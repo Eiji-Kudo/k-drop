@@ -1,50 +1,19 @@
-# Welcome to your Expo app 👋
+# K Drop - KPOPファン向けクイズアプリ
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## 概要
+K Dropは、KPOPのオタク向けクイズアプリです。問題を解いたり作成したりすることで、オタ力の測定・共有を楽しめます。
 
-## Get started
+## 主な機能
+- **問題を解く**: KPOPに関するクイズを解答できます
+- **問題を作成**: ユーザー自身でクイズの問題を作成可能です
+- **オタ力の変動**: クイズの結果により、オタ力が変動します
+- **オタ力ランキング**: 他のユーザーとのオタ力比較が可能です
+- **履歴の確認**: 過去の解答履歴などを確認できます
+- **プロフィール機能**: イベント関連の登録などが行えます
 
-1. Install dependencies
+## リリース予定
+- **V1リリース**: 5月中旬を予定
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## インフラ構成図
+- **使用技術**: Expo, Supabase
+- Supabaseの型生成機能を利用予定
