@@ -7,6 +7,9 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Entypo from '@expo/vector-icons/build/Entypo';
+import FontAwesome5 from '@expo/vector-icons/build/FontAwesome5';
+import FontAwesome from '@expo/vector-icons/build/FontAwesome';
+import Ionicons from '@expo/vector-icons/build/Ionicons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -37,21 +40,21 @@ export default function TabLayout() {
         name="ranking"
         options={{
           title: 'ランキング',
-          tabBarIcon: ({ color }) => <Entypo name="star" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome5 name="chess-king" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: '履歴',
-          tabBarIcon: ({ color }) => <Entypo name="clock" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="history" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'プロフィール',
-          tabBarIcon: ({ color }) => <Entypo name="user" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="person-circle" size={24} color={color} />,
         }}
       />
     </Tabs>
