@@ -3,10 +3,10 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import Entypo from '@expo/vector-icons/build/Entypo';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -30,28 +30,28 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'ホーム',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="ranking"
         options={{
           title: 'ランキング',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Entypo name="star" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: '履歴',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="clock.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Entypo name="clock" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'プロフィール',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Entypo name="user" size={24} color={color} />,
         }}
       />
     </Tabs>
