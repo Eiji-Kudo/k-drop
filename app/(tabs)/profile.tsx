@@ -1,9 +1,8 @@
-import { Image, Platform, StyleSheet } from 'react-native'
+import { Image, Platform, StyleSheet, View } from 'react-native'
 
 import { Collapsible } from '@/components/Collapsible'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
 import { IconSymbol } from '@/components/ui/IconSymbol'
 
 export default function ProfileScreen() {
@@ -19,9 +18,9 @@ export default function ProfileScreen() {
         />
       }
     >
-      <ThemedView style={styles.titleContainer}>
+      <View style={styles.titleContainer}>
         <ThemedText type="title">プロフィール</ThemedText>
-      </ThemedView>
+      </View>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
