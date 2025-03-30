@@ -9,9 +9,9 @@ export default function HomeScreen() {
     <>
       <ScrollView style={styles.container}>
         <SafeAreaView>
-        <ThemedView>
-          <ThemedText>Hello</ThemedText>
-        </ThemedView>
+          <ThemedView>
+            <ThemedText>Hello</ThemedText>
+          </ThemedView>
         </SafeAreaView>
       </ScrollView>
     </>
@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: Colors.light.background,
+    flex: 1,
   },
 })

@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-native/all',
     'plugin:react-hooks/recommended',
-    'prettier',
+    'plugin:prettier/recommended',
     'expo'
   ],
   plugins: ['@typescript-eslint', 'react', 'react-native', 'prettier'],
