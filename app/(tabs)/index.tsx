@@ -1,8 +1,9 @@
 import React from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
-
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
+import { LevelDisplay } from '@/app/components/LevelDisplay'
+
 export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
@@ -10,10 +11,7 @@ export default function HomeScreen() {
         <View style={styles.firstTextContainer}>
           <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
         </View>
-        <View style={styles.levelContainer}>
-          <ThemedText type="subtitle">あなたは</ThemedText>
-          <ThemedText type="subtitle">「軽いオタクレベル」です。</ThemedText>
-        </View>
+        <LevelDisplay />
       </SafeAreaView>
     </ScrollView>
   )
@@ -30,11 +28,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
   },
-  levelContainer: {
-    alignItems: 'center',
-    borderRadius: 10,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-  },
+  // levelContainer has been moved to the LevelDisplay component
 })
