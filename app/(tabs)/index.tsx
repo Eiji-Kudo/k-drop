@@ -1,17 +1,16 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
 import { Colors } from '@/constants/Colors'
 export default function HomeScreen() {
   return (
     <>
       <ScrollView style={styles.container}>
         <SafeAreaView>
-          <ThemedView>
+          <View style={styles.firstTextContainer}>
             <ThemedText>Hello</ThemedText>
-          </ThemedView>
+          </View>
         </SafeAreaView>
       </ScrollView>
     </>
@@ -22,6 +21,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light.background,
     flex: 1,
+    padding: 16,
+  },
+  firstTextContainer: {
+    alignItems: 'center',
+    borderRadius: 10,
     padding: 16,
   },
 })
