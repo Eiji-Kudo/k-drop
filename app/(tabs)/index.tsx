@@ -5,15 +5,13 @@ import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 export default function HomeScreen() {
   return (
-    <>
-      <ScrollView style={styles.container}>
-        <SafeAreaView>
-          <View style={styles.firstTextContainer}>
-            <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
-          </View>
-        </SafeAreaView>
-      </ScrollView>
-    </>
+    <ScrollView style={styles.container}>
+      <SafeAreaView>
+        <View style={styles.firstTextContainer}>
+          <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   )
 }
 
