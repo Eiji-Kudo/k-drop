@@ -28,5 +28,4 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
   },
-  // levelContainer has been moved to the LevelDisplay component
 })
