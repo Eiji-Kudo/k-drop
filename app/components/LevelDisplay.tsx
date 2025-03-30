@@ -16,8 +16,8 @@ export function LevelDisplay() {
 const styles = StyleSheet.create({
   levelContainer: {
     alignItems: 'center',
-    backgroundColor: Colors.light.background,
-    borderColor: Colors.light.border,
+    backgroundColor: Colors.background,
+    borderColor: Colors.border,
     borderRadius: 10,
     borderWidth: 1,
     padding: 16,

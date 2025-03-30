@@ -1,8 +1,8 @@
-import React from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { LevelDisplay } from '@/app/components/LevelDisplay'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
-import { LevelDisplay } from '@/app/components/LevelDisplay'
+import React from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function HomeScreen() {
   return (
@@ -19,7 +19,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.light.background,
+    backgroundColor: Colors.background,
     flex: 1,
     padding: 16,
   },

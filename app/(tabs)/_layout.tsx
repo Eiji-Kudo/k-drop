@@ -5,19 +5,16 @@ import { Platform } from 'react-native'
 import { HapticTab } from '@/components/HapticTab'
 import TabBarBackground from '@/components/ui/TabBarBackground'
 import { Colors } from '@/constants/Colors'
-import { useColorScheme } from '@/hooks/useColorScheme'
 import Entypo from '@expo/vector-icons/build/Entypo'
-import FontAwesome5 from '@expo/vector-icons/build/FontAwesome5'
 import FontAwesome from '@expo/vector-icons/build/FontAwesome'
+import FontAwesome5 from '@expo/vector-icons/build/FontAwesome5'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors.tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
