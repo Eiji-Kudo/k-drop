@@ -35,7 +35,6 @@ export default function HistoryScreen() {
           The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
           sets up the tab navigator.
         </ThemedText>
-
       </Collapsible>
       <Collapsible title="Android, iOS, and web support">
         <ThemedText>
@@ -50,7 +49,6 @@ export default function HistoryScreen() {
           different screen densities
         </ThemedText>
         <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-
       </Collapsible>
       <Collapsible title="Custom fonts">
         <ThemedText>
