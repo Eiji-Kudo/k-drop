@@ -9,7 +9,7 @@ export default function HomeScreen() {
       <ScrollView style={styles.container}>
         <SafeAreaView>
           <View style={styles.firstTextContainer}>
-            <ThemedText>Hello</ThemedText>
+            <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
           </View>
         </SafeAreaView>
       </ScrollView>
