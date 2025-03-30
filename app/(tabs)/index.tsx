@@ -10,6 +10,9 @@ export default function HomeScreen() {
         <View style={styles.firstTextContainer}>
           <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
         </View>
+        <View style={styles.levelContainer}>
+          <ThemedText type="subtitle">Level</ThemedText>
+        </View>
       </SafeAreaView>
     </ScrollView>
   )
@@ -25,5 +28,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     padding: 16,
+  },
+  levelContainer: {
+    alignItems: 'center',
+    borderRadius: 10,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
   },
 })
