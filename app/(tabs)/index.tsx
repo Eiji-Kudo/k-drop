@@ -11,7 +11,8 @@ export default function HomeScreen() {
           <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
         </View>
         <View style={styles.levelContainer}>
-          <ThemedText type="subtitle">Level</ThemedText>
+          <ThemedText type="subtitle">あなたは</ThemedText>
+          <ThemedText type="subtitle">「軽いオタクレベル」です。</ThemedText>
         </View>
       </SafeAreaView>
     </ScrollView>
