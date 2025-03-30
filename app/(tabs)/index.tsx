@@ -22,5 +22,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light.background,
     flex: 1,
+    padding: 16,
   },
 })
