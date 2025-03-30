@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
@@ -8,10 +8,11 @@ export default function HomeScreen() {
   return (
     <>
       <ScrollView style={styles.container}>
+        <SafeAreaView>
         <ThemedView>
           <ThemedText>Hello</ThemedText>
         </ThemedView>
-        
+        </SafeAreaView>
       </ScrollView>
     </>
   )
