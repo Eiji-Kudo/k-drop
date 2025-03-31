@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native'
 
 type PrimaryButtonProps = {
   children: React.ReactNode
@@ -13,9 +13,9 @@ export function PrimaryButton({ children, onPress }: PrimaryButtonProps) {
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <View style={styles.buttonContent}>
         {typeof children === 'string' ? (
-          <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+          <Text style={styles.buttonText}>
             {children}
-          </ThemedText>
+          </Text>
         ) : (
           children
         )}
@@ -26,18 +26,18 @@ export function PrimaryButton({ children, onPress }: PrimaryButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Colors.tint,
+    backgroundColor: Colors.primary,
     borderRadius: 10,
-    marginVertical: 16,
-    padding: 4,
+    padding: 12,
   },
   buttonContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 12,
   },
   buttonText: {
     color: 'white',
     textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 }) 
