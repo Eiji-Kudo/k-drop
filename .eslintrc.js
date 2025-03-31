@@ -7,23 +7,23 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-native/all',
     'plugin:react-hooks/recommended',
-    'prettier',
-    'expo'
+    'plugin:prettier/recommended',
+    'expo',
   ],
-  plugins: ['@typescript-eslint', 'react', 'react-native', 'prettier'],
+  plugins: ['@typescript-eslint', 'react', 'react-native', 'prettier', 'unused-imports'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: './tsconfig.json'
+    project: './tsconfig.json',
   },
   settings: {
     react: {
-      version: 'detect'
-    }
+      version: 'detect',
+    },
   },
   rules: {
     '@typescript-eslint/no-explicit-any': 'error',
@@ -41,9 +41,10 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
     'react/react-in-jsx-scope': 'off',
-    'prettier/prettier': 'error'
+    'prettier/prettier': 'error',
+    'unused-imports/no-unused-imports': 'error',
   },
   env: {
-    'react-native/react-native': true
-  }
-};
+    'react-native/react-native': true,
+  },
+}

@@ -4,3 +4,4 @@
 echo "Running pre-push checks..."
 npm run test:types
 npm run lint
+npm run format
