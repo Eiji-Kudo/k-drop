@@ -1,5 +1,6 @@
 import { LevelDisplay } from '@/components/LevelDisplay'
 import { PrimaryButton } from '@/components/PrimaryButton'
+import { SecondaryButton } from '@/components/SecondaryButton'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import React from 'react'
@@ -14,6 +15,7 @@ export default function HomeScreen() {
         </View>
         <LevelDisplay />
         <PrimaryButton>問題を解く</PrimaryButton>
+        <SecondaryButton>問題を作成する</SecondaryButton>
       </SafeAreaView>
     </ScrollView>
   )
