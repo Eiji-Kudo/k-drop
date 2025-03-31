@@ -1,4 +1,5 @@
 import { LevelDisplay } from '@/app/components/LevelDisplay'
+import { PrimaryButton } from '@/app/components/PrimaryButton'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import React from 'react'
@@ -12,6 +13,7 @@ export default function HomeScreen() {
           <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
         </View>
         <LevelDisplay />
+        <PrimaryButton>バトルを始める</PrimaryButton>
       </SafeAreaView>
     </ScrollView>
   )
