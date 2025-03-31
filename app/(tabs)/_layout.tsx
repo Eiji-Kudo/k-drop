@@ -32,6 +32,7 @@ export default function TabLayout() {
         options={{
           title: 'ホーム',
           tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
+          headerShown: true,
         }}
       />
       <Tabs.Screen
