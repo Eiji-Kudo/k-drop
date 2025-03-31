@@ -31,9 +31,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: Colors.text,
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
   },
 })
