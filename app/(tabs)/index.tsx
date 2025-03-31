@@ -1,5 +1,5 @@
-import { LevelDisplay } from '@/app/components/LevelDisplay'
-import { PrimaryButton } from '@/app/components/PrimaryButton'
+import { LevelDisplay } from '@/components/LevelDisplay'
+import { PrimaryButton } from '@/components/PrimaryButton'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import React from 'react'
