@@ -43,6 +43,13 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
     'unused-imports/no-unused-imports': 'error',
+    'no-restricted-imports': ['error', {
+      paths: [{
+        name: 'react',
+        importNames: ['default'],
+        message: 'React 17以降ではコンポーネントで "import React from \'react\'" は不要です。特定のReactのインポートが必要な場合は、"import { useState, useEffect } from \'react\'" のように名前付きインポートを使用してください。'
+      }]
+    }],
   },
   env: {
     'react-native/react-native': true,
