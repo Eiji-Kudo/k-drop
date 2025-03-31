@@ -1,4 +1,3 @@
-import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native'
@@ -13,9 +12,7 @@ export function PrimaryButton({ children, onPress }: PrimaryButtonProps) {
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <View style={styles.buttonContent}>
         {typeof children === 'string' ? (
-          <Text style={styles.buttonText}>
-            {children}
-          </Text>
+          <Text style={styles.buttonText}>{children}</Text>
         ) : (
           children
         )}
@@ -36,8 +33,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
-}) 
+})

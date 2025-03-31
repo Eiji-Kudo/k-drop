@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
   },
-  safeAreaView: {
-    flex: 1,
-    gap: 16,
-  },
   firstTextContainer: {
     alignItems: 'center',
     borderRadius: 10,
+  },
+  safeAreaView: {
+    flex: 1,
+    gap: 16,
   },
 })
