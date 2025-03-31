@@ -1,6 +1,6 @@
 import { LevelDisplay } from '@/components/LevelDisplay'
-import { PrimaryButton } from '@/components/PrimaryButton'
-import { SecondaryButton } from '@/components/SecondaryButton'
+import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
+import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
