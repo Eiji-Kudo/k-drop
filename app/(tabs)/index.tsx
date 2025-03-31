@@ -3,7 +3,6 @@ import { PrimaryButton } from '@/components/PrimaryButton'
 import { SecondaryButton } from '@/components/SecondaryButton'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
-import React from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function HomeScreen() {

@@ -1,6 +1,5 @@
 import { Colors } from '@/constants/Colors'
-import React from 'react'
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 type PrimaryButtonProps = {
   children: React.ReactNode
