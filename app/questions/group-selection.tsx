@@ -1,5 +1,5 @@
-import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native'
 import { useState } from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
@@ -52,7 +52,6 @@ export default function GroupSelectionScreen() {
               <ThemedText
                 style={[
                   styles.groupButtonText,
-                  selectedGroup === group.id && styles.selectedGroupButtonText,
                 ]}
               >
                 {group.name}
@@ -101,11 +100,7 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   selectedGroupButton: {
-    // backgroundColor: Colors.tint,
     borderWidth: 2,
     borderColor: Colors.primary,
-  },
-  selectedGroupButtonText: {
-    // color: Colors.white,
   },
 })
