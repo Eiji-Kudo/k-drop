@@ -83,11 +83,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     flex: 1,
     paddingHorizontal: 16,
+    paddingTop: 24,
   },
   safeAreaView: {
     flex: 1,
-    gap: 24,
-    paddingVertical: 24,
+    gap: 24
   },
   headerContainer: {
     alignItems: 'center',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   selectedGroupButtonText: {
-    color: '#FFFFFF',
+    color: Colors.white,
   },
   actionContainer: {
     marginTop: 16,
