@@ -1,12 +1,12 @@
 import { Colors } from '@/constants/Colors'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-type PrimaryButtonProps = {
+type SecondaryButtonProps = {
   children: React.ReactNode
   onPress?: () => void
 }
 
-export function PrimaryButton({ children, onPress }: PrimaryButtonProps) {
+export function SecondaryButton({ children, onPress }: SecondaryButtonProps) {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <View style={styles.buttonContent}>
@@ -22,7 +22,7 @@ export function PrimaryButton({ children, onPress }: PrimaryButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.secondary,
     borderRadius: 10,
     padding: 12,
   },
@@ -31,9 +31,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: Colors.text,
     fontSize: 20,
-    fontWeight: 'bold',
     textAlign: 'center',
   },
 })

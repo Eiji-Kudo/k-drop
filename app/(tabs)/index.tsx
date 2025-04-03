@@ -1,5 +1,6 @@
 import { LevelDisplay } from '@/components/LevelDisplay'
-import { PrimaryButton } from '@/components/PrimaryButton'
+import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
+import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
@@ -13,6 +14,7 @@ export default function HomeScreen() {
         </View>
         <LevelDisplay />
         <PrimaryButton>問題を解く</PrimaryButton>
+        <SecondaryButton>問題を作成する</SecondaryButton>
       </SafeAreaView>
     </ScrollView>
   )

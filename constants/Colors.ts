@@ -9,4 +9,7 @@ export const Colors = {
   tabIconSelected: tintColorLight,
   border: '#F0C2D9',
   primary: '#FF9FCC',
+  secondary: '#FFD9EB',
+  tertiary: '#B52E6E',
+  white: '#FFFFFF',
 }
