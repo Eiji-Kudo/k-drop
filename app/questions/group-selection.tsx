@@ -29,7 +29,7 @@ export default function GroupSelectionScreen() {
   const handleContinue = () => {
     if (selectedGroup) {
       // Navigate to the next screen with the selected group
-      //   router.push(`/questions/difficulty?groupId=${selectedGroup}`)
+      // router.push(`/questions/difficulty?groupId=${selectedGroup}`)
     }
   }
 
@@ -48,13 +48,7 @@ export default function GroupSelectionScreen() {
               onPress={() => handleGroupSelect(group.id)}
               style={[styles.groupButton, selectedGroup === group.id && styles.selectedGroupButton]}
             >
-              <ThemedText
-                style={[
-                  styles.groupButtonText,
-                ]}
-              >
-                {group.name}
-              </ThemedText>
+              <ThemedText style={styles.groupButtonText}>{group.name}</ThemedText>
             </SecondaryButton>
           ))}
         </View>
@@ -80,8 +74,8 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   groupButton: {
-    paddingVertical: 16,
     backgroundColor: Colors.secondary,
+    paddingVertical: 16,
   },
   groupButtonText: {
     fontSize: 16,
@@ -99,7 +93,7 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   selectedGroupButton: {
-    borderWidth: 2,
     borderColor: Colors.primary,
+    borderWidth: 2,
   },
 })
