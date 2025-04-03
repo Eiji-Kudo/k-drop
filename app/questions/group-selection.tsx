@@ -31,7 +31,7 @@ export default function GroupSelectionScreen() {
   const handleContinue = () => {
     if (selectedGroup) {
       // Navigate to the next screen with the selected group
-      router.push(`/questions/difficulty?groupId=${selectedGroup}`)
+    //   router.push(`/questions/difficulty?groupId=${selectedGroup}`)
     }
   }
     

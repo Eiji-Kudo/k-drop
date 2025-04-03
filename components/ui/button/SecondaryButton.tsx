@@ -1,14 +1,13 @@
 import { Colors } from '@/constants/Colors'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-type SecondaryButtonProps = {
+type SecondaryButtonProps = React.ComponentProps<typeof TouchableOpacity> & {
   children: React.ReactNode
-  onPress?: () => void
 }
 
-export function SecondaryButton({ children, onPress }: SecondaryButtonProps) {
+export function SecondaryButton({ children, ...props }: SecondaryButtonProps) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={[styles.button, props.style]} {...props}>
       <View style={styles.buttonContent}>
         {typeof children === 'string' ? (
           <Text style={styles.buttonText}>{children}</Text>
