@@ -14,13 +14,12 @@ type Group = {
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
 
-  // Mock data for groups
   const groups: Group[] = [
-    { id: '1', name: 'アニメ' },
-    { id: '2', name: 'マンガ' },
-    { id: '3', name: 'ゲーム' },
-    { id: '4', name: '映画' },
-    { id: '5', name: '音楽' },
+    { id: '1', name: 'BTS' },
+    { id: '2', name: 'BLACKPINK' },
+    { id: '3', name: 'TWICE' },
+    { id: '4', name: 'EXO' },
+    { id: '5', name: 'NCT' },
   ]
 
   const handleGroupSelect = (groupId: string) => {
