@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
   },
   groupButton: {
     paddingVertical: 16,
+    backgroundColor: Colors.secondary,
   },
   groupButtonText: {
     fontSize: 16,
@@ -100,9 +101,11 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   selectedGroupButton: {
-    backgroundColor: Colors.tint,
+    // backgroundColor: Colors.tint,
+    borderWidth: 2,
+    borderColor: Colors.primary,
   },
   selectedGroupButtonText: {
-    color: Colors.white,
+    // color: Colors.white,
   },
 })
