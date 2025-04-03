@@ -31,8 +31,8 @@ export default function GroupSelectionScreen() {
     if (selectedGroup) {
       // Navigate to the next screen with the selected group
       router.push({
-        pathname: "/questions/solve-problem",
-        params: { groupId: selectedGroup }
+        pathname: '/questions/solve-problem',
+        params: { groupId: selectedGroup },
       })
     }
   }

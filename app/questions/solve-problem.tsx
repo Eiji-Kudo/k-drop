@@ -6,7 +6,7 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 
 export default function SolveProblemScreen() {
-  const [answer, setAnswer] = useState('')
+  const [answer] = useState('')
 
   const handleSubmit = () => {
     // 解答送信処理
@@ -22,9 +22,7 @@ export default function SolveProblemScreen() {
         </View>
 
         <View style={styles.questionContainer}>
-          <ThemedText style={styles.questionText}>
-            ここに問題文が表示されます
-          </ThemedText>
+          <ThemedText style={styles.questionText}>ここに問題文が表示されます</ThemedText>
         </View>
 
         <View style={styles.answerContainer}>
@@ -33,9 +31,7 @@ export default function SolveProblemScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={handleSubmit}>
-            解答を送信
-          </PrimaryButton>
+          <PrimaryButton onPress={handleSubmit}>解答を送信</PrimaryButton>
         </View>
       </SafeAreaView>
     </ScrollView>
