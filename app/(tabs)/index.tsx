@@ -4,7 +4,7 @@ import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
-
+import { router } from 'expo-router'
 export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
@@ -13,7 +13,9 @@ export default function HomeScreen() {
           <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
         </View>
         <LevelDisplay />
-        <PrimaryButton>問題を解く</PrimaryButton>
+        <PrimaryButton onPress={() => router.push('/questions/group-selection')}>
+          問題を解く
+        </PrimaryButton>
         <SecondaryButton>問題を作成する</SecondaryButton>
       </SafeAreaView>
     </ScrollView>
