@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { Colors } from '@/constants/Colors'
+import { router } from 'expo-router'
 
 type Group = {
   id: string
@@ -29,7 +30,10 @@ export default function GroupSelectionScreen() {
   const handleContinue = () => {
     if (selectedGroup) {
       // Navigate to the next screen with the selected group
-      // router.push(`/questions/difficulty?groupId=${selectedGroup}`)
+      router.push({
+        pathname: "/questions/solve-problem",
+        params: { groupId: selectedGroup }
+      })
     }
   }
 
@@ -55,7 +59,7 @@ export default function GroupSelectionScreen() {
 
         <View style={styles.actionContainer}>
           <PrimaryButton onPress={handleContinue} disabled={!selectedGroup}>
-            次へ進む
+            問題へ進む
           </PrimaryButton>
         </View>
       </SafeAreaView>
