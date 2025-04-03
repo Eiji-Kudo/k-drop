@@ -31,6 +31,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="questions" options={{ headerShown: true, headerBackTitle: 'トップへ戻る', headerTitle: '問題を解く' }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

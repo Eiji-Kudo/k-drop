@@ -34,7 +34,7 @@ export default function GroupSelectionScreen() {
       router.push(`/questions/difficulty?groupId=${selectedGroup}`)
     }
   }
-
+    
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
