@@ -1,6 +1,5 @@
 import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native'
 import { useState } from 'react'
-import { router } from 'expo-router'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
@@ -14,7 +13,7 @@ type Group = {
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
-  
+
   // Mock data for groups
   const groups: Group[] = [
     { id: '1', name: 'アニメ' },
@@ -31,10 +30,10 @@ export default function GroupSelectionScreen() {
   const handleContinue = () => {
     if (selectedGroup) {
       // Navigate to the next screen with the selected group
-    //   router.push(`/questions/difficulty?groupId=${selectedGroup}`)
+      //   router.push(`/questions/difficulty?groupId=${selectedGroup}`)
     }
   }
-    
+
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -42,21 +41,18 @@ export default function GroupSelectionScreen() {
           <ThemedText type="title">ジャンルを選択</ThemedText>
           <ThemedText type="subtitle">挑戦したいジャンルを選んでください</ThemedText>
         </View>
-        
+
         <View style={styles.groupsContainer}>
           {groups.map((group) => (
-            <SecondaryButton 
+            <SecondaryButton
               key={group.id}
               onPress={() => handleGroupSelect(group.id)}
-              style={[
-                styles.groupButton,
-                selectedGroup === group.id && styles.selectedGroupButton
-              ]}
+              style={[styles.groupButton, selectedGroup === group.id && styles.selectedGroupButton]}
             >
-              <ThemedText 
+              <ThemedText
                 style={[
                   styles.groupButtonText,
-                  selectedGroup === group.id && styles.selectedGroupButtonText
+                  selectedGroup === group.id && styles.selectedGroupButtonText,
                 ]}
               >
                 {group.name}
@@ -64,12 +60,9 @@ export default function GroupSelectionScreen() {
             </SecondaryButton>
           ))}
         </View>
-        
+
         <View style={styles.actionContainer}>
-          <PrimaryButton 
-            onPress={handleContinue}
-            disabled={!selectedGroup}
-          >
+          <PrimaryButton onPress={handleContinue} disabled={!selectedGroup}>
             次へ進む
           </PrimaryButton>
         </View>
@@ -79,37 +72,37 @@ export default function GroupSelectionScreen() {
 }
 
 const styles = StyleSheet.create({
+  actionContainer: {
+    marginTop: 16,
+  },
   container: {
     backgroundColor: Colors.background,
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 24,
   },
-  safeAreaView: {
-    flex: 1,
-    gap: 24
-  },
-  headerContainer: {
-    alignItems: 'center',
-    gap: 8,
-  },
-  groupsContainer: {
-    gap: 12,
-  },
   groupButton: {
     paddingVertical: 16,
-  },
-  selectedGroupButton: {
-    backgroundColor: Colors.tint,
   },
   groupButtonText: {
     fontSize: 16,
     textAlign: 'center',
   },
+  groupsContainer: {
+    gap: 12,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  safeAreaView: {
+    flex: 1,
+    gap: 24,
+  },
+  selectedGroupButton: {
+    backgroundColor: Colors.tint,
+  },
   selectedGroupButtonText: {
     color: Colors.white,
-  },
-  actionContainer: {
-    marginTop: 16,
   },
 })

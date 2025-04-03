@@ -1,13 +1,4 @@
-import { Stack, Tabs } from 'expo-router'
-import { Platform } from 'react-native'
-
-import { HapticTab } from '@/components/HapticTab'
-import TabBarBackground from '@/components/ui/TabBarBackground'
-import { Colors } from '@/constants/Colors'
-import Entypo from '@expo/vector-icons/build/Entypo'
-import FontAwesome from '@expo/vector-icons/build/FontAwesome'
-import FontAwesome5 from '@expo/vector-icons/build/FontAwesome5'
-import Ionicons from '@expo/vector-icons/build/Ionicons'
+import { Stack } from 'expo-router'
 
 export default function TabLayout() {
   return (

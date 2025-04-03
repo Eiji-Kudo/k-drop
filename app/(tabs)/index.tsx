@@ -13,7 +13,9 @@ export default function HomeScreen() {
           <ThemedText type="subtitle">オタ力バトルしよう！</ThemedText>
         </View>
         <LevelDisplay />
-        <PrimaryButton onPress={() => router.push('/questions/group-selection')}>問題を解く</PrimaryButton>
+        <PrimaryButton onPress={() => router.push('/questions/group-selection')}>
+          問題を解く
+        </PrimaryButton>
         <SecondaryButton>問題を作成する</SecondaryButton>
       </SafeAreaView>
     </ScrollView>
