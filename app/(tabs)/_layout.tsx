@@ -14,7 +14,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.tint,
-        headerShown: false,
+        headerShown: true,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -31,14 +31,6 @@ export default function TabLayout() {
         options={{
           title: 'ホーム',
           tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
-          headerShown: true,
-        }}
-      />
-      <Tabs.Screen
-        name="ranking"
-        options={{
-          title: 'ランキング',
-          tabBarIcon: ({ color }) => <FontAwesome5 name="chess-king" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -49,10 +41,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="history"
+        name="ranking"
         options={{
-          title: '履歴',
-          tabBarIcon: ({ color }) => <FontAwesome name="history" size={24} color={color} />,
+          title: 'ランキング',
+          tabBarIcon: ({ color }) => <FontAwesome5 name="chess-king" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
