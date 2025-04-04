@@ -42,6 +42,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="questions/index"
+        options={{
+          title: '問題を解く',
+          tabBarIcon: ({ color }) => <FontAwesome name="pencil-square-o" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="history"
         options={{
           title: '履歴',
