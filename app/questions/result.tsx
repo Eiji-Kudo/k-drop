@@ -18,7 +18,9 @@ export default function ResultScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={() => router.back()}>問題一覧に戻る</PrimaryButton>
+          <PrimaryButton onPress={() => router.navigate('/questions/group-selection')}>
+            グループ一覧に戻る
+          </PrimaryButton>
         </View>
       </SafeAreaView>
     </ScrollView>
