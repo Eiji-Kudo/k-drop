@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import { router } from 'expo-router'
+
 export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
