@@ -16,7 +16,7 @@ erDiagram
     }
     app_user {
         int app_user_id PK "NOT NULL"
-        uuid supabase_uuid "NOT NULL, Supabaseで発行されたUUID"
+        uuid supabase_uuid "NOT NULL"
         string line_account_id "NOT NULL"
     }
     user_profile {
