@@ -118,51 +118,51 @@ erDiagram
     %% Relationship Definitions
     group_category ||--|{ idol_group : "has many"
     idol_group }|--|| group_category : "belongs to"
-    
+
     app_user ||--|| user_profile : "has one profile"
     user_profile }|--|| app_user : "belongs to"
-    
+
     user_profile }|--|| total_otaku_layer : "belongs to (total layer)"
     total_otaku_layer ||--|{ user_profile : "has many"
-    
+
     app_user ||--|{ user_idol_group_score : "has many (per group score)"
     user_idol_group_score }|--|| app_user : "belongs to"
     idol_group ||--|{ user_idol_group_score : "has many"
     user_idol_group_score }|--|| idol_group : "belongs to"
     user_idol_group_score }|--|| group_otaku_layer : "belongs to (group layer)"
     group_otaku_layer ||--|{ user_idol_group_score : "has many"
-    
+
     idol_group ||--|{ quiz_question : "has many"
     quiz_difficulty ||--|{ quiz_question : "has many"
     quiz_question }|--|| idol_group : "belongs to"
     quiz_question }|--|| quiz_difficulty : "belongs to"
-    
+
     app_user ||--|{ user_quiz_answer : "has many"
     user_quiz_answer }|--|| app_user : "belongs to"
     quiz_question ||--|{ user_quiz_answer : "has many"
     user_quiz_answer }|--|| quiz_question : "belongs to"
-    
+
     app_user ||--|{ ranking_total : "has one total ranking entry"
     ranking_total }|--|| app_user : "belongs to"
-    
+
     app_user ||--|{ ranking_group : "has many group ranking entries"
     ranking_group }|--|| app_user : "belongs to"
     idol_group ||--|{ ranking_group : "has many"
     ranking_group }|--|| idol_group : "belongs to"
-    
+
     app_user ||--|{ event : "creates"
     event }|--|| app_user : "created by"
-    
+
     event ||--|{ event_participation : "has many"
     event_participation }|--|| event : "belongs to"
     app_user ||--|{ event_participation : "participates in"
     event_participation }|--|| app_user : "belongs to"
-    
+
     event ||--|{ event_group_participation : "has many participating groups"
     event_group_participation }|--|| event : "belongs to event"
     idol_group ||--|{ event_group_participation : "has many event participations"
     event_group_participation }|--|| idol_group : "belongs to idol group"
-    
+
     app_user ||--|{ monthly_score_history : "has many monthly score entries"
     monthly_score_history }|--|| app_user : "belongs to"
 ```
