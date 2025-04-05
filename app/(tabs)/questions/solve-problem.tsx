@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { router } from 'expo-router'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
@@ -6,11 +6,8 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 
 export default function SolveProblemScreen() {
-  const [answer] = useState('')
-
   const handleSubmit = () => {
-    // 解答送信処理
-    console.log('Submitted answer:', answer)
+    router.navigate('/questions/result')
   }
 
   return (
