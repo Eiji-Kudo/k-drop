@@ -25,9 +25,16 @@ erDiagram
         string user_name
         int total_otaku_score "総合オタク力"
         int remaining_drop "所持中のドロップ数"
+        int total_otaku_layer_id FK "総合オタクレイヤー"
     }
-    otaku_layer {
-        int otaku_layer_id PK
+    total_otaku_layer {
+        int total_otaku_layer_id PK
+        string layer_name
+        int min_score
+        int max_score
+    }
+    group_otaku_layer {
+        int group_otaku_layer_id PK
         string layer_name
         int min_score
         int max_score
@@ -37,7 +44,7 @@ erDiagram
         int app_user_id FK
         int idol_group_id FK
         int otaku_score
-        int otaku_layer_id FK
+        int group_otaku_layer_id FK "グループ別オタクレイヤー"
     }
     quiz_difficulty {
         int quiz_difficulty_id PK
@@ -108,12 +115,15 @@ erDiagram
     app_user ||--|| user_profile : "has one profile"
     user_profile }|--|| app_user : "belongs to"
 
+    user_profile }|--|| total_otaku_layer : "belongs to (total layer)"
+    total_otaku_layer ||--|{ user_profile : "has many"
+
     app_user ||--|{ user_idol_group_score : "has many (per group score)"
     user_idol_group_score }|--|| app_user : "belongs to"
     idol_group ||--|{ user_idol_group_score : "has many"
     user_idol_group_score }|--|| idol_group : "belongs to"
-    otaku_layer ||--|{ user_idol_group_score : "has many"
-    user_idol_group_score }|--|| otaku_layer : "belongs to"
+    user_idol_group_score }|--|| group_otaku_layer : "belongs to (group layer)"
+    group_otaku_layer ||--|{ user_idol_group_score : "has many"
 
     idol_group ||--|{ quiz_question : "has many"
     quiz_difficulty ||--|{ quiz_question : "has many"
