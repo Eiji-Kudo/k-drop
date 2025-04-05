@@ -73,7 +73,7 @@ erDiagram
     ranking_total {
         int ranking_total_id PK "NOT NULL"
         int app_user_id FK "NOT NULL"
-        int display_rank "NOT NULL, 実際の総合順位"
+        int display_rank "NOT NULL, バッチ計算時点の総合順位"
         int display_score "NOT NULL, バッチ計算時点の総合スコア"
         datetime updated_at "NOT NULL"
     }
@@ -81,7 +81,7 @@ erDiagram
         int ranking_group_id PK "NOT NULL"
         int app_user_id FK "NOT NULL"
         int idol_group_id FK "NOT NULL"
-        int display_rank "NOT NULL, 実際のグループ順位"
+        int display_rank "NOT NULL, バッチ計算時点のグループ順位"
         int display_score "NOT NULL, バッチ計算時点のグループ別スコア"
         datetime updated_at "NOT NULL"
     }
