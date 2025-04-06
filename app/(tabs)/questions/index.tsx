@@ -12,18 +12,20 @@ import { router } from 'expo-router'
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
 
-  const { data: groups, isLoading, error } = useQuery({
+  const {
+    data: groups,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['idol_groups'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('idol_group')
-        .select('*')
-      
+      const { data, error } = await supabase.from('idol_group').select('*')
+
       if (error) {
         throw new Error(error.message)
       }
       return data
-    }
+    },
   })
 
   const handleGroupSelect = (groupId: number) => {
@@ -34,8 +36,8 @@ export default function GroupSelectionScreen() {
     if (selectedGroup) {
       router.push({
         pathname: '/questions/solve-problem',
-        params: { 
-          groupId: selectedGroup.toString() 
+        params: {
+          groupId: selectedGroup.toString(),
         },
       })
     }
@@ -54,9 +56,14 @@ export default function GroupSelectionScreen() {
             <SecondaryButton
               key={group.idol_group_id}
               onPress={() => handleGroupSelect(group.idol_group_id)}
-              style={[styles.groupButton, selectedGroup === group.idol_group_id && styles.selectedGroupButton]}
+              style={[
+                styles.groupButton,
+                selectedGroup === group.idol_group_id && styles.selectedGroupButton,
+              ]}
             >
-              <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>{group.idol_group_name}</ThemedText>
+              <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>
+                {group.idol_group_name}
+              </ThemedText>
             </SecondaryButton>
           ))}
         </View>
