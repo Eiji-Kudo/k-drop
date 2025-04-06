@@ -1,6 +1,6 @@
 import { Tables } from '@/database.types'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
@@ -50,18 +50,20 @@ export default function GroupSelectionScreen() {
 
         <View style={styles.groupsContainer}>
           {groups?.map((group) => (
-            <SecondaryButton
-              key={group.idol_group_id}
-              onPress={() => handleGroupSelect(group.idol_group_id)}
-              style={[
-                styles.groupButton,
-                selectedGroup === group.idol_group_id && styles.selectedGroupButton,
-              ]}
-            >
-              <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>
-                {group.idol_group_name}
-              </ThemedText>
-            </SecondaryButton>
+            group.idol_group_name === "所属なし" ? null : (
+              <SecondaryButton
+                key={group.idol_group_id}
+                onPress={() => handleGroupSelect(group.idol_group_id)}
+                style={[
+                  styles.groupButton,
+                  selectedGroup === group.idol_group_id && styles.selectedGroupButton,
+                ]}
+              >
+                <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>
+                  {group.idol_group_name}
+                </ThemedText>
+              </SecondaryButton>
+            )
           ))}
         </View>
 
