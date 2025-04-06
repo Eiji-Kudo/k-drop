@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { Colors } from '@/constants/Colors'
+import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
-
 type Group = {
   id: string
   name: string
@@ -14,14 +14,22 @@ type Group = {
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
+  const [groups, setGroups] = useState<Group[]>([])
 
-  const groups: Group[] = [
-    { id: '1', name: 'BTS' },
-    { id: '2', name: 'BLACKPINK' },
-    { id: '3', name: 'TWICE' },
-    { id: '4', name: 'EXO' },
-    { id: '5', name: 'NCT' },
-  ]
+  useEffect(() => {
+    const fetchData = async () => {
+      // Fetch idol groups
+      const { data: idol_group, error } = await supabase
+        .from('idol_group')
+        .select('*')
+        
+      if (idol_group) {
+        setGroups(idol_group)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const handleGroupSelect = (groupId: string) => {
     setSelectedGroup(groupId)
