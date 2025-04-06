@@ -8,12 +8,14 @@ import { Colors } from '@/constants/Colors'
 import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
 type Group = {
-  id: string
-  name: string
+  idol_group_id: number
+  idol_group_name: string
+  group_category_id: number
+  thumbnail_image: string | null
 }
 
 export default function GroupSelectionScreen() {
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
   const [groups, setGroups] = useState<Group[]>([])
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function GroupSelectionScreen() {
     fetchData()
   }, [])
 
-  const handleGroupSelect = (groupId: string) => {
+  const handleGroupSelect = (groupId: number) => {
     setSelectedGroup(groupId)
   }
 
@@ -56,11 +58,11 @@ export default function GroupSelectionScreen() {
         <View style={styles.groupsContainer}>
           {groups.map((group) => (
             <SecondaryButton
-              key={group.id}
-              onPress={() => handleGroupSelect(group.id)}
-              style={[styles.groupButton, selectedGroup === group.id && styles.selectedGroupButton]}
+              key={group.idol_group_id}
+              onPress={() => handleGroupSelect(group.idol_group_id)}
+              style={[styles.groupButton, selectedGroup === group.idol_group_id && styles.selectedGroupButton]}
             >
-              <ThemedText style={styles.groupButtonText}>{group.name}</ThemedText>
+              <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>{group.idol_group_name}</ThemedText>
             </SecondaryButton>
           ))}
         </View>
