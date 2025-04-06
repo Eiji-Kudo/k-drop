@@ -16,14 +16,31 @@ INSERT INTO group_category (category_name) VALUES
 ('K-Pop');
 
 -- idol_group
-INSERT INTO idol_group (group_category_id, idol_group_name) VALUES
-(1, '所属なし'),
-(1, 'BTS'),
-(1, 'TWICE');
+INSERT INTO idol_group (group_category_id, idol_group_name, thumbnail_image) VALUES
+(1, '所属なし', NULL),
+(1, 'BTS', 'https://example.com/bts.jpg'),
+(1, 'TWICE', 'https://example.com/twice.jpg');
+
+-- group_otaku_layer
+INSERT INTO group_otaku_layer (layer_name, min_score, max_score) VALUES
+('ミーハーオタク', 0, 20),
+('見習いオタク', 21, 40),
+('初心者オタク', 41, 60),
+('沼落ちオタク', 61, 80),
+('ガチオタク', 81, 100),
+('現場主オタク', 101, 120),
+('箱推しオタク', 121, 140),
+('遠征オタク', 141, 160),
+('超熱狂オタク', 161, 180),
+('神推しオタク', 181, 200);
+-- Modified: Added missing semicolon here
 
 -- quiz_difficulty
 INSERT INTO quiz_difficulty (difficulty_name) VALUES
-('初級'), ('中級'), ('上級'), ('超上級');
+('初級'),
+('中級'),
+('上級'),
+('超上級');
 
 -- quiz_question
 INSERT INTO quiz_question (idol_group_id, quiz_difficulty_id, question_text, choice1, choice2, choice3, choice4, correct_choice, explanation) VALUES
@@ -76,4 +93,4 @@ INSERT INTO event_group_participation (event_id, idol_group_id, registered_at) V
 
 -- monthly_score_history
 INSERT INTO monthly_score_history (app_user_id, month, score_snapshot, updated_at) VALUES
-(1, '2025-04-01', 250, NOW()); 
+(1, '2025-04-01', 250, NOW());
