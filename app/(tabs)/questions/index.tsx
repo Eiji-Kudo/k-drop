@@ -5,26 +5,25 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { Colors } from '@/constants/Colors'
+import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
-type Group = {
-  idol_group_id: number
-  idol_group_name: string
-  group_category_id: number
-  thumbnail_image: string | null
-}
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
-  const [groups, setGroups] = useState<Group[]>([])
+  const [groups, setGroups] = useState<Tables<'idol_group'>[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch idol groups
       const { data: idol_group, error } = await supabase
         .from('idol_group')
         .select('*')
         
+      if (error) {
+        console.error('Error fetching groups:', error)
+        return
+      }
+
       if (idol_group) {
         setGroups(idol_group)
       }
@@ -39,10 +38,11 @@ export default function GroupSelectionScreen() {
 
   const handleContinue = () => {
     if (selectedGroup) {
-      // Navigate to the next screen with the selected group
       router.push({
         pathname: '/questions/solve-problem',
-        params: { groupId: selectedGroup },
+        params: { 
+          groupId: selectedGroup.toString() 
+        },
       })
     }
   }
