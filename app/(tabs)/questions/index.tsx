@@ -1,3 +1,5 @@
+import { Tables } from '@/database.types'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
@@ -5,34 +7,35 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { Colors } from '@/constants/Colors'
+import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
 
-type Group = {
-  id: string
-  name: string
-}
-
 export default function GroupSelectionScreen() {
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
 
-  const groups: Group[] = [
-    { id: '1', name: 'BTS' },
-    { id: '2', name: 'BLACKPINK' },
-    { id: '3', name: 'TWICE' },
-    { id: '4', name: 'EXO' },
-    { id: '5', name: 'NCT' },
-  ]
+  const { data: groups } = useQuery<Tables<'idol_group'>[]>({
+    queryKey: ['idol_groups'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('idol_group').select('*')
 
-  const handleGroupSelect = (groupId: string) => {
+      if (error) {
+        throw new Error(error.message)
+      }
+      return data as Tables<'idol_group'>[]
+    },
+  })
+
+  const handleGroupSelect = (groupId: number) => {
     setSelectedGroup(groupId)
   }
 
   const handleContinue = () => {
     if (selectedGroup) {
-      // Navigate to the next screen with the selected group
       router.push({
         pathname: '/questions/solve-problem',
-        params: { groupId: selectedGroup },
+        params: {
+          groupId: selectedGroup.toString(),
+        },
       })
     }
   }
@@ -46,13 +49,18 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.groupsContainer}>
-          {groups.map((group) => (
+          {groups?.map((group) => (
             <SecondaryButton
-              key={group.id}
-              onPress={() => handleGroupSelect(group.id)}
-              style={[styles.groupButton, selectedGroup === group.id && styles.selectedGroupButton]}
+              key={group.idol_group_id}
+              onPress={() => handleGroupSelect(group.idol_group_id)}
+              style={[
+                styles.groupButton,
+                selectedGroup === group.idol_group_id && styles.selectedGroupButton,
+              ]}
             >
-              <ThemedText style={styles.groupButtonText}>{group.name}</ThemedText>
+              <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>
+                {group.idol_group_name}
+              </ThemedText>
             </SecondaryButton>
           ))}
         </View>

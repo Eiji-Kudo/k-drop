@@ -14,15 +14,19 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint-fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "gen-types": "npx supabase gen types typescript --local > database.types.ts && npm run lint-fix"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "@supabase/supabase-js": "^2.49.4",
+    "@tanstack/react-query": "^5.71.10",
     "expo": "~52.0.41",
     "expo-blur": "~14.0.3",
     "expo-constants": "~17.0.8",
@@ -42,6 +46,7 @@
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
+    "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5"
   },
@@ -64,6 +69,7 @@
     "jest-expo": "~52.0.6",
     "prettier": "^3.5.3",
     "react-test-renderer": "18.3.1",
+    "supabase": "^2.20.5",
     "typescript": "^5.3.3"
   },
   "private": true

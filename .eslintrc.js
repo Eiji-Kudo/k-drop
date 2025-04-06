@@ -60,4 +60,12 @@ module.exports = {
   env: {
     'react-native/react-native': true,
   },
+  overrides: [
+    {
+      files: ['database.types.ts'],
+      rules: {
+        '@typescript-eslint/no-redundant-type-constituents': 'off',
+      },
+    },
+  ],
 }

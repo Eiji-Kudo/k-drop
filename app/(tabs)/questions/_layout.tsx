@@ -7,7 +7,7 @@ export default function TabLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="group-selection" />
+      <Stack.Screen name="index" />
       <Stack.Screen name="solve-problem" />
       <Stack.Screen name="result" />
     </Stack>
