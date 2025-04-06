@@ -1,36 +1,30 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { Colors } from '@/constants/Colors'
-import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
-  const [groups, setGroups] = useState<Tables<'idol_group'>[]>([])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: idol_group, error } = await supabase
+  const { data: groups, isLoading, error } = useQuery({
+    queryKey: ['idol_groups'],
+    queryFn: async () => {
+      const { data, error } = await supabase
         .from('idol_group')
         .select('*')
-        
+      
       if (error) {
-        console.error('Error fetching groups:', error)
-        return
+        throw new Error(error.message)
       }
-
-      if (idol_group) {
-        setGroups(idol_group)
-      }
+      return data
     }
-
-    fetchData()
-  }, [])
+  })
 
   const handleGroupSelect = (groupId: number) => {
     setSelectedGroup(groupId)
@@ -56,7 +50,7 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.groupsContainer}>
-          {groups.map((group) => (
+          {groups?.map((group) => (
             <SecondaryButton
               key={group.idol_group_id}
               onPress={() => handleGroupSelect(group.idol_group_id)}
