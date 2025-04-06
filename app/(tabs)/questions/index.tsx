@@ -1,6 +1,6 @@
 import { Tables } from '@/database.types'
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
@@ -13,9 +13,9 @@ import { router } from 'expo-router'
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
 
-  const { data: groups } = useQuery<Tables<'idol_group'>[]>({
+  const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
-    queryFn: async () => {
+    queryFn: async (): Promise<Tables<'idol_group'>[]> => {
       const { data, error } = await supabase.from('idol_group').select('*')
 
       if (error) {
@@ -49,8 +49,8 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.groupsContainer}>
-          {groups?.map((group) => (
-            group.idol_group_name === "所属なし" ? null : (
+          {groups?.map((group) =>
+            group.idol_group_name === '所属なし' ? null : (
               <SecondaryButton
                 key={group.idol_group_id}
                 onPress={() => handleGroupSelect(group.idol_group_id)}
@@ -63,8 +63,8 @@ export default function GroupSelectionScreen() {
                   {group.idol_group_name}
                 </ThemedText>
               </SecondaryButton>
-            )
-          ))}
+            ),
+          )}
         </View>
 
         <View style={styles.actionContainer}>
