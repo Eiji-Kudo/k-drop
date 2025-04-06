@@ -14,7 +14,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint-fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "gen-types": "npx supabase gen types typescript --local > database.types.ts"
   },
   "jest": {
     "preset": "jest-expo"
