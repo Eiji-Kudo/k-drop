@@ -1,10 +1,10 @@
-import { ExpoConfig } from 'expo/config';
+import { ExpoConfig } from 'expo/config'
 
-const supabaseUrl = process.env.REACT_NATIVE_SUPABASE_URL;
-const supabaseAnonKey = process.env.REACT_NATIVE_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.REACT_NATIVE_SUPABASE_URL
+const supabaseAnonKey = process.env.REACT_NATIVE_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase URL and anon key must be provided in environment variables');
+  throw new Error('Supabase URL and anon key must be provided in environment variables')
 }
 
 const config: ExpoConfig = {
@@ -12,45 +12,45 @@ const config: ExpoConfig = {
     supabaseUrl,
     supabaseAnonKey,
   },
-  name: "k-drop",
-  slug: "k-drop",
-  version: "1.0.0",
-  orientation: "portrait",
-  icon: "./assets/images/icon.png",
-  scheme: "myapp",
-  userInterfaceStyle: "automatic",
+  name: 'k-drop',
+  slug: 'k-drop',
+  version: '1.0.0',
+  orientation: 'portrait',
+  icon: './assets/images/icon.png',
+  scheme: 'myapp',
+  userInterfaceStyle: 'automatic',
   newArchEnabled: true,
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "com.kdrop"
+    bundleIdentifier: 'com.kdrop',
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/images/adaptive-icon.png",
-      backgroundColor: "#ffffff"
+      foregroundImage: './assets/images/adaptive-icon.png',
+      backgroundColor: '#ffffff',
     },
-    package: "com.kdrop"
+    package: 'com.kdrop',
   },
   web: {
-    bundler: "metro",
-    output: "static",
-    favicon: "./assets/images/favicon.png"
+    bundler: 'metro',
+    output: 'static',
+    favicon: './assets/images/favicon.png',
   },
   plugins: [
-    "expo-router",
+    'expo-router',
     [
-      "expo-splash-screen",
+      'expo-splash-screen',
       {
-        image: "./assets/images/splash-icon.png",
+        image: './assets/images/splash-icon.png',
         imageWidth: 200,
-        resizeMode: "contain",
-        backgroundColor: "#ffffff"
-      }
-    ]
+        resizeMode: 'contain',
+        backgroundColor: '#ffffff',
+      },
+    ],
   ],
   experiments: {
-    typedRoutes: true
-  }
-};
+    typedRoutes: true,
+  },
+}
 
-export default config;
+export default config
