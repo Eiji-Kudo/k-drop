@@ -1,3 +1,4 @@
+import { Tables } from '@/database.types'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
@@ -12,11 +13,7 @@ import { router } from 'expo-router'
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
 
-  const {
-    data: groups,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: groups } = useQuery<Tables<'idol_group'>[]>({
     queryKey: ['idol_groups'],
     queryFn: async () => {
       const { data, error } = await supabase.from('idol_group').select('*')
@@ -24,7 +21,7 @@ export default function GroupSelectionScreen() {
       if (error) {
         throw new Error(error.message)
       }
-      return data
+      return data as Tables<'idol_group'>[]
     },
   })
 
