@@ -13,9 +13,9 @@ import { router } from 'expo-router'
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
 
-  const { data: groups } = useQuery<Tables<'idol_group'>[]>({
+  const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
-    queryFn: async () => {
+    queryFn: async (): Promise<Tables<'idol_group'>[]> => {
       const { data, error } = await supabase.from('idol_group').select('*')
 
       if (error) {
@@ -49,20 +49,22 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.groupsContainer}>
-          {groups?.map((group) => (
-            <SecondaryButton
-              key={group.idol_group_id}
-              onPress={() => handleGroupSelect(group.idol_group_id)}
-              style={[
-                styles.groupButton,
-                selectedGroup === group.idol_group_id && styles.selectedGroupButton,
-              ]}
-            >
-              <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>
-                {group.idol_group_name}
-              </ThemedText>
-            </SecondaryButton>
-          ))}
+          {groups?.map((group) =>
+            group.idol_group_name === '所属なし' ? null : (
+              <SecondaryButton
+                key={group.idol_group_id}
+                onPress={() => handleGroupSelect(group.idol_group_id)}
+                style={[
+                  styles.groupButton,
+                  selectedGroup === group.idol_group_id && styles.selectedGroupButton,
+                ]}
+              >
+                <ThemedText key={`text-${group.idol_group_id}`} style={styles.groupButtonText}>
+                  {group.idol_group_name}
+                </ThemedText>
+              </SecondaryButton>
+            ),
+          )}
         </View>
 
         <View style={styles.actionContainer}>

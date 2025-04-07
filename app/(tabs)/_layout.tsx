@@ -30,28 +30,36 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'ホーム',
-          tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Entypo name="home" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="questions"
         options={{
           title: '問題を解く',
-          tabBarIcon: ({ color }) => <FontAwesome name="pencil-square-o" size={24} color={color} />,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <FontAwesome name="pencil-square-o" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="ranking"
         options={{
           title: 'ランキング',
-          tabBarIcon: ({ color }) => <FontAwesome5 name="chess-king" size={24} color={color} />,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <FontAwesome5 name="chess-king" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'プロフィール',
-          tabBarIcon: ({ color }) => <Ionicons name="person-circle" size={24} color={color} />,
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Ionicons name="person-circle" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>

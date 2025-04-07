@@ -1,0 +1,7 @@
+# Project Development Rules
+
+## Code Quality
+- Run `npm run check:all` after completing tasks
+- Fix all errors before committing
+- ESLint and Prettier must pass with no warnings
+
