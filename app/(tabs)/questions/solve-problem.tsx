@@ -22,6 +22,11 @@ export default function SolveProblemScreen() {
     }
   }
 
+  if (!currentProblem) {
+    router.replace('/questions/result')
+    return null
+  }
+
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -31,11 +36,7 @@ export default function SolveProblemScreen() {
         </View>
 
         <View style={styles.questionContainer}>
-          {currentProblem ? (
-            <ThemedText style={styles.questionText}>{currentProblem.text}</ThemedText>
-          ) : (
-            <ThemedText style={styles.questionText}>問題が見つかりません</ThemedText>
-          )}
+          <ThemedText style={styles.questionText}>{currentProblem.text}</ThemedText>
         </View>
 
         <View style={styles.answerContainer}>
