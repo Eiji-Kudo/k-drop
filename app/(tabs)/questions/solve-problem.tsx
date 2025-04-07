@@ -1,13 +1,25 @@
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
+import { useContext } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
+import { ProblemsContext } from '@/app/(tabs)/questions/_context/ProblemsContext'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 
 export default function SolveProblemScreen() {
+  const { problems } = useContext(ProblemsContext)
+  const { problemId } = useLocalSearchParams()
+  const currentProblemId = Number(problemId) || 1
+  const currentProblem = problems.find((p) => p.id === currentProblemId)
+
   const handleSubmit = () => {
-    router.navigate('/questions/result')
+    const nextProblem = problems.find((p) => p.id === currentProblemId + 1)
+    if (nextProblem) {
+      router.replace(`/questions/solve-problem?problemId=${nextProblem.id}`)
+    } else {
+      router.replace('/questions/result')
+    }
   }
 
   return (
@@ -19,7 +31,11 @@ export default function SolveProblemScreen() {
         </View>
 
         <View style={styles.questionContainer}>
-          <ThemedText style={styles.questionText}>ここに問題文が表示されます</ThemedText>
+          {currentProblem ? (
+            <ThemedText style={styles.questionText}>{currentProblem.text}</ThemedText>
+          ) : (
+            <ThemedText style={styles.questionText}>問題が見つかりません</ThemedText>
+          )}
         </View>
 
         <View style={styles.answerContainer}>
