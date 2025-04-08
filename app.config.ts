@@ -22,14 +22,14 @@ const config: ExpoConfig = {
   newArchEnabled: true,
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.kdrop',
+    bundleIdentifier: 'com.kdrop.app',
   },
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    package: 'com.kdrop',
+    package: 'com.kdrop.app',
   },
   web: {
     bundler: 'metro',
