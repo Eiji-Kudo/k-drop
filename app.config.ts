@@ -17,12 +17,13 @@ const config: ExpoConfig = {
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
-  scheme: 'myapp',
+  scheme: 'k-drop',
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.kdrop.app',
+    googleServicesFile: "./GoogleService-Info.plist",
   },
   android: {
     adaptiveIcon: {
@@ -38,6 +39,16 @@ const config: ExpoConfig = {
   },
   plugins: [
     'expo-router',
+    '@react-native-firebase/app',
+    '@react-native-firebase/auth',
+    [
+      'expo-build-properties',
+      {
+        'ios': {
+          'useFrameworks': 'static'
+        }
+      }
+    ],
     [
       'expo-splash-screen',
       {
