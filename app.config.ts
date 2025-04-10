@@ -30,6 +30,7 @@ const config: ExpoConfig = {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
+    googleServicesFile: './google-services.json',
     package: 'com.kdrop.app',
   },
   web: {

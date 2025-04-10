@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "31667165484",
+    "project_id": "k-drop-5ca11",
+    "storage_bucket": "k-drop-5ca11.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31667165484:android:91f8fc9af7c60235a53489",
+        "android_client_info": {
+          "package_name": "com.kdrop.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31667165484-fu9icifraat052dmo4siub8b5c4iqh48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZi2CBL6cgHxd3eH1lSgroayeepR6cASs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31667165484-fu9icifraat052dmo4siub8b5c4iqh48.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "31667165484-ig8hjup5lt7nkpaf405bq9sr4mrsou6q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kdrop.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
