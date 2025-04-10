@@ -7,7 +7,6 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
-import type { Tables } from '../database.types'
 
 import { useColorScheme } from '@/hooks/useColorScheme'
 import { supabase } from '@/utils/supabase'
@@ -32,18 +31,17 @@ export default function RootLayout() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true)
   const [firebaseUser, setFirebaseUser] = useState<FirebaseAuthTypes.User | null>(null)
-  const [appUser, setAppUser] = useState<Tables<'app_user'> | null>(null)
-
-  // Handle user state changes
-  function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
-    setFirebaseUser(user)
-    if (initializing) setInitializing(false)
-  }
 
   useEffect(() => {
+    // Handle user state changes
+    function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
+      setFirebaseUser(user)
+      if (initializing) setInitializing(false)
+    }
+
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
     return subscriber // unsubscribe on unmount
-  }, [onAuthStateChanged])
+  }, [initializing])
 
   if (initializing) return null
 
