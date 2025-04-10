@@ -23,7 +23,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.kdrop.app',
-    googleServicesFile: "./GoogleService-Info.plist",
+    googleServicesFile: './GoogleService-Info.plist',
   },
   android: {
     adaptiveIcon: {
@@ -44,10 +44,10 @@ const config: ExpoConfig = {
     [
       'expo-build-properties',
       {
-        'ios': {
-          'useFrameworks': 'static'
-        }
-      }
+        ios: {
+          useFrameworks: 'static',
+        },
+      },
     ],
     [
       'expo-splash-screen',
