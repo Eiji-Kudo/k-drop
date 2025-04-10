@@ -47,42 +47,42 @@ export default function RootLayout() {
 
   if (initializing) return null
 
-    auth()
-      .signInAnonymously()
-      .then((userCredential) => {
-        console.log('User signed in anonymously', userCredential.user.uid)
-        const user = userCredential.user
-        
-        // まず既存ユーザーを検索
-        supabase
-          .from('app_user')
-          .select('*')
-          .eq('firebase_uid', user.uid)
-          .then(({ data, error }) => {
-            if (error) {
-              console.error('Failed to check existing user:', error)
-              return
-            }
-            
-            if (data && data.length > 0) {
-              // 既存ユーザーが見つかった場合
-              console.log('User already exists in Supabase')
-              return
-            }
-            
-            // 新規ユーザーの場合のみ挿入
-            supabase
-              .from('app_user')
-              .insert({ firebase_uid: user.uid, line_account_id: user.uid })
-              .then(({ data, error: insertError }) => {
-                if (insertError) {
-                  console.error('Failed to insert user into Supabase:', insertError)
-                } else {
-                  console.log('User registered in Supabase', user.uid)
-                }
-              })
-          })
-      })
+  auth()
+    .signInAnonymously()
+    .then((userCredential) => {
+      console.log('User signed in anonymously', userCredential.user.uid)
+      const user = userCredential.user
+
+      // まず既存ユーザーを検索
+      supabase
+        .from('app_user')
+        .select('*')
+        .eq('firebase_uid', user.uid)
+        .then(({ data, error }) => {
+          if (error) {
+            console.error('Failed to check existing user:', error)
+            return
+          }
+
+          if (data && data.length > 0) {
+            // 既存ユーザーが見つかった場合
+            console.log('User already exists in Supabase')
+            return
+          }
+
+          // 新規ユーザーの場合のみ挿入
+          supabase
+            .from('app_user')
+            .insert({ firebase_uid: user.uid, line_account_id: user.uid })
+            .then(({ data, error: insertError }) => {
+              if (insertError) {
+                console.error('Failed to insert user into Supabase:', insertError)
+              } else {
+                console.log('User registered in Supabase', user.uid)
+              }
+            })
+        })
+    })
     .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
       if (error.code === 'auth/operation-not-allowed') {
         console.log('Enable anonymous in your firebase console.')
