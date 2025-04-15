@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import 'react-native-reanimated'
 
 import { useColorScheme } from '@/hooks/useColorScheme'
+import { supabase } from '@/utils/supabase'
 
 const queryClient = new QueryClient()
 
@@ -25,6 +26,22 @@ export default function RootLayout() {
       SplashScreen.hideAsync()
     }
   }, [loaded])
+
+  async function signUpNewUser() {
+    const { data, error } = await supabase.auth.signUp({
+      email: 'valid.email@supabase.io',
+      password: 'example-password',
+      options: {
+        emailRedirectTo: 'https://example.com/welcome',
+      },
+    })
+
+    if (error) {
+      throw new Error(`Signup failed: ${error.message}`)
+    }
+
+    return data
+  }
 
   if (!loaded) {
     return null
