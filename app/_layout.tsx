@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import 'react-native-reanimated'
+import * as SecureStore from 'expo-secure-store'
 
 import { useColorScheme } from '@/hooks/useColorScheme'
 import { supabase } from '@/utils/supabase'
@@ -40,26 +41,35 @@ export default function RootLayout() {
   }, [fontsLoaded])
 
   async function signUpNewUser() {
+    const email = 'valid.email@supabase.io';
+    const password = 'example-password';
+    
     const { data, error } = await supabase.auth.signUp({
-      email: 'valid.email@supabase.io',
-      password: 'example-password',
+      email,
+      password,
       options: {
         emailRedirectTo: 'https://example.com/welcome',
       },
-    })
+    });
 
     if (error) {
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: 'valid.email@supabase.io',
-        password: 'example-password',
+        email,
+        password,
       });
       if (signInError) {
         throw new Error(`Signup failed: ${error.message} and sign in failed: ${signInError.message}`);
       }
+      // Save credentials securely
+      await SecureStore.setItemAsync('email', email);
+      await SecureStore.setItemAsync('password', password);
       return signInData;
     }
 
-    return data
+    // Save credentials securely
+    await SecureStore.setItemAsync('email', email);
+    await SecureStore.setItemAsync('password', password);
+    return data;
   }
 
   if (!fontsLoaded) {
