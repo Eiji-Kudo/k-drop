@@ -6,10 +6,9 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import 'react-native-reanimated'
-import * as SecureStore from 'expo-secure-store'
 
+import { useAuth } from '@/hooks/useAuth'
 import { useColorScheme } from '@/hooks/useColorScheme'
-import { supabase } from '@/utils/supabase'
 
 const queryClient = new QueryClient()
 
@@ -20,79 +19,26 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   })
+  const { signUpNewUser } = useAuth()
 
   useEffect(() => {
     async function initializeApp() {
       try {
-        const data = await signUpNewUser();
-        console.log('Sign up success:', data.user?.email);
+        const data = await signUpNewUser()
+        console.log('Sign up success:', data.user?.email)
       } catch (error) {
-        console.error('Sign up error:', error);
+        console.error('Sign up error:', error)
       }
       try {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
     if (fontsLoaded) {
-      initializeApp();
+      initializeApp()
     }
-  }, [fontsLoaded])
-
-  async function signUpNewUser() {
-    // Try to retrieve stored credentials
-    const storedEmail = await SecureStore.getItemAsync('email');
-    const storedPassword = await SecureStore.getItemAsync('password');
-
-    if (storedEmail && storedPassword) {
-      // Attempt to sign in with stored credentials
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: storedEmail,
-        password: storedPassword,
-      });
-      if (!signInError && signInData) {
-        console.log('Sign in success with stored credentials');
-        return signInData;
-      } else {
-        console.log('Stored credentials sign in failed, proceeding to sign up');
-      }
-    } else {
-      console.log('No stored credentials found, proceeding to sign up');
-    }
-
-    // Use default credentials for sign up
-    const email = 'valid.email@supabase.io';
-    const password = 'example-password';
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: 'https://example.com/welcome',
-      },
-    });
-
-    if (error) {
-      // If sign up fails, try signing in with the default credentials
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (signInError) {
-        throw new Error(`Sign up failed: ${error.message} and sign in failed: ${signInError.message}`);
-      }
-      // Save the default credentials securely
-      await SecureStore.setItemAsync('email', email);
-      await SecureStore.setItemAsync('password', password);
-      return signInData;
-    }
-
-    // Save the default credentials securely
-    await SecureStore.setItemAsync('email', email);
-    await SecureStore.setItemAsync('password', password);
-    return data;
-  }
+  }, [fontsLoaded, signUpNewUser])
 
   if (!fontsLoaded) {
     return null
