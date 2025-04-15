@@ -26,6 +26,14 @@ export function useAuth() {
     })
   }
 
+  function generateRandomCredentials() {
+    const timestamp = Math.floor(Date.now() / 1000)
+    const randomValue = Math.floor(Math.random() * 10000)
+    const email = `${timestamp}${randomValue}@anonymous.user`
+    const password = `password_${timestamp}${randomValue}`
+    return { email, password }
+  }
+
   async function signUpNewUser() {
     const storedEmail = await SecureStore.getItemAsync('email')
     const storedPassword = await SecureStore.getItemAsync('password')
@@ -40,20 +48,21 @@ export function useAuth() {
       console.log('No stored credentials found, proceeding to sign up')
     }
 
-    const defaultEmail = 'valid.email@supabase.io'
-    const defaultPassword = 'example-password'
-    const { data, error } = await signUp(defaultEmail, defaultPassword)
+    const { email, password } = generateRandomCredentials()
+    const { data, error } = await signUp(email, password)
 
     if (error) {
-      const { data: signInData, error: signInError } = await signIn(defaultEmail, defaultPassword)
+      const { data: signInData, error: signInError } = await signIn(email, password)
       if (signInError) {
-        throw new Error(`Sign up failed: ${error.message} and sign in failed: ${signInError.message}`)
+        throw new Error(
+          `Sign up failed: ${error.message} and sign in failed: ${signInError.message}`,
+        )
       }
-      await storeCredentials(defaultEmail, defaultPassword)
+      await storeCredentials(email, password)
       return signInData
     }
 
-    await storeCredentials(defaultEmail, defaultPassword)
+    await storeCredentials(email, password)
     return data
   }
 
