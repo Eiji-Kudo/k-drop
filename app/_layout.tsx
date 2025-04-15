@@ -49,7 +49,14 @@ export default function RootLayout() {
     })
 
     if (error) {
-      throw new Error(`Signup failed: ${error.message}`)
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: 'valid.email@supabase.io',
+        password: 'example-password',
+      });
+      if (signInError) {
+        throw new Error(`Signup failed: ${error.message} and sign in failed: ${signInError.message}`);
+      }
+      return signInData;
     }
 
     return data
