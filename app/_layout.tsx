@@ -12,20 +12,32 @@ import { supabase } from '@/utils/supabase'
 
 const queryClient = new QueryClient()
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const colorScheme = useColorScheme()
-  const [loaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   })
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync()
+    async function initializeApp() {
+      try {
+        const data = await signUpNewUser();
+        console.log('Sign up success:', data);
+      } catch (error) {
+        console.error('Sign up error:', error);
+      }
+      try {
+        await SplashScreen.hideAsync();
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, [loaded])
+    if (fontsLoaded) {
+      initializeApp();
+    }
+  }, [fontsLoaded])
 
   async function signUpNewUser() {
     const { data, error } = await supabase.auth.signUp({
@@ -43,7 +55,7 @@ export default function RootLayout() {
     return data
   }
 
-  if (!loaded) {
+  if (!fontsLoaded) {
     return null
   }
 
