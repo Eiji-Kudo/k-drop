@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useColorScheme } from '@/hooks/useColorScheme'
 const queryClient = new QueryClient()
 
+// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
