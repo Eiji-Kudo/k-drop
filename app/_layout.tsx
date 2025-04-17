@@ -9,7 +9,6 @@ import 'react-native-reanimated'
 
 import { useAuth } from '@/hooks/useAuth'
 import { useColorScheme } from '@/hooks/useColorScheme'
-
 const queryClient = new QueryClient()
 
 SplashScreen.preventAutoHideAsync()
@@ -25,7 +24,7 @@ export default function RootLayout() {
     async function initializeApp() {
       try {
         const data = await signUpNewUser()
-        console.log('Sign up success:', data.user?.email)
+        console.log('Sign up success:', data)
       } catch (error) {
         console.error('Sign up error:', error)
       }
