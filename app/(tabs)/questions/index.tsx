@@ -17,11 +17,23 @@ export default function GroupSelectionScreen() {
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
-      const { data, error } = await supabase.auth.getUser()
-      console.log(data)
+      const { data } = await supabase.auth.getUser()
       return data.user
     },
   })
+
+  console.log(user?.id)
+
+  // userが解いた問題
+  const { data: userQuizAnswer } = useQuery({
+    queryKey: ['user_quiz_answer'],
+    queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
+      const { data, error } = await supabase.from('user_quiz_answer').select('*')
+      return data as Tables<'user_quiz_answer'>[]
+    },
+  })
+
+  // 選択したgroupの問題
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
