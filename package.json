@@ -15,7 +15,7 @@
     "lint-fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check:all": "npm run test && npm run test:types && npm run lint && npm run format:check",
+    "check:all": "npx jest && npm run test:types && npm run lint && npm run format:check",
     "gen-types": "npx supabase gen types typescript --local > database.types.ts && npm run lint-fix"
   },
   "jest": {
