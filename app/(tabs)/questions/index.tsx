@@ -15,7 +15,7 @@ import { useGlobalContext } from '@/app/_context/GlobalContext'
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
   const { setSelectedQuizQuestions } = useGlobalContext()
-  
+
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
