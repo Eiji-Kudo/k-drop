@@ -38,22 +38,25 @@ export default function GroupSelectionScreen() {
     queryKey: ['quiz_question', selectedGroup],
     queryFn: async (): Promise<Tables<'quiz_question'>[]> => {
       if (!selectedGroup) return []
-      
+
       const { data, error } = await supabase
         .from('quiz_question')
         .select('*')
         .eq('idol_group_id', selectedGroup)
-      
+
       if (error) {
         throw new Error(error.message)
       }
-      
+
       return data as Tables<'quiz_question'>[]
     },
     enabled: !!selectedGroup,
   })
 
-  console.log('quizQuestion', quizQuestions?.map((question) => question.idol_group_id))
+  const selectedGroupQuizQuestions = quizQuestions?.map((question) => question.quiz_question_id)
+
+  console.log('selectedGroupQuizQuestions', selectedGroupQuizQuestions)
+
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
     queryFn: async (): Promise<Tables<'idol_group'>[]> => {
