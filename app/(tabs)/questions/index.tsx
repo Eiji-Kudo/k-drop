@@ -14,6 +14,8 @@ import { router } from 'expo-router'
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
 
+  console.log('selectedGroup', selectedGroup)
+
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
@@ -21,8 +23,6 @@ export default function GroupSelectionScreen() {
       return data.user
     },
   })
-
-  console.log(user?.id)
 
   // userが解いた問題
   const { data: userQuizAnswer } = useQuery({
@@ -34,7 +34,26 @@ export default function GroupSelectionScreen() {
   })
 
   // 選択したgroupの問題
+  const { data: quizQuestions } = useQuery({
+    queryKey: ['quiz_question', selectedGroup],
+    queryFn: async (): Promise<Tables<'quiz_question'>[]> => {
+      if (!selectedGroup) return []
+      
+      const { data, error } = await supabase
+        .from('quiz_question')
+        .select('*')
+        .eq('idol_group_id', selectedGroup)
+      
+      if (error) {
+        throw new Error(error.message)
+      }
+      
+      return data as Tables<'quiz_question'>[]
+    },
+    enabled: !!selectedGroup,
+  })
 
+  console.log('quizQuestion', quizQuestions?.map((question) => question.idol_group_id))
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
     queryFn: async (): Promise<Tables<'idol_group'>[]> => {
@@ -43,7 +62,7 @@ export default function GroupSelectionScreen() {
       if (error) {
         throw new Error(error.message)
       }
-      return data as Tables<'idol_group'>[]
+      return data
     },
   })
 
