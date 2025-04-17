@@ -1,7 +1,7 @@
 import { ExpoConfig } from 'expo/config'
 
-const supabaseUrl = process.env.REACT_NATIVE_SUPABASE_URL
-const supabaseAnonKey = process.env.REACT_NATIVE_SUPABASE_ANON_KEY
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Supabase URL and anon key must be provided in environment variables')
