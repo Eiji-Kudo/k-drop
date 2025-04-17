@@ -24,8 +24,7 @@ export default function RootLayout() {
   useEffect(() => {
     async function initializeApp() {
       try {
-        const data = await signUpNewUser()
-        console.log('Sign up success:', data)
+        await signUpNewUser()
       } catch (error) {
         console.error('Sign up error:', error)
       }

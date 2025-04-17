@@ -8,10 +8,20 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
 import { Colors } from '@/constants/Colors'
 import { supabase } from '@/utils/supabase'
+import { User } from '@supabase/supabase-js'
 import { router } from 'expo-router'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
+
+  const { data: user } = useQuery({
+    queryKey: ['user'],
+    queryFn: async (): Promise<User | null> => {
+      const { data, error } = await supabase.auth.getUser()
+      console.log(data)
+      return data.user
+    },
+  })
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
