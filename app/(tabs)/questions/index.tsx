@@ -1,6 +1,6 @@
 import { Tables } from '@/database.types'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
@@ -10,12 +10,12 @@ import { Colors } from '@/constants/Colors'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
 import { router } from 'expo-router'
+import { useGlobalContext } from '@/app/_context/GlobalContext'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
-
-  console.log('selectedGroup', selectedGroup)
-
+  const { setSelectedQuizQuestions } = useGlobalContext()
+  
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
@@ -55,7 +55,11 @@ export default function GroupSelectionScreen() {
 
   const selectedGroupQuizQuestions = quizQuestions?.map((question) => question.quiz_question_id)
 
-  console.log('selectedGroupQuizQuestions', selectedGroupQuizQuestions)
+  useEffect(() => {
+    if (selectedGroupQuizQuestions) {
+      setSelectedQuizQuestions(selectedGroupQuizQuestions)
+    }
+  }, [selectedGroupQuizQuestions])
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],

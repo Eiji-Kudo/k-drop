@@ -1,31 +1,32 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react'
+import { createContext, ReactNode, useContext, useState } from 'react'
 
 type GlobalContextType = {
-  user: {
-    id: string
-    name: string
-    level: number
-  } | null
   themeMode: 'light' | 'dark' | 'system'
   setThemeMode: (mode: 'light' | 'dark' | 'system') => void
+  selectedQuizQuestions: number[]
+  setSelectedQuizQuestions: (questions: number[]) => void
 }
 
 const GlobalContext = createContext<GlobalContextType>({
-  user: null,
   themeMode: 'system',
   setThemeMode: () => {},
+  selectedQuizQuestions: [],
+  setSelectedQuizQuestions: () => {},
 })
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [themeMode, setThemeMode] = useState<GlobalContextType['themeMode']>('system')
-  const [user] = useState<GlobalContextType['user']>({
-    id: 'user_123',
-    name: 'Guest',
-    level: 1,
-  })
+  const [selectedQuizQuestions, setSelectedQuizQuestions] = useState<number[]>([])
 
   return (
-    <GlobalContext.Provider value={{ user, themeMode, setThemeMode }}>
+    <GlobalContext.Provider
+      value={{
+        themeMode,
+        setThemeMode,
+        selectedQuizQuestions,
+        setSelectedQuizQuestions,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   )
