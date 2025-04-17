@@ -27,4 +27,4 @@ K Dropは、KPOPのオタク向けクイズアプリです。問題を解いた�
 - **Supabase ローカル起動**: `npx supabase start`
 - **ローカル Supabase インスタンス**: http://localhost:54323
 
-- 止める時　`npx supabase stop --no-backup`
+- 止める時は `npx supabase stop --no-backup`
