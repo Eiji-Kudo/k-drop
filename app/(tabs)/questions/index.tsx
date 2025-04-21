@@ -5,8 +5,8 @@ import { SafeAreaView, ScrollView, View } from 'react-native'
 import { useGlobalContext } from '@/app/_context/GlobalContext'
 import { useSetQuizQuestionsFromSelectedGroup } from '@/app/features/solve-problems/hooks/useGroupSelection'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
-import { GroupButton } from './GroupButton'
-import { GroupSelectionHeader } from './GroupSelectionHeader'
+import { GroupButton } from '@/app/features/solve-problems/components/GroupButton'
+import { GroupSelectionHeader } from '@/app/features/solve-problems/components/GroupSelectionHeader'
 import { styles } from './_styles'
 
 export default function GroupSelectionScreen() {

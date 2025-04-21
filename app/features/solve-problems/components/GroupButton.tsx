@@ -1,6 +1,7 @@
 import { ThemedText } from '@/components/ThemedText'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
-import { styles } from './_styles'
+import { Colors } from '@/constants/Colors'
+import { StyleSheet } from 'react-native'
 
 type GroupButtonProps = {
   group: {
@@ -21,3 +22,18 @@ export function GroupButton({ group, isSelected, onPress }: GroupButtonProps) {
     </SecondaryButton>
   )
 }
+
+const styles = StyleSheet.create({
+  groupButton: {
+    backgroundColor: Colors.secondary,
+    paddingVertical: 16,
+  },
+  groupButtonText: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  selectedGroupButton: {
+    borderColor: Colors.primary,
+    borderWidth: 2,
+  },
+})

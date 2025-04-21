@@ -1,6 +1,5 @@
 import { ThemedText } from '@/components/ThemedText'
-import { View } from 'react-native'
-import { styles } from './_styles'
+import { StyleSheet, View } from 'react-native'
 
 export function GroupSelectionHeader() {
   return (
@@ -10,3 +9,10 @@ export function GroupSelectionHeader() {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    alignItems: 'center',
+    gap: 8,
+  },
+})
