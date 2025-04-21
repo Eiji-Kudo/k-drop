@@ -9,27 +9,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
   },
-  groupButton: {
-    backgroundColor: Colors.secondary,
-    paddingVertical: 16,
-  },
-  groupButtonText: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
   groupsContainer: {
     gap: 12,
-  },
-  headerContainer: {
-    alignItems: 'center',
-    gap: 8,
   },
   safeAreaView: {
     flex: 1,
     gap: 24,
-  },
-  selectedGroupButton: {
-    borderColor: Colors.primary,
-    borderWidth: 2,
   },
 })
