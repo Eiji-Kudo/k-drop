@@ -53,8 +53,4 @@ export function useSetQuizQuestionsFromSelectedGroup(
       setSelectedQuizQuestions(unsolvedQuizzes)
     }
   }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
-
-  return {
-    solvedQuizIds,
-  }
 }
