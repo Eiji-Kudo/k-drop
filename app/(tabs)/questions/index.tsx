@@ -7,7 +7,7 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { GroupButton } from './GroupButton'
 import { GroupSelectionHeader } from './GroupSelectionHeader'
 import { styles } from './styles'
-import { useSetQuizQuestionsFromSelectedGroup } from './use-group-selection'
+import { useSetQuizQuestionsFromSelectedGroup } from '@/app/features/solve-questions/hooks/useGroupSelection'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
