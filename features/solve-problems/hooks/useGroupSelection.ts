@@ -8,6 +8,7 @@ export function useSetQuizQuestionsFromSelectedGroup(
   selectedQuizQuestions: number[] = [],
   setSelectedQuizQuestions?: (quizIds: number[]) => void,
 ) {
+  // ユーザー情報を取得
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
@@ -16,6 +17,7 @@ export function useSetQuizQuestionsFromSelectedGroup(
     },
   })
 
+  // ユーザーのクイズ回答を取得
   const { data: userQuizAnswer } = useQuery({
     queryKey: ['user_quiz_answer', user?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
@@ -30,6 +32,7 @@ export function useSetQuizQuestionsFromSelectedGroup(
     enabled: !!user,
   })
 
+  // アイドルグループを取得
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
     queryFn: async (): Promise<Tables<'idol_group'>[]> => {
@@ -44,17 +47,18 @@ export function useSetQuizQuestionsFromSelectedGroup(
     [userQuizAnswer],
   )
 
+  // 未解答のクイズだけを選択状態に保つ
   useEffect(() => {
     if (!setSelectedQuizQuestions) return
 
-    const filtered = selectedQuizQuestions.filter((id: number) => !solvedQuizIds.includes(id))
+    const unsolvedQuizzes = selectedQuizQuestions.filter((id: number) => !solvedQuizIds.includes(id))
 
-    const isSame =
-      filtered.length === selectedQuizQuestions.length &&
-      filtered.every((v: number, i: number) => v === selectedQuizQuestions[i])
+    const isSelectionUnchanged =
+      unsolvedQuizzes.length === selectedQuizQuestions.length &&
+      unsolvedQuizzes.every((v: number, i: number) => v === selectedQuizQuestions[i])
 
-    if (!isSame) {
-      setSelectedQuizQuestions(filtered)
+    if (!isSelectionUnchanged) {
+      setSelectedQuizQuestions(unsolvedQuizzes)
     }
   }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
 
