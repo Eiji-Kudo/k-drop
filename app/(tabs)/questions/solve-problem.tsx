@@ -5,7 +5,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
-import { ProblemsContext } from '@/context/ProblemsContext'
+import { ProblemsContext } from '@/features/solve-problems/context/ProblemsContext'
 
 export default function SolveProblemScreen() {
   const { problems } = useContext(ProblemsContext)
