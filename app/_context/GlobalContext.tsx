@@ -15,11 +15,8 @@ const GlobalContext = createContext<GlobalContextType>({
 })
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
-  const [themeMode, setThemeMode] =
-    useState<GlobalContextType['themeMode']>('system')
-  const [selectedQuizQuestions, setSelectedQuizQuestions] = useState<number[]>(
-    []
-  )
+  const [themeMode, setThemeMode] = useState<GlobalContextType['themeMode']>('system')
+  const [selectedQuizQuestions, setSelectedQuizQuestions] = useState<number[]>([])
 
   return (
     <GlobalContext.Provider
