@@ -8,7 +8,6 @@ export function useSetQuizQuestionsFromSelectedGroup(
   selectedQuizQuestions: number[] = [],
   setSelectedQuizQuestions?: (quizIds: number[]) => void,
 ) {
-  // ユーザー情報を取得
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
