@@ -50,6 +50,7 @@ export function useSetQuizQuestionsFromSelectedGroup(
   useEffect(() => {
     if (!setSelectedQuizQuestions) return
 
+    // 選択されたクイズのうち、解いたクイズを除外
     const unsolvedQuizzes = selectedQuizQuestions.filter((id: number) => !solvedQuizIds.includes(id))
 
     const isSelectionUnchanged =
