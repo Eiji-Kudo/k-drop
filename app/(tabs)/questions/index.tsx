@@ -1,5 +1,5 @@
 import { router } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { SafeAreaView, ScrollView, View } from 'react-native'
 
 import { useGlobalContext } from '@/app/_context/GlobalContext'
@@ -7,17 +7,15 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { GroupButton } from './GroupButton'
 import { GroupSelectionHeader } from './GroupSelectionHeader'
 import { styles } from './styles'
-import { useGroupSelectionData } from './use-group-selection'
+import { useSetQuizQuestionsFromSelectedGroup } from './use-group-selection'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
   const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
-  const { groups, solvedQuizIds } = useGroupSelectionData(selectedGroup)
-
-  useEffect(() => {
-    const filteredQuizQuestions = selectedQuizQuestions.filter((id) => !solvedQuizIds.includes(id))
-    setSelectedQuizQuestions(filteredQuizQuestions)
-  }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
+  const { groups } = useSetQuizQuestionsFromSelectedGroup(
+    selectedQuizQuestions,
+    setSelectedQuizQuestions,
+  )
 
   const handleGroupSelect = (groupId: number) => setSelectedGroup(groupId)
 

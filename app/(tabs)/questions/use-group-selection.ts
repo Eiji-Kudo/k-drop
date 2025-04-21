@@ -2,9 +2,12 @@ import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
 import { useQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
-export function useGroupSelectionData(selectedGroup: number | null) {
+export function useSetQuizQuestionsFromSelectedGroup(
+  selectedQuizQuestions: number[] = [],
+  setSelectedQuizQuestions?: (quizIds: number[]) => void,
+) {
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
@@ -27,20 +30,6 @@ export function useGroupSelectionData(selectedGroup: number | null) {
     enabled: !!user,
   })
 
-  const { data: quizQuestions } = useQuery({
-    queryKey: ['quiz_question', selectedGroup],
-    queryFn: async (): Promise<Tables<'quiz_question'>[]> => {
-      if (!selectedGroup) return []
-      const { data, error } = await supabase
-        .from('quiz_question')
-        .select('*')
-        .eq('idol_group_id', selectedGroup)
-      if (error) throw new Error(error.message)
-      return data as Tables<'quiz_question'>[]
-    },
-    enabled: !!selectedGroup,
-  })
-
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
     queryFn: async (): Promise<Tables<'idol_group'>[]> => {
@@ -55,19 +44,17 @@ export function useGroupSelectionData(selectedGroup: number | null) {
     [userQuizAnswer],
   )
 
-  const selectedGroupQuizQuestions = useMemo(
-    () =>
-      quizQuestions?.map((q) => q.quiz_question_id).filter((id) => !solvedQuizIds.includes(id)) ??
-      [],
-    [quizQuestions, solvedQuizIds],
-  )
+  useEffect(() => {
+    if (setSelectedQuizQuestions) {
+      const filteredQuizQuestions = selectedQuizQuestions.filter(
+        (id) => !solvedQuizIds.includes(id),
+      )
+      setSelectedQuizQuestions(filteredQuizQuestions)
+    }
+  }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
 
   return {
-    user,
-    userQuizAnswer,
-    quizQuestions,
     groups,
     solvedQuizIds,
-    selectedGroupQuizQuestions,
   }
 }
