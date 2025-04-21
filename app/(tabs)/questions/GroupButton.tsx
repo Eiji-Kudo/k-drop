@@ -1,6 +1,6 @@
 import { ThemedText } from '@/components/ThemedText'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
-import { styles } from './styles'
+import { styles } from './_styles'
 
 type GroupButtonProps = {
   group: {

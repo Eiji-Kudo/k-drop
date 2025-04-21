@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { SafeAreaView, ScrollView, View } from 'react-native'
 
 import { useGlobalContext } from '@/app/_context/GlobalContext'
+import { useSetQuizQuestionsFromSelectedGroup } from '@/app/features/solve-problems/hooks/useGroupSelection'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { GroupButton } from './GroupButton'
 import { GroupSelectionHeader } from './GroupSelectionHeader'
-import { styles } from './styles'
-import { useSetQuizQuestionsFromSelectedGroup } from '@/app/features/solve-questions/hooks/useGroupSelection'
+import { styles } from './_styles'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
