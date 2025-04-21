@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { SafeAreaView, ScrollView, View } from 'react-native'
 
 import { useGlobalContext } from '@/app/_context/GlobalContext'
-import { useSetQuizQuestionsFromSelectedGroup } from '@/app/features/solve-problems/hooks/useGroupSelection'
+import { useSetQuizQuestionsFromSelectedGroup } from '@/features/solve-problems/hooks/useGroupSelection'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
-import { GroupButton } from '@/app/features/solve-problems/components/GroupButton'
-import { GroupSelectionHeader } from '@/app/features/solve-problems/components/GroupSelectionHeader'
+import { GroupButton } from '@/features/solve-problems/components/GroupButton'
+import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
 import { styles } from './_styles'
 
 export default function GroupSelectionScreen() {

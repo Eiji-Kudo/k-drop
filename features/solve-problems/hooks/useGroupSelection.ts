@@ -58,3 +58,6 @@ export function useSetQuizQuestionsFromSelectedGroup(
     solvedQuizIds,
   }
 }
+
+// デフォルトエクスポートとして関数を追加
+export default useSetQuizQuestionsFromSelectedGroup
