@@ -45,11 +45,16 @@ export function useSetQuizQuestionsFromSelectedGroup(
   )
 
   useEffect(() => {
-    if (setSelectedQuizQuestions) {
-      const filteredQuizQuestions = selectedQuizQuestions.filter(
-        (id) => !solvedQuizIds.includes(id),
-      )
-      setSelectedQuizQuestions(filteredQuizQuestions)
+    if (!setSelectedQuizQuestions) return
+
+    const filtered = selectedQuizQuestions.filter((id: number) => !solvedQuizIds.includes(id))
+
+    const isSame =
+      filtered.length === selectedQuizQuestions.length &&
+      filtered.every((v: number, i: number) => v === selectedQuizQuestions[i])
+
+    if (!isSame) {
+      setSelectedQuizQuestions(filtered)
     }
   }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
 
@@ -58,6 +63,3 @@ export function useSetQuizQuestionsFromSelectedGroup(
     solvedQuizIds,
   }
 }
-
-// デフォルトエクスポートとして関数を追加
-export default useSetQuizQuestionsFromSelectedGroup
