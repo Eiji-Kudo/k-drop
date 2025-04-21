@@ -1,4 +1,4 @@
-import { useGlobalContext } from '@/app/context/GlobalContext'
+import { useGlobalContext } from '@/context/GlobalContext'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 import { Tables } from '@/database.types'

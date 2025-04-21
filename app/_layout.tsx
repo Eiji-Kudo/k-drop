@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import 'react-native-reanimated'
 
-import { GlobalProvider } from '@/app/context/GlobalContext'
+import { GlobalProvider } from '@/context/GlobalContext'
 import { useAuth } from '@/hooks/useAuth'
 import { useColorScheme } from '@/hooks/useColorScheme'
 const queryClient = new QueryClient()
