@@ -16,7 +16,6 @@ export default function GroupSelectionScreen() {
   const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
   useSetQuizQuestionsFromSelectedGroup(selectedQuizQuestions, setSelectedQuizQuestions)
 
-  // アイドルグループを取得
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
     queryFn: async (): Promise<Tables<'idol_group'>[]> => {
