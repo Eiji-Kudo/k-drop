@@ -1,15 +1,15 @@
-import { router } from 'expo-router'
-import { useState } from 'react'
-import { SafeAreaView, ScrollView, View, StyleSheet } from 'react-native'
-import { useGlobalContext } from '@/app/_context/GlobalContext'
-import { useSetQuizQuestionsFromSelectedGroup } from '@/features/solve-problems/hooks/useSetQuizQuestionsFromSelectedGroup'
+import { useGlobalContext } from '@/app/context/GlobalContext'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
+import { Colors } from '@/constants/Colors'
+import { Tables } from '@/database.types'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
-import { Colors } from '@/constants/Colors'
-import { useQuery } from '@tanstack/react-query'
-import { Tables } from '@/database.types'
+import { useSetQuizQuestionsFromSelectedGroup } from '@/features/solve-problems/hooks/useSetQuizQuestionsFromSelectedGroup'
 import { supabase } from '@/utils/supabase'
+import { useQuery } from '@tanstack/react-query'
+import { router } from 'expo-router'
+import { useState } from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
