@@ -1,13 +1,12 @@
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { SafeAreaView, ScrollView, View } from 'react-native'
-
+import { SafeAreaView, ScrollView, View, StyleSheet } from 'react-native'
 import { useGlobalContext } from '@/app/_context/GlobalContext'
 import { useSetQuizQuestionsFromSelectedGroup } from '@/features/solve-problems/hooks/useGroupSelection'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
-import { styles } from './_styles'
+import { Colors } from '@/constants/Colors'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
@@ -55,3 +54,20 @@ export default function GroupSelectionScreen() {
     </ScrollView>
   )
 }
+
+const styles = StyleSheet.create({
+  actionContainer: { marginTop: 16 },
+  container: {
+    backgroundColor: Colors.background,
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  groupsContainer: {
+    gap: 12,
+  },
+  safeAreaView: {
+    flex: 1,
+    gap: 24,
+  },
+})
