@@ -24,16 +24,20 @@ export default function GroupSelectionScreen() {
     },
   })
 
-  // userが解いた問題
   const { data: userQuizAnswer } = useQuery({
-    queryKey: ['user_quiz_answer'],
+    queryKey: ['user_quiz_answer', user?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
-      const { data } = await supabase.from('user_quiz_answer').select('*')
+      if (!user) return []
+      const { data, error } = await supabase
+        .from('user_quiz_answer')
+        .select('*')
+        .eq('user_id', user.id)
+      if (error) throw new Error(error.message)
       return data as Tables<'user_quiz_answer'>[]
     },
+    enabled: !!user,
   })
 
-  // 選択したgroupの問題
   const { data: quizQuestions } = useQuery({
     queryKey: ['quiz_question', selectedGroup],
     queryFn: async (): Promise<Tables<'quiz_question'>[]> => {
@@ -48,14 +52,25 @@ export default function GroupSelectionScreen() {
     enabled: !!selectedGroup,
   })
 
+  const solvedQuizIds = useMemo(
+    () => userQuizAnswer?.map((a) => a.quiz_question_id) ?? [],
+    [userQuizAnswer],
+  )
+
   const selectedGroupQuizQuestions = useMemo(
-    () => quizQuestions?.map((q) => q.quiz_question_id) ?? [],
-    [quizQuestions],
+    () =>
+      quizQuestions?.map((q) => q.quiz_question_id).filter((id) => !solvedQuizIds.includes(id)) ??
+      [],
+    [quizQuestions, solvedQuizIds],
   )
 
   useEffect(() => {
     setSelectedQuizQuestions(selectedGroupQuizQuestions)
   }, [selectedGroupQuizQuestions, setSelectedQuizQuestions])
+
+  useEffect(() => {
+    console.log('solved quizzes:', solvedQuizIds)
+  }, [solvedQuizIds])
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
