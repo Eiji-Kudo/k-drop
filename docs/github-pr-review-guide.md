@@ -16,26 +16,11 @@ git diff main > docs/pr-diff.md
 
 ## 3. PR説明文を作成
 
-`.github/pull_request_template.md` に従って説明文を作成:
+`.github/pull_request_template.md` に従って説明文を作成
 
-```markdown
-# [簡潔なタイトル]
+## 4. 後片付け
 
-## 関連Issue
-- 
-
-## 関連PR
-- 
-
-## 変更点
-- 
-
-## 動作確認事項
-- 
+```bash
+# 差分ファイルを削除
+rm docs/pr-diff.md
 ```
-
-## 4. レビュー実施
-
-1. コード変更を確認
-2. 機能テストを実施
-3. コメントを追加
