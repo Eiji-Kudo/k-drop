@@ -14,7 +14,7 @@ import { useGlobalContext } from '@/app/_context/GlobalContext'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
-  const { setSelectedQuizQuestions } = useGlobalContext()
+  const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
 
   const { data: user } = useQuery({
     queryKey: ['user'],
@@ -69,8 +69,8 @@ export default function GroupSelectionScreen() {
   }, [selectedGroupQuizQuestions, setSelectedQuizQuestions])
 
   useEffect(() => {
-    console.log('solved quizzes:', solvedQuizIds)
-  }, [solvedQuizIds])
+    setSelectedQuizQuestions(selectedQuizQuestions.filter((id) => !solvedQuizIds.includes(id)))
+  }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
