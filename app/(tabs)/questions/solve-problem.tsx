@@ -2,10 +2,10 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { useContext } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
-import { ProblemsContext } from '@/app/(tabs)/questions/_context/ProblemsContext'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
+import { ProblemsContext } from '@/context/ProblemsContext'
 
 export default function SolveProblemScreen() {
   const { problems } = useContext(ProblemsContext)

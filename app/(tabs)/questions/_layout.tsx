@@ -1,4 +1,4 @@
-import { ProblemsProvider } from '@/app/(tabs)/questions/_context/ProblemsContext'
+import { ProblemsProvider } from '@/context/ProblemsContext'
 import { Stack } from 'expo-router'
 
 export default function TabLayout() {
