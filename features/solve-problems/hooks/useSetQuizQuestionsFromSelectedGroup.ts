@@ -31,16 +31,6 @@ export function useSetQuizQuestionsFromSelectedGroup(
     enabled: !!user,
   })
 
-  // アイドルグループを取得
-  const { data: groups } = useQuery({
-    queryKey: ['idol_groups'],
-    queryFn: async (): Promise<Tables<'idol_group'>[]> => {
-      const { data, error } = await supabase.from('idol_group').select('*')
-      if (error) throw new Error(error.message)
-      return data as Tables<'idol_group'>[]
-    },
-  })
-
   const solvedQuizIds = useMemo(
     () => userQuizAnswer?.map((a) => a.quiz_question_id) ?? [],
     [userQuizAnswer],
@@ -65,7 +55,6 @@ export function useSetQuizQuestionsFromSelectedGroup(
   }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
 
   return {
-    groups,
     solvedQuizIds,
   }
 }

@@ -7,14 +7,24 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
 import { Colors } from '@/constants/Colors'
+import { useQuery } from '@tanstack/react-query'
+import { Tables } from '@/database.types'
+import { supabase } from '@/utils/supabase'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
   const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
-  const { groups } = useSetQuizQuestionsFromSelectedGroup(
-    selectedQuizQuestions,
-    setSelectedQuizQuestions,
-  )
+  useSetQuizQuestionsFromSelectedGroup(selectedQuizQuestions, setSelectedQuizQuestions)
+
+  // アイドルグループを取得
+  const { data: groups } = useQuery({
+    queryKey: ['idol_groups'],
+    queryFn: async (): Promise<Tables<'idol_group'>[]> => {
+      const { data, error } = await supabase.from('idol_group').select('*')
+      if (error) throw new Error(error.message)
+      return data as Tables<'idol_group'>[]
+    },
+  })
 
   const handleGroupSelect = (groupId: number) => setSelectedGroup(groupId)
 
