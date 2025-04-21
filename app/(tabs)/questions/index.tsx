@@ -1,8 +1,9 @@
 import { Tables } from '@/database.types'
 import { useQuery } from '@tanstack/react-query'
-import { useState, useMemo, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
+import { useGlobalContext } from '@/app/_context/GlobalContext'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { SecondaryButton } from '@/components/ui/button/SecondaryButton'
@@ -10,7 +11,6 @@ import { Colors } from '@/constants/Colors'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
 import { router } from 'expo-router'
-import { useGlobalContext } from '@/app/_context/GlobalContext'
 
 export default function GroupSelectionScreen() {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
@@ -65,12 +65,9 @@ export default function GroupSelectionScreen() {
   )
 
   useEffect(() => {
-    setSelectedQuizQuestions(selectedGroupQuizQuestions)
-  }, [selectedGroupQuizQuestions, setSelectedQuizQuestions])
-
-  useEffect(() => {
-    setSelectedQuizQuestions(selectedQuizQuestions.filter((id) => !solvedQuizIds.includes(id)))
-  }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
+    const filteredQuizQuestions = selectedQuizQuestions.filter((id) => !solvedQuizIds.includes(id))
+    setSelectedQuizQuestions(filteredQuizQuestions)
+  }, [selectedGroupQuizQuestions, setSelectedQuizQuestions, selectedQuizQuestions, solvedQuizIds])
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
