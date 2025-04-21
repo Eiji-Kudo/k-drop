@@ -51,7 +51,9 @@ export function useSetQuizQuestionsFromSelectedGroup(
     if (!setSelectedQuizQuestions) return
 
     // 選択されたクイズのうち、解いたクイズを除外
-    const unsolvedQuizzes = selectedQuizQuestions.filter((id: number) => !solvedQuizIds.includes(id))
+    const unsolvedQuizzes = selectedQuizQuestions.filter(
+      (id: number) => !solvedQuizIds.includes(id),
+    )
 
     const isSelectionUnchanged =
       unsolvedQuizzes.length === selectedQuizQuestions.length &&
