@@ -26,5 +26,3 @@ export function ProblemsProvider({ children }: ProblemsProviderProps) {
 
   return <ProblemsContext.Provider value={{ problems }}>{children}</ProblemsContext.Provider>
 }
-
-export default ProblemsProvider
