@@ -17,6 +17,7 @@ git diff main > docs/pr-diff.md
 ## 3. PR説明文を作成
 
 `.github/pull_request_template.md` に従って説明文を作成
+`cline/made-description.md`に保存
 
 ## 4. 後片付け
 
