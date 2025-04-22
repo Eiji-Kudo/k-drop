@@ -28,12 +28,14 @@ export const ResultModal = ({ visible, mark }: ResultModalProps) => {
             tint="light"
             style={[styles.markTextContainer, { borderColor: mark?.color ?? Colors.primary }]}
           >
-            <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
-              {mark?.symbol === '◎' ? '正解!' : '不正解'}
-            </Text>
-            <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
-              {mark?.symbol ?? ''}
-            </Text>
+            <View style={styles.resultTextContainer}>
+              <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
+                {mark?.symbol === '◎' ? '正解!' : '不正解'}
+              </Text>
+              <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
+                {mark?.symbol ?? ''}
+              </Text>
+            </View>
           </BlurView>
         </Animated.View>
       </View>
@@ -70,6 +72,13 @@ const styles = StyleSheet.create({
   resultText: {
     fontSize: 28,
     fontWeight: '800',
-    marginBottom: 24,
+  },
+  resultTextContainer: {
+    alignItems: 'center',
+    gap: 16,
+    height: '100%',
+    justifyContent: 'flex-start',
+    paddingTop: 20,
+    width: '100%',
   },
 })
