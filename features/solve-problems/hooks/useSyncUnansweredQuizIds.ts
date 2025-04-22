@@ -58,8 +58,7 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     if (!setSelectedQuizIds) return
 
     const isSameLength = unansweredQuizIds.length === selectedQuizIds.length
-    const isSame =
-      isSameLength && unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
+    const isSame = isSameLength && unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
 
     if (!isSame) {
       setSelectedQuizIds(unansweredQuizIds)

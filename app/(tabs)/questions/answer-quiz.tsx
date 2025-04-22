@@ -1,5 +1,4 @@
 import { router, useLocalSearchParams } from 'expo-router'
-import { useContext } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
@@ -8,12 +7,10 @@ import { Colors } from '@/constants/Colors'
 import { useGlobalContext } from '@/context/GlobalContext'
 
 export default function AnswerQuizScreen() {
-  
   const { problemId } = useLocalSearchParams()
   const currentProblemId = Number(problemId) || 1
-  const {selectedQuizIds} = useGlobalContext()
+  const { selectedQuizIds } = useGlobalContext()
   const currentProblem = selectedQuizIds.find((quizId) => quizId === currentProblemId)
-  
 
   const handleSubmit = () => {
     const nextProblem = selectedQuizIds.find((p) => p === currentProblemId + 1)
