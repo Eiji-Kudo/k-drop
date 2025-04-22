@@ -16,7 +16,6 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     },
   })
 
-  // ユーザーのクイズ回答を取得
   const { data: userQuizAnswers } = useQuery({
     queryKey: ['user_quiz_answer', currentUser?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
@@ -55,7 +54,6 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     [groupQuizzes, answeredQuizIds],
   )
 
-  // 未解答のクイズだけを選択状態に保つ
   useEffect(() => {
     if (!setSelectedQuizQuestions) return
 
