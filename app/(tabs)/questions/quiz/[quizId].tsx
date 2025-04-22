@@ -1,19 +1,24 @@
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 import { useGlobalContext } from '@/context/GlobalContext'
+import { useNextQuiz } from '@/features/solve-problems/hooks/useNextQuiz'
+
 export default function QuizScreen() {
   const { selectedQuizIds } = useGlobalContext()
+  const { getNextQuiz } = useNextQuiz()
   const { quizId } = useLocalSearchParams()
-  console.log('quizId', quizId)
-
-  const handleSubmit = () => {
-    // TODO: Implement quiz submission logic
-    console.log('Submitting quiz...')
-    // get next quiz id
+  
+  const navigateToNextQuestionOrResult = () => {
+    const nextQuizId = getNextQuiz()
+    if (nextQuizId) {
+      router.push(`/questions/quiz/${nextQuizId}`)
+    } else {
+      router.push('/questions/result')
+    }
   }
 
   return (
@@ -34,7 +39,7 @@ export default function QuizScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={handleSubmit}>解答を送信</PrimaryButton>
+          <PrimaryButton onPress={navigateToNextQuestionOrResult}>解答を送信</PrimaryButton>
         </View>
       </SafeAreaView>
     </ScrollView>
