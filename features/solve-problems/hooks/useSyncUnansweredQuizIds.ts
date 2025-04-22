@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
 export function useSyncUnansweredQuizIds(groupId: number | null) {
-  const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
+  const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
 
   const { data: currentUser } = useQuery({
     queryKey: ['user'],
@@ -55,14 +55,14 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
   )
 
   useEffect(() => {
-    if (!setSelectedQuizQuestions) return
+    if (!setSelectedQuizIds) return
 
-    const isSameLength = unansweredQuizIds.length === selectedQuizQuestions.length
+    const isSameLength = unansweredQuizIds.length === selectedQuizIds.length
     const isSame =
-      isSameLength && unansweredQuizIds.every((id, i) => id === selectedQuizQuestions[i])
+      isSameLength && unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
 
     if (!isSame) {
-      setSelectedQuizQuestions(unansweredQuizIds)
+      setSelectedQuizIds(unansweredQuizIds)
     }
-  }, [unansweredQuizIds, selectedQuizQuestions, setSelectedQuizQuestions, groupId])
+  }, [unansweredQuizIds, selectedQuizIds, setSelectedQuizIds, groupId])
 }

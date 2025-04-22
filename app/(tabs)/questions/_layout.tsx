@@ -1,9 +1,9 @@
-import { ProblemsProvider } from '@/features/solve-problems/context/ProblemsContext'
+
 import { Stack } from 'expo-router'
 
 export default function TabLayout() {
   return (
-    <ProblemsProvider>
+
       <Stack
         screenOptions={{
           headerShown: false,
@@ -13,6 +13,6 @@ export default function TabLayout() {
         <Stack.Screen name="answer-quiz" />
         <Stack.Screen name="result" />
       </Stack>
-    </ProblemsProvider>
+
   )
 }

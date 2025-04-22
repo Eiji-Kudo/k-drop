@@ -5,18 +5,20 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
-import { ProblemsContext } from '@/features/solve-problems/context/ProblemsContext'
+import { useGlobalContext } from '@/context/GlobalContext'
 
 export default function AnswerQuizScreen() {
-  const { problems } = useContext(ProblemsContext)
+  
   const { problemId } = useLocalSearchParams()
   const currentProblemId = Number(problemId) || 1
-  const currentProblem = problems.find((p) => p.id === currentProblemId)
+  const {selectedQuizIds} = useGlobalContext()
+  const currentProblem = selectedQuizIds.find((quizId) => quizId === currentProblemId)
+  
 
   const handleSubmit = () => {
-    const nextProblem = problems.find((p) => p.id === currentProblemId + 1)
+    const nextProblem = selectedQuizIds.find((p) => p === currentProblemId + 1)
     if (nextProblem) {
-      router.replace(`/questions/answer-quiz?problemId=${nextProblem.id}`)
+      router.replace(`/questions/answer-quiz?problemId=${nextProblem}`)
     } else {
       router.replace('/questions/result')
     }
@@ -35,9 +37,9 @@ export default function AnswerQuizScreen() {
           <ThemedText type="subtitle">以下の問題に解答してください</ThemedText>
         </View>
 
-        <View style={styles.questionContainer}>
+        {/* <View style={styles.questionContainer}>
           <ThemedText style={styles.questionText}>{currentProblem.text}</ThemedText>
-        </View>
+        </View> */}
 
         <View style={styles.answerContainer}>
           <ThemedText style={styles.answerLabel}>解答:</ThemedText>
