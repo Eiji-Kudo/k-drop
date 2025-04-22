@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   choicesContainer: {
-    gap: 8,
+    gap: 16,
     paddingTop: 16,
   },
   container: {
