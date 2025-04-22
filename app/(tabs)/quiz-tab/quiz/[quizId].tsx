@@ -35,7 +35,6 @@ export default function QuizScreen() {
   const navigateToNextQuestionOrResult = () => {
     const next = getNextQuiz()
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
-    // ここでモーダルを閉じる
     setMark(null)
   }
 
@@ -73,6 +72,7 @@ export default function QuizScreen() {
                       color: isCorrect ? Colors.primary : Colors.toastError,
                     })
                     setTimeout(() => setShowExplanation(true), 600)
+                    setTimeout(() => setMark(null), 2000)
                   }}
                   style={[
                     styles.choiceButton,
