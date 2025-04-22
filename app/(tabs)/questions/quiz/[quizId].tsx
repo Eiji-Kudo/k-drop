@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router'
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
@@ -8,6 +8,7 @@ import { Tables } from '@/database.types'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 
 export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
@@ -16,8 +17,6 @@ export default function QuizScreen() {
   if (typeof quizId !== 'string') {
     throw new Error('Invalid quizId: must be a string')
   }
-
-  console.log('quizId', quizId)
 
   const { data: quiz } = useQuery({
     queryKey: ['quiz', quizId],
@@ -29,7 +28,7 @@ export default function QuizScreen() {
     enabled: !!quizId,
   })
 
-  console.log('quiz', quiz)
+  const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
 
   const navigateToNextQuestionOrResult = () => {
     const nextQuizId = getNextQuiz()
@@ -40,6 +39,10 @@ export default function QuizScreen() {
     }
   }
 
+  if (!quiz) return null
+
+  const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
+
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -49,12 +52,22 @@ export default function QuizScreen() {
         </View>
 
         <View style={styles.questionContainer}>
-          <ThemedText style={styles.questionText}>問題文</ThemedText>
+          <ThemedText style={styles.questionText}>{quiz.prompt}</ThemedText>
         </View>
 
-        <View style={styles.answerContainer}>
-          <ThemedText style={styles.answerLabel}>解答:</ThemedText>
-          {/* 解答入力フィールドをここに追加 */}
+        <View style={styles.choicesContainer}>
+          {choices.map((c, i) => (
+            <Pressable
+              key={i}
+              onPress={() => setSelectedChoice(i + 1)}
+              style={[
+                styles.choiceButton,
+                selectedChoice === i + 1 && styles.choiceButtonSelected,
+              ]}
+            >
+              <ThemedText style={styles.choiceText}>{`${i + 1}. ${c}`}</ThemedText>
+            </Pressable>
+          ))}
         </View>
 
         <View style={styles.actionContainer}>
@@ -69,12 +82,23 @@ const styles = StyleSheet.create({
   actionContainer: {
     marginTop: 16,
   },
-  answerContainer: {
-    marginTop: 24,
+  choiceButton: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
-  answerLabel: {
+  choiceButtonSelected: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  choicesContainer: {
+    marginTop: 16,
+    gap: 8,
+  },
+  choiceText: {
     fontSize: 16,
-    marginBottom: 8,
   },
   container: {
     backgroundColor: Colors.background,
