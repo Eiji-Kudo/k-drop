@@ -4,6 +4,7 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
+import { useNextQuiz } from '@/features/solve-problems/hooks/useNextQuiz'
 import { useSyncUnansweredQuizIds } from '@/features/solve-problems/hooks/useSyncUnansweredQuizIds'
 import { supabase } from '@/utils/supabase'
 import { showErrorToast } from '@/utils/toast'
@@ -14,7 +15,8 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
-  const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
+  const { selectedQuizIds } = useGlobalContext()
+  const { getNextQuiz, hasQuizzes } = useNextQuiz()
 
   useSyncUnansweredQuizIds(selectedGroupId)
 
@@ -34,9 +36,12 @@ export default function GroupSelectionScreen() {
       showErrorToast('問題が選択されていません')
       return
     }
-    const [nextQuizId, ...remaining] = selectedQuizIds
-    setSelectedQuizIds(remaining)
-    router.push(`/questions/quiz/${nextQuizId}`)
+    const nextQuizId = getNextQuiz()
+    if (nextQuizId) {
+      router.push(`/questions/quiz/${nextQuizId}`)
+    } else {
+      router.push('/questions/result')
+    }
   }
 
   return (
@@ -58,10 +63,7 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton
-            onPress={handleContinue}
-            disabled={!selectedGroupId || selectedQuizIds.length === 0}
-          >
+          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId || !hasQuizzes}>
             問題へ進む
           </PrimaryButton>
         </View>

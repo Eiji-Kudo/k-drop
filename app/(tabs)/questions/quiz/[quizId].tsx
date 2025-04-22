@@ -4,10 +4,17 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
-
+import { useGlobalContext } from '@/context/GlobalContext'
 export default function QuizScreen() {
+  const { selectedQuizIds } = useGlobalContext()
   const { quizId } = useLocalSearchParams()
   console.log('quizId', quizId)
+
+  const handleSubmit = () => {
+    // TODO: Implement quiz submission logic
+    console.log('Submitting quiz...')
+    // get next quiz id
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -27,7 +34,7 @@ export default function QuizScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={() => {}}>解答を送信</PrimaryButton>
+          <PrimaryButton onPress={handleSubmit}>解答を送信</PrimaryButton>
         </View>
       </SafeAreaView>
     </ScrollView>
