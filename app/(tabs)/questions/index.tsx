@@ -1,6 +1,5 @@
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
-import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
@@ -13,12 +12,8 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
-  const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
-  useSetQuizQuestionsFromSelectedGroup(
-    selectedQuizQuestions,
-    selectedGroupId,
-    setSelectedQuizQuestions,
-  )
+
+  useSetQuizQuestionsFromSelectedGroup(selectedGroupId)
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],

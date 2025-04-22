@@ -1,14 +1,12 @@
+import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
-export function useSetQuizQuestionsFromSelectedGroup(
-  selectedQuizQuestions: number[] = [],
-  selectedIdolGroupId: number | null,
-  setSelectedQuizQuestions?: (quizIds: number[]) => void,
-) {
+export function useSetQuizQuestionsFromSelectedGroup(selectedIdolGroupId: number | null) {
+  const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
