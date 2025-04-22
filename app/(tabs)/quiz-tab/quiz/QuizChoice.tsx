@@ -1,4 +1,5 @@
 import { ThemedText } from '@/components/ThemedText'
+import { Colors } from '@/constants/Colors'
 import { Pressable, PressableProps, StyleSheet, ViewStyle } from 'react-native'
 
 type Variant = 'default' | 'correct' | 'wrong'
@@ -28,19 +29,19 @@ export function QuizChoice({ index, label, variant, style, ...rest }: Props) {
 
 const styles = StyleSheet.create({
   choiceButton: {
-    borderColor: '#d1d1d1',
+    borderColor: Colors.border,
     borderRadius: 8,
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   choiceButtonCorrect: {
-    backgroundColor: '#e4f5ff',
-    borderColor: '#68c1f1',
+    backgroundColor: Colors.secondary,
+    borderColor: Colors.primary,
   },
   choiceButtonWrong: {
-    backgroundColor: '#ffecec',
-    borderColor: '#f56f6f',
+    backgroundColor: Colors.toastError,
+    borderColor: Colors.toastError,
   },
   choiceText: { fontSize: 16, fontWeight: '500' },
 })

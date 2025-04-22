@@ -10,7 +10,7 @@ import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { QuizChoice } from './QuizChoice'
-
+import { Colors } from '@/constants/Colors'
 export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
   const { quizId } = useLocalSearchParams()
@@ -103,7 +103,7 @@ export default function QuizScreen() {
 
 const styles = StyleSheet.create({
   choicesContainer: { gap: 16 },
-  container: { flex: 1, paddingHorizontal: 16, paddingTop: 24 },
+  container: { backgroundColor: Colors.background, flex: 1, paddingHorizontal: 16, paddingTop: 24 },
   explanationText: { fontSize: 14, lineHeight: 20 },
   headerContainer: { alignItems: 'center', gap: 8 },
   questionText: { fontSize: 18, lineHeight: 24 },
