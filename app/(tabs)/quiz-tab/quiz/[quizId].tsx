@@ -1,5 +1,14 @@
 import { router, useLocalSearchParams } from 'expo-router'
-import { Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  Animated,
+  Modal,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
@@ -8,7 +17,7 @@ import { Tables } from '@/database.types'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
@@ -31,12 +40,23 @@ export default function QuizScreen() {
   const [showExplanation, setShowExplanation] = useState(false)
   const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(null)
 
+  const scaleAnim = useRef(new Animated.Value(0)).current
+  const opacityAnim = useRef(new Animated.Value(0)).current
+
   useEffect(() => {
     if (mark) {
+      Animated.parallel([
+        Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }),
+        Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
+      ]).start()
+
       const t = setTimeout(() => setMark(null), 2000)
       return () => clearTimeout(t)
+    } else {
+      scaleAnim.setValue(0)
+      opacityAnim.setValue(0)
     }
-  }, [mark])
+  }, [mark, scaleAnim, opacityAnim])
 
   const navigateToNextQuestionOrResult = () => {
     const next = getNextQuiz()
@@ -104,14 +124,22 @@ export default function QuizScreen() {
       </ScrollView>
 
       <Modal visible={!!mark} transparent>
-        <View style={styles.markOverlay}>
-          <View style={styles.markTextContainer}>
-            <Text style={styles.resultText}>{mark?.symbol === '◎' ? '正解' : '不正解'}</Text>
+        <Animated.View style={[styles.markOverlay, { opacity: opacityAnim }]}>
+          <Animated.View
+            style={[
+              styles.markTextContainer,
+              { transform: [{ scale: scaleAnim }], borderColor: mark?.color ?? Colors.primary },
+            ]}
+          >
+            {/* 正解/不正解のテキストもスタイリングして表示 */}
+            <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
+              {mark?.symbol === '◎' ? '正解!' : '不正解'}
+            </Text>
             <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
               {mark?.symbol ?? ''}
             </Text>
-          </View>
-        </View>
+          </Animated.View>
+        </Animated.View>
       </Modal>
     </>
   )
@@ -140,6 +168,7 @@ const styles = StyleSheet.create({
   headerContainer: { alignItems: 'center', gap: 8 },
   markOverlay: {
     alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.45)',
     flex: 1,
     justifyContent: 'center',
   },
@@ -150,8 +179,15 @@ const styles = StyleSheet.create({
     height: '40%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 24,
+    borderWidth: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 10,
   },
-  resultText: { fontSize: 24, fontWeight: '700', marginBottom: 16 },
+  resultText: { fontSize: 28, fontWeight: '800', marginBottom: 24 },
   questionText: { fontSize: 18, lineHeight: 24 },
   safeAreaView: { flex: 1, gap: 32 },
 })
