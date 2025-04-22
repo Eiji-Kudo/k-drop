@@ -22,7 +22,9 @@ export function QuizChoice({ index, label, variant, style, ...rest }: Props) {
         style,
       ]}
     >
-      <ThemedText style={styles.choiceText}>{`${index + 1}. ${label}`}</ThemedText>
+      <ThemedText
+        style={styles.choiceText}
+      >{`${index + 1}. ${label}`}</ThemedText>
     </Pressable>
   )
 }

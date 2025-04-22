@@ -34,7 +34,10 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     queryKey: ['quiz', currentUser?.id, groupId],
     queryFn: async (): Promise<Tables<'quiz'>[]> => {
       if (!currentUser) return []
-      const { data, error } = await supabase.from('quiz').select('*').eq('idol_group_id', groupId)
+      const { data, error } = await supabase
+        .from('quiz')
+        .select('*')
+        .eq('idol_group_id', groupId)
       if (error) throw new Error(error.message)
       return data as Tables<'quiz'>[]
     },
@@ -58,7 +61,9 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     if (!setSelectedQuizIds) return
 
     const isSameLength = unansweredQuizIds.length === selectedQuizIds.length
-    const isSame = isSameLength && unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
+    const isSame =
+      isSameLength &&
+      unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
 
     if (!isSame) {
       setSelectedQuizIds(unansweredQuizIds)

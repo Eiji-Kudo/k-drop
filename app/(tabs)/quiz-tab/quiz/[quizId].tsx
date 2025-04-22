@@ -24,7 +24,9 @@ export default function QuizScreen() {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [buttonsLocked, setButtonsLocked] = useState(false)
   const [showExplanation, setShowExplanation] = useState(false)
-  const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(null)
+  const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(
+    null,
+  )
 
   const navigateToNextQuestionOrResult = () => {
     const next = getNextQuiz()
@@ -90,6 +92,11 @@ export default function QuizScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: Colors.background, flex: 1, paddingHorizontal: 16, paddingTop: 24 },
+  container: {
+    backgroundColor: Colors.background,
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
   safeAreaView: { flex: 1, gap: 32 },
 })

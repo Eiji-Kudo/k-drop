@@ -10,7 +10,13 @@ module.exports = {
     'plugin:prettier/recommended',
     'expo',
   ],
-  plugins: ['@typescript-eslint', 'react', 'react-native', 'prettier', 'unused-imports'],
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'react-native',
+    'prettier',
+    'unused-imports',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -39,7 +45,10 @@ module.exports = {
     'react-native/no-color-literals': 'off',
     'react-native/no-unused-styles': 'error',
     'react/no-unescaped-entities': 'off',
-    'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
+    'react/jsx-curly-brace-presence': [
+      'error',
+      { props: 'never', children: 'never' },
+    ],
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
     'unused-imports/no-unused-imports': 'error',

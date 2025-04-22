@@ -1,7 +1,14 @@
 import { Colors } from '@/constants/Colors'
 import { BlurView } from 'expo-blur'
 import { useEffect, useRef } from 'react'
-import { Animated, Dimensions, Modal, StyleSheet, Text, View } from 'react-native'
+import {
+  Animated,
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 
 type ResultModalProps = {
   visible: boolean
@@ -26,13 +33,26 @@ export const ResultModal = ({ visible, mark }: ResultModalProps) => {
           <BlurView
             intensity={60}
             tint="light"
-            style={[styles.markTextContainer, { borderColor: mark?.color ?? Colors.primary }]}
+            style={[
+              styles.markTextContainer,
+              { borderColor: mark?.color ?? Colors.primary },
+            ]}
           >
             <View style={styles.resultTextContainer}>
-              <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
+              <Text
+                style={[
+                  styles.resultText,
+                  { color: mark?.color ?? Colors.primary },
+                ]}
+              >
                 {mark?.symbol === '◎' ? '正解!' : '不正解'}
               </Text>
-              <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
+              <Text
+                style={[
+                  styles.markText,
+                  { color: mark?.color ?? Colors.primary },
+                ]}
+              >
                 {mark?.symbol ?? ''}
               </Text>
             </View>

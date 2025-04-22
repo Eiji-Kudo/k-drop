@@ -7,7 +7,10 @@ type ExplanationSectionProps = {
   onNextPress: () => void
 }
 
-export const ExplanationSection = ({ explanation, onNextPress }: ExplanationSectionProps) => (
+export const ExplanationSection = ({
+  explanation,
+  onNextPress,
+}: ExplanationSectionProps) => (
   <>
     <View>
       <ThemedText style={styles.explanationText}>{explanation}</ThemedText>

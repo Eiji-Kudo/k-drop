@@ -1,5 +1,9 @@
 import { Colors } from '@/constants/Colors'
-import { toast, ToastOptions, ToastPosition } from '@backpackapp-io/react-native-toast'
+import {
+  toast,
+  ToastOptions,
+  ToastPosition,
+} from '@backpackapp-io/react-native-toast'
 
 const DEFAULT_DURATION = 5000
 
@@ -29,7 +33,10 @@ export const showToast = (message: string, options?: Partial<ToastOptions>) => {
  * @param message 表示するエラーメッセージ
  * @param options その他のトーストオプション
  */
-export const showErrorToast = (message: string, options?: Partial<ToastOptions>) => {
+export const showErrorToast = (
+  message: string,
+  options?: Partial<ToastOptions>,
+) => {
   toast.error(message, {
     position: ToastPosition.BOTTOM,
     styles: {
