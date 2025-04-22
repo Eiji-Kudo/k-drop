@@ -1,17 +1,13 @@
 import { router, useLocalSearchParams } from 'expo-router'
 import {
-  Animated,
-  Modal,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
-  Dimensions,
 } from 'react-native'
-import { BlurView } from 'expo-blur'
 
+import { ResultModal } from '@/components/result-modal/ResultModal'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
@@ -19,7 +15,7 @@ import { Tables } from '@/database.types'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
@@ -41,19 +37,6 @@ export default function QuizScreen() {
   const [buttonsLocked, setButtonsLocked] = useState(false)
   const [showExplanation, setShowExplanation] = useState(false)
   const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(null)
-
-  const scaleAnim = useRef(new Animated.Value(0)).current
-  // const opacityAnim = useRef(new Animated.Value(0)).current  // フェード無効化
-
-  useEffect(() => {
-    if (mark) {
-      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()
-      // Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start()  // フェード無効化
-    } else {
-      scaleAnim.setValue(0)
-      // opacityAnim.setValue(0)  // フェード無効化
-    }
-  }, [mark, scaleAnim /*, opacityAnim */])
 
   const navigateToNextQuestionOrResult = () => {
     const next = getNextQuiz()
@@ -122,32 +105,10 @@ export default function QuizScreen() {
         </SafeAreaView>
       </ScrollView>
 
-      <Modal visible={!!mark} transparent>
-        <View style={styles.markOverlay /* 不透明で即時表示 */}>
-          <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-            <BlurView
-              intensity={60}
-              tint="light"
-              style={[
-                styles.markTextContainer,
-                { borderColor: mark?.color ?? Colors.primary },
-              ]}
-            >
-              <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
-                {mark?.symbol === '◎' ? '正解!' : '不正解'}
-              </Text>
-              <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
-                {mark?.symbol ?? ''}
-              </Text>
-            </BlurView>
-          </Animated.View>
-        </View>
-      </Modal>
+      <ResultModal visible={!!mark} mark={mark} />
     </>
   )
 }
-
-const WIDTH = Dimensions.get('window').width * 0.7
 
 const styles = StyleSheet.create({
   choiceButton: {
@@ -170,27 +131,6 @@ const styles = StyleSheet.create({
   container: { backgroundColor: Colors.background, flex: 1, paddingHorizontal: 16, paddingTop: 24 },
   explanationText: { fontSize: 14, lineHeight: 20 },
   headerContainer: { alignItems: 'center', gap: 8 },
-  markOverlay: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  markText: { fontSize: WIDTH * 0.55, fontWeight: '900' },
-  markTextContainer: {
-    width: WIDTH,
-    aspectRatio: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 24,
-    borderWidth: 4,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 10,
-  },
-  resultText: { fontSize: 28, fontWeight: '800', marginBottom: 24 },
   questionText: { fontSize: 18, lineHeight: 24 },
   safeAreaView: { flex: 1, gap: 32 },
 })
