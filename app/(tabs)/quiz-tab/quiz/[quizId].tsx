@@ -8,7 +8,9 @@ import {
   StyleSheet,
   Text,
   View,
+  Dimensions,
 } from 'react-native'
+import { BlurView } from 'expo-blur'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
@@ -41,22 +43,20 @@ export default function QuizScreen() {
   const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(null)
 
   const scaleAnim = useRef(new Animated.Value(0)).current
-  const opacityAnim = useRef(new Animated.Value(0)).current
+  // const opacityAnim = useRef(new Animated.Value(0)).current  // ✂️ フェード無効化
 
   useEffect(() => {
     if (mark) {
-      Animated.parallel([
-        Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }),
-        Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
-      ]).start()
+      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()
+      // Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start()  // ✂️
 
       const t = setTimeout(() => setMark(null), 2000)
       return () => clearTimeout(t)
     } else {
       scaleAnim.setValue(0)
-      opacityAnim.setValue(0)
+      // opacityAnim.setValue(0)  // ✂️
     }
-  }, [mark, scaleAnim, opacityAnim])
+  }, [mark, scaleAnim /*, opacityAnim */])
 
   const navigateToNextQuestionOrResult = () => {
     const next = getNextQuiz()
@@ -124,26 +124,32 @@ export default function QuizScreen() {
       </ScrollView>
 
       <Modal visible={!!mark} transparent>
-        <Animated.View style={[styles.markOverlay, { opacity: opacityAnim }]}>
-          <Animated.View
-            style={[
-              styles.markTextContainer,
-              { transform: [{ scale: scaleAnim }], borderColor: mark?.color ?? Colors.primary },
-            ]}
-          >
-            {/* 正解/不正解のテキストもスタイリングして表示 */}
-            <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
-              {mark?.symbol === '◎' ? '正解!' : '不正解'}
-            </Text>
-            <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
-              {mark?.symbol ?? ''}
-            </Text>
+        {/* opacityAnim を外してフェードをオフ */}
+        <View style={styles.markOverlay}>
+          <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+            <BlurView
+              intensity={60}
+              tint="light"
+              style={[
+                styles.markTextContainer,
+                { borderColor: mark?.color ?? Colors.primary },
+              ]}
+            >
+              <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
+                {mark?.symbol === '◎' ? '正解!' : '不正解'}
+              </Text>
+              <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
+                {mark?.symbol ?? ''}
+              </Text>
+            </BlurView>
           </Animated.View>
-        </Animated.View>
+        </View>
       </Modal>
     </>
   )
 }
+
+const WIDTH = Dimensions.get('window').width * 0.7
 
 const styles = StyleSheet.create({
   choiceButton: {
@@ -172,15 +178,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  markText: { fontSize: 180, fontWeight: '900' },
+  markText: { fontSize: WIDTH * 0.55, fontWeight: '900' },
   markTextContainer: {
-    backgroundColor: 'white',
-    width: '70%',
-    height: '40%',
+    width: WIDTH,
+    aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 24,
     borderWidth: 4,
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
