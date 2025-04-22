@@ -18,7 +18,7 @@ export default function ResultScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={() => router.navigate('/questions')}>
+          <PrimaryButton onPress={() => router.navigate('/quiz-tab')}>
             グループ一覧に戻る
           </PrimaryButton>
         </View>

@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router'
-import { Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, View, Text } from 'react-native'
+import { Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
@@ -40,7 +40,7 @@ export default function QuizScreen() {
 
   const navigateToNextQuestionOrResult = () => {
     const next = getNextQuiz()
-    router.push(next ? `/questions/quiz/${next}` : '/questions/result')
+    router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
   }
 
   if (!quiz) return null

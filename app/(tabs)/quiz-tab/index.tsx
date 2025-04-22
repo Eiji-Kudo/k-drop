@@ -38,9 +38,9 @@ export default function GroupSelectionScreen() {
     }
     const nextQuizId = getNextQuiz()
     if (nextQuizId) {
-      router.push(`/questions/quiz/${nextQuizId}`)
+      router.push(`/quiz-tab/quiz/${nextQuizId}`)
     } else {
-      router.push('/questions/result')
+      router.push('/quiz-tab/result')
     }
   }
 
