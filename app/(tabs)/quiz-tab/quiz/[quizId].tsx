@@ -105,9 +105,12 @@ export default function QuizScreen() {
 
       <Modal visible={!!mark} transparent>
         <View style={styles.markOverlay}>
-          <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
-            {mark?.symbol ?? ''}
-          </Text>
+          <View style={styles.markTextContainer}>
+            <Text style={styles.resultText}>{mark?.symbol === '◎' ? '正解' : '不正解'}</Text>
+            <Text style={[styles.markText, { color: mark?.color ?? Colors.primary }]}>
+              {mark?.symbol ?? ''}
+            </Text>
+          </View>
         </View>
       </Modal>
     </>
@@ -137,11 +140,18 @@ const styles = StyleSheet.create({
   headerContainer: { alignItems: 'center', gap: 8 },
   markOverlay: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.25)',
     flex: 1,
     justifyContent: 'center',
   },
   markText: { fontSize: 180, fontWeight: '900' },
+  markTextContainer: {
+    backgroundColor: 'white',
+    width: '70%',
+    height: '40%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  resultText: { fontSize: 24, fontWeight: '700', marginBottom: 16 },
   questionText: { fontSize: 18, lineHeight: 24 },
   safeAreaView: { flex: 1, gap: 32 },
 })
