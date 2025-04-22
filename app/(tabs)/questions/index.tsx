@@ -3,7 +3,7 @@ import { Colors } from '@/constants/Colors'
 import { Tables } from '@/database.types'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
-import { useSetQuizQuestionsFromSelectedGroup } from '@/features/solve-problems/hooks/useSetQuizQuestionsFromSelectedGroup'
+import { useSyncUnansweredQuizIds } from '@/features/solve-problems/hooks/useSyncUnansweredQuizIds'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
@@ -13,7 +13,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
 
-  useSetQuizQuestionsFromSelectedGroup(selectedGroupId)
+  useSyncUnansweredQuizIds(selectedGroupId)
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
