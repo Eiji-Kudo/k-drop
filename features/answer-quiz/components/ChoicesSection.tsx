@@ -1,9 +1,10 @@
+import { Colors } from '@/constants/Colors'
+import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ExplanationSection } from './ExplanationSection'
 import { ResultModal } from './result-modal'
-import { Tables } from '@/database.types'
 
 type ChoiceVariant = 'default' | 'correct' | 'wrong'
 
@@ -30,7 +31,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
     const isCorrect = quiz.correct_choice === selectedChoiceNumber
     setMark({
       symbol: isCorrect ? '◎' : '×',
-      color: isCorrect ? '#68c1f1' : '#f56f6f',
+      color: isCorrect ? Colors.markCorrect : Colors.markWrong,
     })
 
     setTimeout(() => setShowExplanation(true), 600)

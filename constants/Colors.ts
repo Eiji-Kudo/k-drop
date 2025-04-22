@@ -14,4 +14,6 @@ export const Colors = {
   toastSuccess: '#4CAF50',
   toastError: '#F44336',
   white: '#FFFFFF',
+  markCorrect: '#68c1f1',
+  markWrong: '#f56f6f',
 }
