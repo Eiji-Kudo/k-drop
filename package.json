@@ -10,6 +10,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
+    "test:ci": "jest --watchAll=false",
     "test:types": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
     "lint-fix": "eslint . --ext .ts,.tsx --fix",
@@ -19,9 +20,11 @@
     "gen-types": "npx supabase gen types typescript --local > database.types.ts && npm run lint-fix"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@backpackapp-io/react-native-toast": "^0.13.0",
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
@@ -40,6 +43,7 @@
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.8",
     "expo-web-browser": "~14.0.2",
+    "moti": "^0.30.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.7",
@@ -53,6 +57,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.3.0",

@@ -8,7 +8,7 @@ export default function TabLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="answer-quiz" />
+      <Stack.Screen name="quiz/[quizId]" />
       <Stack.Screen name="result" />
     </Stack>
   )

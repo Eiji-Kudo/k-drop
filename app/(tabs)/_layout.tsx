@@ -36,7 +36,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="questions"
+        name="quiz-tab"
         options={{
           title: '問題を解く',
           tabBarIcon: ({ color }: { color: string }) => (

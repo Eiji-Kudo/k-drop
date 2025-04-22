@@ -7,7 +7,9 @@ const supabaseUrl = Constants.expoConfig?.extra?.supabaseUrl as string
 const supabaseAnonKey = Constants.expoConfig?.extra?.supabaseAnonKey as string
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase URL and anon key must be provided in environment variables')
+  throw new Error(
+    'Supabase URL and anon key must be provided in environment variables',
+  )
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
