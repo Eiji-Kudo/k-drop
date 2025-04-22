@@ -6,6 +6,7 @@ import { useEffect, useMemo } from 'react'
 
 export function useSetQuizQuestionsFromSelectedGroup(
   selectedQuizQuestions: number[] = [],
+  selectedIdolGroupId: number | null,
   setSelectedQuizQuestions?: (quizIds: number[]) => void,
 ) {
   const { data: user } = useQuery({
@@ -31,26 +32,41 @@ export function useSetQuizQuestionsFromSelectedGroup(
     enabled: !!user,
   })
 
-  const solvedQuizIds = useMemo(
-    () => userQuizAnswer?.map((a) => a.quiz_question_id) ?? [],
-    [userQuizAnswer],
+  const { data: quizzes } = useQuery({
+    queryKey: ['quiz', user?.id, selectedIdolGroupId],
+    queryFn: async (): Promise<Tables<'quiz'>[]> => {
+      if (!user) return []
+      const { data, error } = await supabase
+        .from('quiz')
+        .select('*')
+        .eq('idol_group_id', selectedIdolGroupId)
+      if (error) throw new Error(error.message)
+      return data as Tables<'quiz'>[]
+    },
+    enabled: !!user && !!selectedIdolGroupId,
+  })
+
+  const solvedQuizIds = useMemo(() => userQuizAnswer?.map((a) => a.quiz_id) ?? [], [userQuizAnswer])
+
+  const unsolvedQuizIds = useMemo(
+    () =>
+      quizzes
+        ?.filter((quiz) => !solvedQuizIds.includes(quiz.quiz_id))
+        .map((quiz) => quiz.quiz_id) ?? [],
+    [quizzes, solvedQuizIds],
   )
 
   // 未解答のクイズだけを選択状態に保つ
   useEffect(() => {
+    console.log('unsolvedQuizIds', unsolvedQuizIds)
     if (!setSelectedQuizQuestions) return
 
-    // 選択されたクイズのうち、解いたクイズを除外
-    const unsolvedQuizzes = selectedQuizQuestions.filter(
-      (id: number) => !solvedQuizIds.includes(id),
-    )
+    const isSameLength = unsolvedQuizIds.length === selectedQuizQuestions.length
+    const isSame = isSameLength && unsolvedQuizIds.every((id, i) => id === selectedQuizQuestions[i])
 
-    const isSelectionUnchanged =
-      unsolvedQuizzes.length === selectedQuizQuestions.length &&
-      unsolvedQuizzes.every((v: number, i: number) => v === selectedQuizQuestions[i])
-
-    if (!isSelectionUnchanged) {
-      setSelectedQuizQuestions(unsolvedQuizzes)
+    if (!isSame) {
+      console.log('unsolvedQuizIds', unsolvedQuizIds)
+      setSelectedQuizQuestions(unsolvedQuizIds)
     }
-  }, [solvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions])
+  }, [unsolvedQuizIds, selectedQuizQuestions, setSelectedQuizQuestions, selectedIdolGroupId])
 }
