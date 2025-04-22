@@ -13,6 +13,8 @@ export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
   const { quizId } = useLocalSearchParams()
 
+  console.log('quizId', quizId)
+
   const { data: quiz } = useQuery({
     queryKey: ['quiz', quizId],
     queryFn: async () => {
@@ -20,6 +22,7 @@ export default function QuizScreen() {
       if (error) throw new Error(error.message)
       return data as Tables<'quiz'>
     },
+    enabled: !!quizId,
   })
 
   console.log('quiz', quiz)
