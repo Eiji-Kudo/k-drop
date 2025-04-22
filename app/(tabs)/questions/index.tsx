@@ -27,12 +27,7 @@ export default function GroupSelectionScreen() {
   const handleGroupSelect = (groupId: number) => setSelectedGroupId(groupId)
 
   const handleContinue = () => {
-    if (selectedGroupId) {
-      router.push({
-        pathname: '/questions/answer-quiz',
-        params: { groupId: selectedGroupId.toString() },
-      })
-    }
+    router.push('/questions/answer-quiz')
   }
 
   return (
