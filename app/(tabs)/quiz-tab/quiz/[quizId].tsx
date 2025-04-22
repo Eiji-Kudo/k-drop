@@ -1,14 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router'
-import {
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
-
-import { ResultModal } from '@/components/result-modal/index'
+import { ResultModal } from '@/features/answer-quiz/components/result-modal'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'

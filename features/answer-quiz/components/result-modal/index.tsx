@@ -26,10 +26,7 @@ export const ResultModal = ({ visible, mark }: ResultModalProps) => {
           <BlurView
             intensity={60}
             tint="light"
-            style={[
-              styles.markTextContainer,
-              { borderColor: mark?.color ?? Colors.primary },
-            ]}
+            style={[styles.markTextContainer, { borderColor: mark?.color ?? Colors.primary }]}
           >
             <Text style={[styles.resultText, { color: mark?.color ?? Colors.primary }]}>
               {mark?.symbol === '◎' ? '正解!' : '不正解'}
@@ -52,27 +49,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  markText: { 
-    fontSize: WIDTH * 0.55, 
-    fontWeight: '900' 
+  markText: {
+    fontSize: WIDTH * 0.55,
+    fontWeight: '900',
   },
   markTextContainer: {
-    width: WIDTH,
-    aspectRatio: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    aspectRatio: 1,
     borderRadius: 24,
     borderWidth: 4,
+    elevation: 10,
+    justifyContent: 'center',
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 6,
-    elevation: 10,
+    width: WIDTH,
   },
-  resultText: { 
-    fontSize: 28, 
-    fontWeight: '800', 
-    marginBottom: 24 
+  resultText: {
+    fontSize: 28,
+    fontWeight: '800',
+    marginBottom: 24,
   },
-}) 
+})
