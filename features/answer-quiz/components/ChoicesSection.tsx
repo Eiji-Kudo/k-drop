@@ -1,4 +1,4 @@
-import { QuizChoice } from '@/app/(tabs)/quiz-tab/quiz/QuizChoice'
+import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { StyleSheet, View } from 'react-native'
 
 type ChoiceVariant = 'default' | 'correct' | 'wrong'
