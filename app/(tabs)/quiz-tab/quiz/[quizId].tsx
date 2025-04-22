@@ -28,12 +28,6 @@ export default function QuizScreen() {
     null,
   )
 
-  const navigateToNextQuestionOrResult = () => {
-    const next = getNextQuiz()
-    router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
-    setMark(null)
-  }
-
   const handleChoiceSelection = (choiceIndex: number) => {
     if (buttonsLocked || !quiz) return
 
@@ -58,6 +52,12 @@ export default function QuizScreen() {
     if (quiz.correct_choice === choiceNumber) return 'correct'
     if (selectedChoice === choiceNumber) return 'wrong'
     return 'default'
+  }
+
+  const navigateToNextQuestionOrResult = () => {
+    const next = getNextQuiz()
+    router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
+    setMark(null)
   }
 
   if (!quiz) return null
