@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   choiceText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 500,
   },
   choicesContainer: {
     gap: 8,
