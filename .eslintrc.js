@@ -56,6 +56,14 @@ module.exports = {
         ],
       },
     ],
+    'max-lines': [
+      'error',
+      {
+        max: 100,
+        skipBlankLines: true,
+        skipComments: true,
+      },
+    ],
   },
   env: {
     'react-native/react-native': true,
