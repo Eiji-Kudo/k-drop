@@ -1,10 +1,9 @@
-import { useGlobalContext } from '@/context/GlobalContext'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 import { Tables } from '@/database.types'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
-import { useSetQuizQuestionsFromSelectedGroup } from '@/features/solve-problems/hooks/useSetQuizQuestionsFromSelectedGroup'
+import { useSyncUnansweredQuizIds } from '@/features/solve-problems/hooks/useSyncUnansweredQuizIds'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
@@ -12,9 +11,9 @@ import { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function GroupSelectionScreen() {
-  const [selectedGroup, setSelectedGroup] = useState<number | null>(null)
-  const { selectedQuizQuestions, setSelectedQuizQuestions } = useGlobalContext()
-  useSetQuizQuestionsFromSelectedGroup(selectedQuizQuestions, setSelectedQuizQuestions)
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
+
+  useSyncUnansweredQuizIds(selectedGroupId)
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
@@ -25,15 +24,10 @@ export default function GroupSelectionScreen() {
     },
   })
 
-  const handleGroupSelect = (groupId: number) => setSelectedGroup(groupId)
+  const handleGroupSelect = (groupId: number) => setSelectedGroupId(groupId)
 
   const handleContinue = () => {
-    if (selectedGroup) {
-      router.push({
-        pathname: '/questions/solve-problem',
-        params: { groupId: selectedGroup.toString() },
-      })
-    }
+    router.push('/questions/answer-quiz')
   }
 
   return (
@@ -47,7 +41,7 @@ export default function GroupSelectionScreen() {
               <GroupButton
                 key={group.idol_group_id}
                 group={group}
-                isSelected={selectedGroup === group.idol_group_id}
+                isSelected={selectedGroupId === group.idol_group_id}
                 onPress={handleGroupSelect}
               />
             ),
@@ -55,7 +49,7 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={handleContinue} disabled={!selectedGroup}>
+          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId}>
             問題へ進む
           </PrimaryButton>
         </View>

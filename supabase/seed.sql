@@ -33,7 +33,6 @@ INSERT INTO group_otaku_layer (layer_name, min_score, max_score) VALUES
 ('遠征オタク', 141, 160),
 ('超熱狂オタク', 161, 180),
 ('神推しオタク', 181, 200);
--- Modified: Added missing semicolon here
 
 -- quiz_difficulty
 INSERT INTO quiz_difficulty (difficulty_name) VALUES
@@ -42,15 +41,17 @@ INSERT INTO quiz_difficulty (difficulty_name) VALUES
 ('上級'),
 ('超上級');
 
--- quiz_question
-INSERT INTO quiz_question (idol_group_id, quiz_difficulty_id, question_text, choice1, choice2, choice3, choice4, correct_choice, explanation) VALUES
-(3, 1, 'TWICEのデビュー曲は次のうちどれ？', 'Like OOH-AHH', 'CHEER UP', 'TT', 'SIGNAL', 1, '2015年12月20日にデビューした。'),
-(3, 1, 'TWICEは何人グループ？', '9', '7', '8', '10', 1, '9人組グループでデビューした。'),
-(3, 2, 'TWICEのマンネは次のうちだれ？', 'ツウィ', 'チェヨン', 'ダヒョン', 'ミナ', 1, 'ツウィは1999年6月14日生まれのグループで最年少メンバー。'),
-(3, 2, 'TWICEを生んだサバイバル番組の名称は次のうちどれ？', 'SIXTEEN', 'SEVENTEEN', 'EIGHTEEN', 'NINETEEN', 1, 'SIXTEENは2015年に放送された女性練習生16人によるサバイバル番組。'),
-(2, 1, 'BTSのデビュー曲は次のうちどれ？', 'NO MORE DREAM', 'Butter', 'Dynamite', 'MIC Drop', 1, '2013年6月13日にデビュー。'),
-(2, 1, 'BTSは何人グループ？', '7', '5', '6', '8', 1, '7人組グループでデビュー。'),
-(2, 1, 'BTSのマンネは次のうちだれ？', 'グク', 'テテ', 'ジミン', 'ジン', 1, 'グクは1997年9月1日生まれのグループで最年少メンバー。');
+-- quiz
+INSERT INTO quiz
+  (idol_group_id, quiz_difficulty_id, prompt, choice1, choice2, choice3, choice4, correct_choice, explanation)
+VALUES
+(3, 1, 'TWICEのデビュー曲は次のうちどれ？',        'Like OOH-AHH', 'CHEER UP',  'TT',      'SIGNAL',   1, '2015年12月20日にデビューした。'),
+(3, 1, 'TWICEは何人グループ？',                    '9',            '7',         '8',       '10',       1, '9人組グループでデビューした。'),
+(3, 2, 'TWICEのマンネは次のうちだれ？',            'ツウィ',       'チェヨン',   'ダヒョン', 'ミナ',     1, 'ツウィは1999年6月14日生まれのグループで最年少メンバー。'),
+(3, 2, 'TWICEを生んだサバイバル番組の名称は？',      'SIXTEEN',      'SEVENTEEN', 'EIGHTEEN', 'NINETEEN', 1, 'SIXTEENは2015年に放送された女性練習生16人によるサバイバル番組。'),
+(2, 1, 'BTSのデビュー曲は次のうちどれ？',          'NO MORE DREAM','Butter',    'Dynamite','MIC Drop', 1, '2013年6月13日にデビュー。'),
+(2, 1, 'BTSは何人グループ？',                      '7',            '5',         '6',       '8',        1, '7人組グループでデビュー。'),
+(2, 1, 'BTSのマンネは次のうちだれ？',              'グク',         'テテ',       'ジミン',   'ジン',     1, 'グクは1997年9月1日生まれのグループで最年少メンバー。');
 
 -- app_user
 INSERT INTO app_user (supabase_uuid, line_account_id) VALUES
@@ -66,9 +67,9 @@ INSERT INTO user_idol_group_score (app_user_id, idol_group_id, otaku_score, grou
 (1, 3, 100, 1);
 
 -- user_quiz_answer
-INSERT INTO user_quiz_answer (app_user_id, quiz_question_id, selected_choice, is_correct, answered_at) VALUES
-(1, 1, 1, true, NOW()),
-(1, 2, 1, true, NOW());
+INSERT INTO user_quiz_answer (app_user_id, quiz_id, selected_choice, is_correct, answered_at) VALUES
+(1, 1, 1, true,  NOW()),
+(1, 2, 1, true,  NOW());
 
 -- ranking_total
 INSERT INTO ranking_total (app_user_id, display_rank, display_score, updated_at) VALUES

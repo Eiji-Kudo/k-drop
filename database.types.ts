@@ -256,22 +256,7 @@ export type Database = {
           },
         ]
       }
-      quiz_difficulty: {
-        Row: {
-          difficulty_name: string
-          quiz_difficulty_id: number
-        }
-        Insert: {
-          difficulty_name: string
-          quiz_difficulty_id?: number
-        }
-        Update: {
-          difficulty_name?: string
-          quiz_difficulty_id?: number
-        }
-        Relationships: []
-      }
-      quiz_question: {
+      quiz: {
         Row: {
           choice1: string
           choice2: string
@@ -280,9 +265,9 @@ export type Database = {
           correct_choice: number
           explanation: string
           idol_group_id: number
-          question_text: string
+          prompt: string
           quiz_difficulty_id: number
-          quiz_question_id: number
+          quiz_id: number
         }
         Insert: {
           choice1: string
@@ -292,9 +277,9 @@ export type Database = {
           correct_choice: number
           explanation: string
           idol_group_id: number
-          question_text: string
+          prompt: string
           quiz_difficulty_id: number
-          quiz_question_id?: number
+          quiz_id?: number
         }
         Update: {
           choice1?: string
@@ -304,9 +289,9 @@ export type Database = {
           correct_choice?: number
           explanation?: string
           idol_group_id?: number
-          question_text?: string
+          prompt?: string
           quiz_difficulty_id?: number
-          quiz_question_id?: number
+          quiz_id?: number
         }
         Relationships: [
           {
@@ -324,6 +309,21 @@ export type Database = {
             referencedColumns: ['quiz_difficulty_id']
           },
         ]
+      }
+      quiz_difficulty: {
+        Row: {
+          difficulty_name: string
+          quiz_difficulty_id: number
+        }
+        Insert: {
+          difficulty_name: string
+          quiz_difficulty_id?: number
+        }
+        Update: {
+          difficulty_name?: string
+          quiz_difficulty_id?: number
+        }
+        Relationships: []
       }
       ranking_group: {
         Row: {
@@ -513,7 +513,7 @@ export type Database = {
           answered_at: string
           app_user_id: number
           is_correct: boolean
-          quiz_question_id: number
+          quiz_id: number
           selected_choice: number
           user_quiz_answer_id: number
         }
@@ -521,7 +521,7 @@ export type Database = {
           answered_at: string
           app_user_id: number
           is_correct: boolean
-          quiz_question_id: number
+          quiz_id: number
           selected_choice: number
           user_quiz_answer_id?: number
         }
@@ -529,24 +529,24 @@ export type Database = {
           answered_at?: string
           app_user_id?: number
           is_correct?: boolean
-          quiz_question_id?: number
+          quiz_id?: number
           selected_choice?: number
           user_quiz_answer_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: 'fk_user_quiz'
+            columns: ['quiz_id']
+            isOneToOne: false
+            referencedRelation: 'quiz'
+            referencedColumns: ['quiz_id']
+          },
           {
             foreignKeyName: 'fk_user_quiz_app_user'
             columns: ['app_user_id']
             isOneToOne: false
             referencedRelation: 'app_user'
             referencedColumns: ['app_user_id']
-          },
-          {
-            foreignKeyName: 'fk_user_quiz_question'
-            columns: ['quiz_question_id']
-            isOneToOne: false
-            referencedRelation: 'quiz_question'
-            referencedColumns: ['quiz_question_id']
           },
         ]
       }
