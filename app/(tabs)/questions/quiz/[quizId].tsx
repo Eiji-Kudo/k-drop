@@ -6,16 +6,17 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 import { useGlobalContext } from '@/context/GlobalContext'
 
-export default function AnswerQuizScreen() {
-  const { problemId } = useLocalSearchParams()
-  const currentProblemId = Number(problemId) || 1
+export default function QuizScreen() {
+  const { quizId } = useLocalSearchParams()
+  console.log('quizId', quizId)
+  const currentProblemId = Number(quizId) || 1
   const { selectedQuizIds } = useGlobalContext()
   const currentProblem = selectedQuizIds.find((quizId) => quizId === currentProblemId)
 
   const handleSubmit = () => {
     const nextProblem = selectedQuizIds.find((p) => p === currentProblemId + 1)
     if (nextProblem) {
-      router.replace(`/questions/answer-quiz?problemId=${nextProblem}`)
+      router.replace(`/questions/quiz/${nextProblem}`)
     } else {
       router.replace('/questions/result')
     }
