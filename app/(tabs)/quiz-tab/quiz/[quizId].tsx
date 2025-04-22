@@ -43,24 +43,23 @@ export default function QuizScreen() {
   const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(null)
 
   const scaleAnim = useRef(new Animated.Value(0)).current
-  // const opacityAnim = useRef(new Animated.Value(0)).current  // ✂️ フェード無効化
+  // const opacityAnim = useRef(new Animated.Value(0)).current  // フェード無効化
 
   useEffect(() => {
     if (mark) {
       Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()
-      // Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start()  // ✂️
-
-      const t = setTimeout(() => setMark(null), 2000)
-      return () => clearTimeout(t)
+      // Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start()  // フェード無効化
     } else {
       scaleAnim.setValue(0)
-      // opacityAnim.setValue(0)  // ✂️
+      // opacityAnim.setValue(0)  // フェード無効化
     }
   }, [mark, scaleAnim /*, opacityAnim */])
 
   const navigateToNextQuestionOrResult = () => {
     const next = getNextQuiz()
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
+    // ここでモーダルを閉じる
+    setMark(null)
   }
 
   if (!quiz) return null
@@ -124,8 +123,7 @@ export default function QuizScreen() {
       </ScrollView>
 
       <Modal visible={!!mark} transparent>
-        {/* opacityAnim を外してフェードをオフ */}
-        <View style={styles.markOverlay}>
+        <View style={styles.markOverlay /* 不透明で即時表示 */}>
           <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <BlurView
               intensity={60}
@@ -174,7 +172,6 @@ const styles = StyleSheet.create({
   headerContainer: { alignItems: 'center', gap: 8 },
   markOverlay: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.45)',
     flex: 1,
     justifyContent: 'center',
   },
