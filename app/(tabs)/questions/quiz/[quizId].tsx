@@ -4,14 +4,26 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
-import { useGlobalContext } from '@/context/GlobalContext'
 import { useNextQuiz } from '@/features/solve-problems/hooks/useNextQuiz'
+import { supabase } from '@/utils/supabase'
+import { useQuery } from '@tanstack/react-query'
+import { Tables } from '@/database.types'
 
 export default function QuizScreen() {
-  const { selectedQuizIds } = useGlobalContext()
   const { getNextQuiz } = useNextQuiz()
   const { quizId } = useLocalSearchParams()
-  
+
+  const { data: quiz } = useQuery({
+    queryKey: ['quiz', quizId],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('quiz').select('*').eq('id', quizId).single()
+      if (error) throw new Error(error.message)
+      return data as Tables<'quiz'>
+    },
+  })
+
+  console.log('quiz', quiz)
+
   const navigateToNextQuestionOrResult = () => {
     const nextQuizId = getNextQuiz()
     if (nextQuizId) {

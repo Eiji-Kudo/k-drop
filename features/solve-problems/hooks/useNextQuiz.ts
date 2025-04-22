@@ -10,10 +10,10 @@ export const useNextQuiz = () => {
     if (selectedQuizIds.length === 0) {
       return null
     }
-    
+
     const [nextQuizId, ...remaining] = selectedQuizIds
     setSelectedQuizIds(remaining)
-    
+
     return nextQuizId
   }
 
@@ -21,4 +21,4 @@ export const useNextQuiz = () => {
     getNextQuiz,
     hasQuizzes: selectedQuizIds.length > 0,
   }
-} 
+}
