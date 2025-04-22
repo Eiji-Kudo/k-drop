@@ -1,4 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router'
+import React from 'react'
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
@@ -106,12 +107,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   choiceButtonCorrect: {
-    backgroundColor: Colors.success,
-    borderColor: Colors.success,
+    backgroundColor: Colors.secondary,
+    borderColor: Colors.primary,
   },
   choiceButtonWrong: {
-    backgroundColor: Colors.danger,
-    borderColor: Colors.danger,
+    backgroundColor: Colors.toastError,
+    borderColor: Colors.toastError,
   },
   choiceText: {
     fontSize: 16,
@@ -126,6 +127,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 24,
   },
+  explanationText: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
   headerContainer: {
     alignItems: 'center',
     gap: 8,
@@ -133,10 +138,6 @@ const styles = StyleSheet.create({
   questionText: {
     fontSize: 18,
     lineHeight: 24,
-  },
-  explanationText: {
-    fontSize: 14,
-    lineHeight: 20,
   },
   safeAreaView: {
     flex: 1,
