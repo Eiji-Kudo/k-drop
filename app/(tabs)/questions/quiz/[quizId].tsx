@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   choiceButtonSelected: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.secondary,
     borderColor: Colors.primary,
   },
   choicesContainer: {
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   },
   choiceText: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
   container: {
     backgroundColor: Colors.background,
