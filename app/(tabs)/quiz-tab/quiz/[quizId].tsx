@@ -3,29 +3,77 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
-import { Tables } from '@/database.types'
+import { Colors } from '@/constants/Colors'
 import { ResultModal } from '@/features/answer-quiz/components/result-modal'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
-import { supabase } from '@/utils/supabase'
-import { useQuery } from '@tanstack/react-query'
+import { useQuizQuery } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useState } from 'react'
 import { QuizChoice } from './QuizChoice'
-import { Colors } from '@/constants/Colors'
+
+type ChoiceVariant = 'default' | 'correct' | 'wrong'
+
+const QuizHeader = () => (
+  <View style={styles.headerContainer}>
+    <ThemedText type="title">問題を解く</ThemedText>
+    <ThemedText type="subtitle">以下の問題に解答してください</ThemedText>
+  </View>
+)
+
+type QuestionPromptProps = {
+  prompt: string
+}
+
+const QuestionPrompt = ({ prompt }: QuestionPromptProps) => (
+  <View>
+    <ThemedText style={styles.questionText}>{prompt}</ThemedText>
+  </View>
+)
+
+type ChoicesSectionProps = {
+  choices: string[]
+  getVariant: (index: number) => ChoiceVariant
+  onChoicePress: (index: number) => void
+  disabled: boolean
+}
+
+const ChoicesSection = ({ choices, getVariant, onChoicePress, disabled }: ChoicesSectionProps) => (
+  <View style={styles.choicesContainer}>
+    {choices.map((choice, index) => (
+      <QuizChoice
+        key={index}
+        index={index}
+        label={choice}
+        variant={getVariant(index)}
+        disabled={disabled}
+        onPress={() => onChoicePress(index)}
+      />
+    ))}
+  </View>
+)
+
+type ExplanationSectionProps = {
+  explanation: string
+  onNextPress: () => void
+}
+
+const ExplanationSection = ({ explanation, onNextPress }: ExplanationSectionProps) => (
+  <>
+    <View>
+      <ThemedText style={styles.explanationText}>{explanation}</ThemedText>
+    </View>
+    <View>
+      <PrimaryButton onPress={onNextPress}>次へ</PrimaryButton>
+    </View>
+  </>
+)
+
 export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
   const { quizId } = useLocalSearchParams()
 
   if (typeof quizId !== 'string') throw new Error('Invalid quizId')
 
-  const { data: quiz } = useQuery({
-    queryKey: ['quiz', quizId],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('quiz').select('*').eq('quiz_id', quizId).single()
-      if (error) throw new Error(error.message)
-      return data as Tables<'quiz'>
-    },
-    enabled: !!quizId,
-  })
+  const { data: quiz } = useQuizQuery(quizId)
 
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [buttonsLocked, setButtonsLocked] = useState(false)
@@ -38,6 +86,32 @@ export default function QuizScreen() {
     setMark(null)
   }
 
+  const handleChoiceSelection = (choiceIndex: number) => {
+    if (buttonsLocked || !quiz) return
+    
+    const selectedChoiceNumber = choiceIndex + 1
+    setSelectedChoice(selectedChoiceNumber)
+    setButtonsLocked(true)
+    
+    const isCorrect = quiz.correct_choice === selectedChoiceNumber
+    setMark({
+      symbol: isCorrect ? '◎' : '×',
+      color: isCorrect ? '#68c1f1' : '#f56f6f',
+    })
+    
+    setTimeout(() => setShowExplanation(true), 600)
+    setTimeout(() => setMark(null), 2000)
+  }
+
+  const getChoiceVariant = (choiceIndex: number): ChoiceVariant => {
+    if (!buttonsLocked || !quiz) return 'default'
+    
+    const choiceNumber = choiceIndex + 1
+    if (quiz.correct_choice === choiceNumber) return 'correct'
+    if (selectedChoice === choiceNumber) return 'wrong'
+    return 'default'
+  }
+
   if (!quiz) return null
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
@@ -46,52 +120,20 @@ export default function QuizScreen() {
     <>
       <ScrollView style={styles.container}>
         <SafeAreaView style={styles.safeAreaView}>
-          <View style={styles.headerContainer}>
-            <ThemedText type="title">問題を解く</ThemedText>
-            <ThemedText type="subtitle">以下の問題に解答してください</ThemedText>
-          </View>
-
-          <View>
-            <ThemedText style={styles.questionText}>{quiz.prompt}</ThemedText>
-          </View>
-
-          <View style={styles.choicesContainer}>
-            {choices.map((c, i) => {
-              let variant: 'default' | 'correct' | 'wrong' = 'default'
-              if (buttonsLocked && quiz.correct_choice === i + 1) variant = 'correct'
-              else if (buttonsLocked && selectedChoice === i + 1) variant = 'wrong'
-              return (
-                <QuizChoice
-                  key={i}
-                  index={i}
-                  label={c}
-                  variant={variant}
-                  disabled={buttonsLocked}
-                  onPress={() => {
-                    if (buttonsLocked) return
-                    setSelectedChoice(i + 1)
-                    setButtonsLocked(true)
-                    setMark({
-                      symbol: quiz.correct_choice === i + 1 ? '◎' : '×',
-                      color: quiz.correct_choice === i + 1 ? '#68c1f1' : '#f56f6f',
-                    })
-                    setTimeout(() => setShowExplanation(true), 600)
-                    setTimeout(() => setMark(null), 2000)
-                  }}
-                />
-              )
-            })}
-          </View>
+          <QuizHeader />
+          <QuestionPrompt prompt={quiz.prompt} />
+          <ChoicesSection 
+            choices={choices}
+            getVariant={getChoiceVariant}
+            onChoicePress={handleChoiceSelection}
+            disabled={buttonsLocked}
+          />
 
           {showExplanation && (
-            <>
-              <View>
-                <ThemedText style={styles.explanationText}>{quiz.explanation}</ThemedText>
-              </View>
-              <View>
-                <PrimaryButton onPress={navigateToNextQuestionOrResult}>次へ</PrimaryButton>
-              </View>
-            </>
+            <ExplanationSection 
+              explanation={quiz.explanation} 
+              onNextPress={navigateToNextQuestionOrResult} 
+            />
           )}
         </SafeAreaView>
       </ScrollView>
