@@ -77,7 +77,7 @@ export default function QuizScreen() {
 
 const styles = StyleSheet.create({
   actionContainer: {
-    marginTop: 16,
+    paddingTop: 16,
   },
   choiceButton: {
     borderColor: Colors.border,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   choicesContainer: {
     gap: 8,
-    marginTop: 16,
+    paddingTop: 16,
   },
   container: {
     backgroundColor: Colors.background,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   questionContainer: {
-    marginTop: 24,
+    paddingTop: 24,
   },
   questionText: {
     fontSize: 18,
