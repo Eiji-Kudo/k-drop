@@ -60,10 +60,7 @@ export default function QuizScreen() {
             <Pressable
               key={i}
               onPress={() => setSelectedChoice(i + 1)}
-              style={[
-                styles.choiceButton,
-                selectedChoice === i + 1 && styles.choiceButtonSelected,
-              ]}
+              style={[styles.choiceButton, selectedChoice === i + 1 && styles.choiceButtonSelected]}
             >
               <ThemedText style={styles.choiceText}>{`${i + 1}. ${c}`}</ThemedText>
             </Pressable>
@@ -83,23 +80,23 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   choiceButton: {
-    borderWidth: 1,
     borderColor: Colors.border,
     borderRadius: 8,
-    paddingVertical: 12,
+    borderWidth: 1,
     paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   choiceButtonSelected: {
     backgroundColor: Colors.secondary,
     borderColor: Colors.primary,
   },
-  choicesContainer: {
-    marginTop: 16,
-    gap: 8,
-  },
   choiceText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  choicesContainer: {
+    gap: 8,
+    marginTop: 16,
   },
   container: {
     backgroundColor: Colors.background,
