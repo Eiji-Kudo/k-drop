@@ -7,7 +7,7 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 import { ProblemsContext } from '@/features/solve-problems/context/ProblemsContext'
 
-export default function SolveProblemScreen() {
+export default function AnswerQuizScreen() {
   const { problems } = useContext(ProblemsContext)
   const { problemId } = useLocalSearchParams()
   const currentProblemId = Number(problemId) || 1
@@ -16,7 +16,7 @@ export default function SolveProblemScreen() {
   const handleSubmit = () => {
     const nextProblem = problems.find((p) => p.id === currentProblemId + 1)
     if (nextProblem) {
-      router.replace(`/questions/solve-problem?problemId=${nextProblem.id}`)
+      router.replace(`/questions/answer-quiz?problemId=${nextProblem.id}`)
     } else {
       router.replace('/questions/result')
     }

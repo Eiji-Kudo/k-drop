@@ -29,7 +29,7 @@ export default function GroupSelectionScreen() {
   const handleContinue = () => {
     if (selectedGroupId) {
       router.push({
-        pathname: '/questions/solve-problem',
+        pathname: '/questions/answer-quiz',
         params: { groupId: selectedGroupId.toString() },
       })
     }
