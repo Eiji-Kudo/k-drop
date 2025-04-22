@@ -29,6 +29,7 @@ export default function QuizScreen() {
   })
 
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
+  const [isAnswered, setIsAnswered] = useState(false)
 
   const navigateToNextQuestionOrResult = () => {
     const nextQuizId = getNextQuiz()
@@ -56,20 +57,41 @@ export default function QuizScreen() {
         </View>
 
         <View style={styles.choicesContainer}>
-          {choices.map((c, i) => (
-            <Pressable
-              key={i}
-              onPress={() => setSelectedChoice(i + 1)}
-              style={[styles.choiceButton, selectedChoice === i + 1 && styles.choiceButtonSelected]}
-            >
-              <ThemedText style={styles.choiceText}>{`${i + 1}. ${c}`}</ThemedText>
-            </Pressable>
-          ))}
+          {choices.map((c, i) => {
+            const isSelected = selectedChoice === i + 1
+            const isCorrect = quiz.correct_choice === i + 1
+            return (
+              <Pressable
+                key={i}
+                disabled={isAnswered}
+                onPress={() => {
+                  if (!isAnswered) {
+                    setSelectedChoice(i + 1)
+                    setIsAnswered(true)
+                  }
+                }}
+                style={[
+                  styles.choiceButton,
+                  isAnswered && isCorrect && styles.choiceButtonCorrect,
+                  isAnswered && isSelected && !isCorrect && styles.choiceButtonWrong,
+                ]}
+              >
+                <ThemedText style={styles.choiceText}>{`${i + 1}. ${c}`}</ThemedText>
+              </Pressable>
+            )
+          })}
         </View>
 
-        <View>
-          <PrimaryButton onPress={navigateToNextQuestionOrResult}>解答を送信</PrimaryButton>
-        </View>
+        {isAnswered && (
+          <>
+            <View>
+              <ThemedText style={styles.explanationText}>{quiz.explanation}</ThemedText>
+            </View>
+            <View>
+              <PrimaryButton onPress={navigateToNextQuestionOrResult}>次へ</PrimaryButton>
+            </View>
+          </>
+        )}
       </SafeAreaView>
     </ScrollView>
   )
@@ -83,9 +105,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  choiceButtonSelected: {
-    backgroundColor: Colors.secondary,
-    borderColor: Colors.primary,
+  choiceButtonCorrect: {
+    backgroundColor: Colors.success,
+    borderColor: Colors.success,
+  },
+  choiceButtonWrong: {
+    backgroundColor: Colors.danger,
+    borderColor: Colors.danger,
   },
   choiceText: {
     fontSize: 16,
@@ -107,6 +133,10 @@ const styles = StyleSheet.create({
   questionText: {
     fontSize: 18,
     lineHeight: 24,
+  },
+  explanationText: {
+    fontSize: 14,
+    lineHeight: 20,
   },
   safeAreaView: {
     flex: 1,
