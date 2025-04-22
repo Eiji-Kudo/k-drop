@@ -73,6 +73,7 @@ module.exports = {
       files: ['database.types.ts'],
       rules: {
         '@typescript-eslint/no-redundant-type-constituents': 'off',
+        'max-lines': 'off',
       },
     },
   ],
