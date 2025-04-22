@@ -7,7 +7,8 @@ import {
   View,
 } from 'react-native'
 
-import { ResultModal } from '@/components/result-modal/ResultModal'
+
+import { ResultModal } from '@/components/result-modal/index'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
