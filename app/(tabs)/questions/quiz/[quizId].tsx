@@ -51,7 +51,7 @@ export default function QuizScreen() {
           <ThemedText type="subtitle">以下の問題に解答してください</ThemedText>
         </View>
 
-        <View style={styles.questionContainer}>
+        <View>
           <ThemedText style={styles.questionText}>{quiz.prompt}</ThemedText>
         </View>
 
@@ -67,7 +67,7 @@ export default function QuizScreen() {
           ))}
         </View>
 
-        <View style={styles.actionContainer}>
+        <View>
           <PrimaryButton onPress={navigateToNextQuestionOrResult}>解答を送信</PrimaryButton>
         </View>
       </SafeAreaView>
@@ -76,7 +76,6 @@ export default function QuizScreen() {
 }
 
 const styles = StyleSheet.create({
-  actionContainer: {},
   choiceButton: {
     borderColor: Colors.border,
     borderRadius: 8,
@@ -105,7 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  questionContainer: {},
   questionText: {
     fontSize: 18,
     lineHeight: 24,
