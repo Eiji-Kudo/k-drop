@@ -4,21 +4,25 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
+import { Tables } from '@/database.types'
 import { useNextQuiz } from '@/features/solve-problems/hooks/useNextQuiz'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
-import { Tables } from '@/database.types'
 
 export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
   const { quizId } = useLocalSearchParams()
+
+  if (typeof quizId !== 'string') {
+    throw new Error('Invalid quizId: must be a string')
+  }
 
   console.log('quizId', quizId)
 
   const { data: quiz } = useQuery({
     queryKey: ['quiz', quizId],
     queryFn: async () => {
-      const { data, error } = await supabase.from('quiz').select('*').eq('id', quizId).single()
+      const { data, error } = await supabase.from('quiz').select('*').eq('quiz_id', quizId).single()
       if (error) throw new Error(error.message)
       return data as Tables<'quiz'>
     },
