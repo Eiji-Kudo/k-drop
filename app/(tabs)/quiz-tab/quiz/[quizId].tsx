@@ -1,71 +1,17 @@
 import { router, useLocalSearchParams } from 'expo-router'
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 
-import { ThemedText } from '@/components/ThemedText'
-import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
+import { ChoicesSection } from '@/features/answer-quiz/components/ChoicesSection'
+import { ExplanationSection } from '@/features/answer-quiz/components/ExplanationSection'
+import { QuestionPrompt } from '@/features/answer-quiz/components/QuestionPrompt'
+import { QuizHeader } from '@/features/answer-quiz/components/QuizHeader'
 import { ResultModal } from '@/features/answer-quiz/components/result-modal'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { useQuizQuery } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useState } from 'react'
-import { QuizChoice } from './QuizChoice'
 
 type ChoiceVariant = 'default' | 'correct' | 'wrong'
-
-const QuizHeader = () => (
-  <View style={styles.headerContainer}>
-    <ThemedText type="title">問題を解く</ThemedText>
-    <ThemedText type="subtitle">以下の問題に解答してください</ThemedText>
-  </View>
-)
-
-type QuestionPromptProps = {
-  prompt: string
-}
-
-const QuestionPrompt = ({ prompt }: QuestionPromptProps) => (
-  <View>
-    <ThemedText style={styles.questionText}>{prompt}</ThemedText>
-  </View>
-)
-
-type ChoicesSectionProps = {
-  choices: string[]
-  getVariant: (index: number) => ChoiceVariant
-  onChoicePress: (index: number) => void
-  disabled: boolean
-}
-
-const ChoicesSection = ({ choices, getVariant, onChoicePress, disabled }: ChoicesSectionProps) => (
-  <View style={styles.choicesContainer}>
-    {choices.map((choice, index) => (
-      <QuizChoice
-        key={index}
-        index={index}
-        label={choice}
-        variant={getVariant(index)}
-        disabled={disabled}
-        onPress={() => onChoicePress(index)}
-      />
-    ))}
-  </View>
-)
-
-type ExplanationSectionProps = {
-  explanation: string
-  onNextPress: () => void
-}
-
-const ExplanationSection = ({ explanation, onNextPress }: ExplanationSectionProps) => (
-  <>
-    <View>
-      <ThemedText style={styles.explanationText}>{explanation}</ThemedText>
-    </View>
-    <View>
-      <PrimaryButton onPress={onNextPress}>次へ</PrimaryButton>
-    </View>
-  </>
-)
 
 export default function QuizScreen() {
   const { getNextQuiz } = useNextQuiz()
@@ -144,10 +90,6 @@ export default function QuizScreen() {
 }
 
 const styles = StyleSheet.create({
-  choicesContainer: { gap: 16 },
   container: { backgroundColor: Colors.background, flex: 1, paddingHorizontal: 16, paddingTop: 24 },
-  explanationText: { fontSize: 14, lineHeight: 20 },
-  headerContainer: { alignItems: 'center', gap: 8 },
-  questionText: { fontSize: 18, lineHeight: 24 },
   safeAreaView: { flex: 1, gap: 32 },
 })
