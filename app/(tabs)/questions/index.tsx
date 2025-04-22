@@ -6,7 +6,7 @@ import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
 import { useSyncUnansweredQuizIds } from '@/features/solve-problems/hooks/useSyncUnansweredQuizIds'
 import { supabase } from '@/utils/supabase'
-import { toast } from '@backpackapp-io/react-native-toast'
+import { showErrorToast } from '@/utils/toast'
 import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -31,11 +31,9 @@ export default function GroupSelectionScreen() {
 
   const handleContinue = () => {
     if (selectedQuizIds.length === 0) {
-      // error toastを出す
-      toast('問題が選択されていません')
+      showErrorToast('問題が選択されていません')
       return
     }
-    toast('問題が選択されています')
     const [nextQuizId, ...remaining] = selectedQuizIds
     setSelectedQuizIds(remaining)
     router.push(`/questions/quiz/${nextQuizId}`)
@@ -60,7 +58,10 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId || selectedQuizIds.length === 0}>
+          <PrimaryButton
+            onPress={handleContinue}
+            disabled={!selectedGroupId || selectedQuizIds.length === 0}
+          >
             問題へ進む
           </PrimaryButton>
         </View>

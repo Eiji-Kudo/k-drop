@@ -11,5 +11,7 @@ export const Colors = {
   primary: '#FF9FCC',
   secondary: '#FFD9EB',
   tertiary: '#B52E6E',
+  toastSuccess: '#4CAF50',
+  toastError: '#F44336',
   white: '#FFFFFF',
 }

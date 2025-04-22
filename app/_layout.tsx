@@ -10,7 +10,7 @@ import 'react-native-reanimated'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { useAuth } from '@/hooks/useAuth'
 import { useColorScheme } from '@/hooks/useColorScheme'
-import { toast, Toasts } from '@backpackapp-io/react-native-toast'
+import { Toasts } from '@backpackapp-io/react-native-toast'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const queryClient = new QueryClient()
@@ -46,7 +46,6 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return null
   }
-
 
   return (
     <QueryClientProvider client={queryClient}>
