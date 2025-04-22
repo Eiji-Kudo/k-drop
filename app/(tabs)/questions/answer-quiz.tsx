@@ -34,9 +34,9 @@ export default function AnswerQuizScreen() {
           <ThemedText type="subtitle">以下の問題に解答してください</ThemedText>
         </View>
 
-        {/* <View style={styles.questionContainer}>
-          <ThemedText style={styles.questionText}>{currentProblem.text}</ThemedText>
-        </View> */}
+        <View style={styles.questionContainer}>
+          <ThemedText style={styles.questionText}>問題文</ThemedText>
+        </View>
 
         <View style={styles.answerContainer}>
           <ThemedText style={styles.answerLabel}>解答:</ThemedText>
