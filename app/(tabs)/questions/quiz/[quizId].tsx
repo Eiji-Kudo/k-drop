@@ -5,7 +5,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
 import { Tables } from '@/database.types'
-import { useNextQuiz } from '@/features/solve-problems/hooks/useNextQuiz'
+import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
 
