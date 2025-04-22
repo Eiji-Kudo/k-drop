@@ -1,10 +1,12 @@
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
+import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { GroupButton } from '@/features/solve-problems/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/solve-problems/components/GroupSelectionHeader'
 import { useSyncUnansweredQuizIds } from '@/features/solve-problems/hooks/useSyncUnansweredQuizIds'
 import { supabase } from '@/utils/supabase'
+import { toast } from '@backpackapp-io/react-native-toast'
 import { useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -12,6 +14,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
+  const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
 
   useSyncUnansweredQuizIds(selectedGroupId)
 
@@ -27,7 +30,15 @@ export default function GroupSelectionScreen() {
   const handleGroupSelect = (groupId: number) => setSelectedGroupId(groupId)
 
   const handleContinue = () => {
-    router.push('/questions/quiz/1')
+    if (selectedQuizIds.length === 0) {
+      // error toastを出す
+      toast('問題が選択されていません')
+      return
+    }
+    toast('問題が選択されています')
+    const [nextQuizId, ...remaining] = selectedQuizIds
+    setSelectedQuizIds(remaining)
+    router.push(`/questions/quiz/${nextQuizId}`)
   }
 
   return (
@@ -49,7 +60,7 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId}>
+          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId || selectedQuizIds.length === 0}>
             問題へ進む
           </PrimaryButton>
         </View>

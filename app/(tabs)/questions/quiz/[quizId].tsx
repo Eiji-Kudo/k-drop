@@ -9,23 +9,10 @@ import { useGlobalContext } from '@/context/GlobalContext'
 export default function QuizScreen() {
   const { quizId } = useLocalSearchParams()
   console.log('quizId', quizId)
-  const currentProblemId = Number(quizId) || 1
-  const { selectedQuizIds } = useGlobalContext()
-  const currentProblem = selectedQuizIds.find((quizId) => quizId === currentProblemId)
+ 
+  
 
-  const handleSubmit = () => {
-    const nextProblem = selectedQuizIds.find((p) => p === currentProblemId + 1)
-    if (nextProblem) {
-      router.replace(`/questions/quiz/${nextProblem}`)
-    } else {
-      router.replace('/questions/result')
-    }
-  }
 
-  if (!currentProblem) {
-    router.replace('/questions/result')
-    return null
-  }
 
   return (
     <ScrollView style={styles.container}>
@@ -45,7 +32,7 @@ export default function QuizScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={handleSubmit}>解答を送信</PrimaryButton>
+          <PrimaryButton onPress={() => {}}>解答を送信</PrimaryButton>
         </View>
       </SafeAreaView>
     </ScrollView>

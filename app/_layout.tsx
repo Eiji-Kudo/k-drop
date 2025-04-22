@@ -10,6 +10,9 @@ import 'react-native-reanimated'
 import { GlobalProvider } from '@/context/GlobalContext'
 import { useAuth } from '@/hooks/useAuth'
 import { useColorScheme } from '@/hooks/useColorScheme'
+import { toast, Toasts } from '@backpackapp-io/react-native-toast'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+
 const queryClient = new QueryClient()
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -44,14 +47,18 @@ export default function RootLayout() {
     return null
   }
 
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <GlobalProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <Toasts />
+          </GestureHandlerRootView>
         </GlobalProvider>
         <StatusBar style="auto" />
       </ThemeProvider>
