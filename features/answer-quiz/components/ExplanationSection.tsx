@@ -19,8 +19,8 @@ export const ExplanationSection = ({ explanation, onNextPress }: ExplanationSect
 )
 
 const styles = StyleSheet.create({
-  explanationText: { 
-    fontSize: 14, 
-    lineHeight: 20 
+  explanationText: {
+    fontSize: 14,
+    lineHeight: 20,
   },
-}) 
+})

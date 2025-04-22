@@ -12,4 +12,4 @@ export const useQuizQuery = (quizId: string) => {
     },
     enabled: !!quizId,
   })
-} 
+}

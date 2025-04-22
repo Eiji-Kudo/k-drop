@@ -10,11 +10,11 @@ type ChoicesSectionProps = {
   disabled: boolean
 }
 
-export const ChoicesSection = ({ 
-  choices, 
-  getVariant, 
-  onChoicePress, 
-  disabled 
+export const ChoicesSection = ({
+  choices,
+  getVariant,
+  onChoicePress,
+  disabled,
 }: ChoicesSectionProps) => (
   <View style={styles.choicesContainer}>
     {choices.map((choice, index) => (
@@ -31,7 +31,7 @@ export const ChoicesSection = ({
 )
 
 const styles = StyleSheet.create({
-  choicesContainer: { 
-    gap: 16 
+  choicesContainer: {
+    gap: 16,
   },
-}) 
+})

@@ -12,8 +12,8 @@ export const QuestionPrompt = ({ prompt }: QuestionPromptProps) => (
 )
 
 const styles = StyleSheet.create({
-  questionText: { 
-    fontSize: 18, 
-    lineHeight: 24 
+  questionText: {
+    fontSize: 18,
+    lineHeight: 24,
   },
-}) 
+})

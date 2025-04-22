@@ -9,8 +9,8 @@ export const QuizHeader = () => (
 )
 
 const styles = StyleSheet.create({
-  headerContainer: { 
-    alignItems: 'center', 
-    gap: 8 
+  headerContainer: {
+    alignItems: 'center',
+    gap: 8,
   },
-}) 
+})

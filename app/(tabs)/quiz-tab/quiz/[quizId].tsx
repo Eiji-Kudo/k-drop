@@ -34,24 +34,24 @@ export default function QuizScreen() {
 
   const handleChoiceSelection = (choiceIndex: number) => {
     if (buttonsLocked || !quiz) return
-    
+
     const selectedChoiceNumber = choiceIndex + 1
     setSelectedChoice(selectedChoiceNumber)
     setButtonsLocked(true)
-    
+
     const isCorrect = quiz.correct_choice === selectedChoiceNumber
     setMark({
       symbol: isCorrect ? '◎' : '×',
       color: isCorrect ? '#68c1f1' : '#f56f6f',
     })
-    
+
     setTimeout(() => setShowExplanation(true), 600)
     setTimeout(() => setMark(null), 2000)
   }
 
   const getChoiceVariant = (choiceIndex: number): ChoiceVariant => {
     if (!buttonsLocked || !quiz) return 'default'
-    
+
     const choiceNumber = choiceIndex + 1
     if (quiz.correct_choice === choiceNumber) return 'correct'
     if (selectedChoice === choiceNumber) return 'wrong'
@@ -68,7 +68,7 @@ export default function QuizScreen() {
         <SafeAreaView style={styles.safeAreaView}>
           <QuizHeader />
           <QuestionPrompt prompt={quiz.prompt} />
-          <ChoicesSection 
+          <ChoicesSection
             choices={choices}
             getVariant={getChoiceVariant}
             onChoicePress={handleChoiceSelection}
@@ -76,9 +76,9 @@ export default function QuizScreen() {
           />
 
           {showExplanation && (
-            <ExplanationSection 
-              explanation={quiz.explanation} 
-              onNextPress={navigateToNextQuestionOrResult} 
+            <ExplanationSection
+              explanation={quiz.explanation}
+              onNextPress={navigateToNextQuestionOrResult}
             />
           )}
         </SafeAreaView>
