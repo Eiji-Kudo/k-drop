@@ -1,5 +1,4 @@
 import { router, useLocalSearchParams } from 'expo-router'
-import React from 'react'
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ThemedText } from '@/components/ThemedText'

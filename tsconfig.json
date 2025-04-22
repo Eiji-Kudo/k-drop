@@ -5,7 +5,8 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "jsx": "react-jsx"
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }
