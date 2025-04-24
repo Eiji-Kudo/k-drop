@@ -9,27 +9,19 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
   const queryClient = useQueryClient()
 
-  const cachedUser = queryClient.getQueryData<User | null>(['user'])
-  
   const { data: currentUser } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
-      if (cachedUser) {
-        return cachedUser
-      }
-      
       const { data } = await supabase.auth.getUser()
       return data.user
     },
-    initialData: cachedUser,
-    staleTime: 1000 * 60 * 5,
   })
 
   const { data: userQuizAnswers } = useQuery({
     queryKey: ['user_quiz_answer', currentUser?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
       if (!currentUser) return []
-      
+
       const { data, error } = await supabase
         .from('user_quiz_answer')
         .select('*')
@@ -44,7 +36,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
     queryKey: ['quiz', idolGroupId],
     queryFn: async (): Promise<Tables<'quiz'>[]> => {
       if (!idolGroupId) return []
-      
+
       const { data, error } = await supabase
         .from('quiz')
         .select('*')

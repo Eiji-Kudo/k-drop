@@ -63,10 +63,7 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton
-            onPress={handleContinue}
-            disabled={!selectedGroupId}
-          >
+          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId}>
             問題へ進む
           </PrimaryButton>
         </View>
