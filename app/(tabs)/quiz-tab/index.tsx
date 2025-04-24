@@ -16,7 +16,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
   const { selectedQuizIds } = useGlobalContext()
-  const { getNextQuiz, hasQuizzes } = useNextQuiz()
+  const { getNextQuiz } = useNextQuiz()
 
   useSyncUnansweredQuizIds(selectedGroupId)
 
