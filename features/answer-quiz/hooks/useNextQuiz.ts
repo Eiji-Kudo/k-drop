@@ -19,6 +19,5 @@ export const useNextQuiz = () => {
 
   return {
     getNextQuiz,
-    hasQuizzes: selectedQuizIds.length > 0,
   }
 }

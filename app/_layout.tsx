@@ -8,17 +8,25 @@ import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
-import { useEffect } from 'react'
-import 'react-native-reanimated'
+import { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
+import 'react-native-reanimated'
 
 import { GlobalProvider } from '@/context/GlobalContext'
-import { useAuth } from '@/hooks/useAuth'
+
 import { useColorScheme } from '@/hooks/useColorScheme'
+import { signUpNewUser } from '@/utils/auth'
 import { Toasts } from '@backpackapp-io/react-native-toast'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5分
+      gcTime: 10 * 60 * 1000, // 10分
+    },
+  },
+})
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
@@ -28,14 +36,18 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   })
-  const { signUpNewUser } = useAuth()
+  const [isUserInitialized, setIsUserInitialized] = useState(false)
 
   useEffect(() => {
     async function initializeApp() {
       try {
-        await signUpNewUser()
+        const userData = await signUpNewUser()
+        if ('user' in userData) {
+          queryClient.setQueryData(['user'], userData.user)
+        }
+        setIsUserInitialized(true)
       } catch (error) {
-        console.error('Sign up error:', error)
+        setIsUserInitialized(true)
       }
       try {
         await SplashScreen.hideAsync()
@@ -46,9 +58,9 @@ export default function RootLayout() {
     if (fontsLoaded) {
       initializeApp()
     }
-  }, [fontsLoaded, signUpNewUser])
+  }, [fontsLoaded])
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !isUserInitialized) {
     return null
   }
 

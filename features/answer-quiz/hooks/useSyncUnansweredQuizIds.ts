@@ -2,24 +2,34 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
-export function useSyncUnansweredQuizIds(groupId: number | null) {
+export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
+  const queryClient = useQueryClient()
 
+  const cachedUser = queryClient.getQueryData<User | null>(['user'])
+  
   const { data: currentUser } = useQuery({
     queryKey: ['user'],
     queryFn: async (): Promise<User | null> => {
+      if (cachedUser) {
+        return cachedUser
+      }
+      
       const { data } = await supabase.auth.getUser()
       return data.user
     },
+    initialData: cachedUser,
+    staleTime: 1000 * 60 * 5,
   })
 
   const { data: userQuizAnswers } = useQuery({
     queryKey: ['user_quiz_answer', currentUser?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
       if (!currentUser) return []
+      
       const { data, error } = await supabase
         .from('user_quiz_answer')
         .select('*')
@@ -31,17 +41,18 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
   })
 
   const { data: groupQuizzes } = useQuery({
-    queryKey: ['quiz', currentUser?.id, groupId],
+    queryKey: ['quiz', idolGroupId],
     queryFn: async (): Promise<Tables<'quiz'>[]> => {
-      if (!currentUser) return []
+      if (!idolGroupId) return []
+      
       const { data, error } = await supabase
         .from('quiz')
         .select('*')
-        .eq('idol_group_id', groupId)
+        .eq('idol_group_id', idolGroupId)
       if (error) throw new Error(error.message)
       return data as Tables<'quiz'>[]
     },
-    enabled: !!currentUser && !!groupId,
+    enabled: !!idolGroupId,
   })
 
   const answeredQuizIds = useMemo(
@@ -68,5 +79,5 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     if (!isSame) {
       setSelectedQuizIds(unansweredQuizIds)
     }
-  }, [unansweredQuizIds, selectedQuizIds, setSelectedQuizIds, groupId])
+  }, [unansweredQuizIds, selectedQuizIds, setSelectedQuizIds, idolGroupId])
 }
