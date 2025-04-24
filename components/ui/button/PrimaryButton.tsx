@@ -5,12 +5,24 @@ type PrimaryButtonProps = React.ComponentProps<typeof TouchableOpacity> & {
   children: React.ReactNode
 }
 
-export function PrimaryButton({ children, ...props }: PrimaryButtonProps) {
+export function PrimaryButton({
+  children,
+  disabled,
+  ...props
+}: PrimaryButtonProps) {
   return (
-    <TouchableOpacity style={[styles.button, props.style]} {...props}>
+    <TouchableOpacity
+      style={[styles.button, disabled && styles.buttonDisabled, props.style]}
+      disabled={disabled}
+      {...props}
+    >
       <View style={styles.buttonContent}>
         {typeof children === 'string' ? (
-          <Text style={styles.buttonText}>{children}</Text>
+          <Text
+            style={[styles.buttonText, disabled && styles.buttonTextDisabled]}
+          >
+            {children}
+          </Text>
         ) : (
           children
         )}
@@ -29,10 +41,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  buttonDisabled: {
+    backgroundColor: Colors.disabled,
+  },
   buttonText: {
     color: Colors.white,
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  buttonTextDisabled: {
+    color: Colors.disabledText,
   },
 })

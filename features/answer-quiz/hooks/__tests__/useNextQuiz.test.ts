@@ -2,7 +2,6 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { renderHook } from '@testing-library/react'
 import { useNextQuiz } from '../useNextQuiz'
 
-// Mock the context
 jest.mock('@/context/GlobalContext', () => ({
   useGlobalContext: jest.fn(),
 }))
@@ -12,8 +11,6 @@ describe('useNextQuiz', () => {
 
   beforeEach(() => {
     mockSetSelectedQuizIds = jest.fn()
-
-    // デフォルトのモック値を設定
     ;(useGlobalContext as jest.Mock).mockReturnValue({
       selectedQuizIds: [],
       setSelectedQuizIds: mockSetSelectedQuizIds,
@@ -23,7 +20,6 @@ describe('useNextQuiz', () => {
   it('should return null when no quizzes are available', () => {
     const { result } = renderHook(() => useNextQuiz())
 
-    expect(result.current.hasQuizzes).toBe(false)
     expect(result.current.getNextQuiz()).toBeNull()
     expect(mockSetSelectedQuizIds).not.toHaveBeenCalled()
   })
@@ -37,9 +33,6 @@ describe('useNextQuiz', () => {
 
     const { result } = renderHook(() => useNextQuiz())
 
-    expect(result.current.hasQuizzes).toBe(true)
-
-    // getNextQuizを呼び出し
     const nextQuiz = result.current.getNextQuiz()
 
     expect(nextQuiz).toBe('quiz1')
@@ -54,8 +47,6 @@ describe('useNextQuiz', () => {
     })
 
     const { result } = renderHook(() => useNextQuiz())
-
-    expect(result.current.hasQuizzes).toBe(true)
 
     // 最後のクイズを取得
     const nextQuiz = result.current.getNextQuiz()

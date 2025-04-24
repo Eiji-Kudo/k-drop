@@ -14,4 +14,6 @@ export const Colors = {
   toastSuccess: '#4CAF50',
   toastError: '#F44336',
   white: '#FFFFFF',
+  disabled: '#CCCCCC',
+  disabledText: '#888888',
 }

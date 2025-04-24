@@ -9,8 +9,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll",
-    "test:ci": "jest --watchAll=false",
+    "test": "jest",
     "test:types": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
     "lint-fix": "eslint . --ext .ts,.tsx --fix",
@@ -77,7 +76,7 @@
     "jest-expo": "~52.0.6",
     "prettier": "^3.5.3",
     "react-test-renderer": "18.3.1",
-    "supabase": "^2.20.5",
+    "supabase": "^2.22.4",
     "typescript": "^5.3.3"
   },
   "private": true
