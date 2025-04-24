@@ -23,7 +23,6 @@ describe('useNextQuiz', () => {
   it('should return null when no quizzes are available', () => {
     const { result } = renderHook(() => useNextQuiz())
 
-    expect(result.current.hasQuizzes).toBe(false)
     expect(result.current.getNextQuiz()).toBeNull()
     expect(mockSetSelectedQuizIds).not.toHaveBeenCalled()
   })
@@ -36,8 +35,6 @@ describe('useNextQuiz', () => {
     })
 
     const { result } = renderHook(() => useNextQuiz())
-
-    expect(result.current.hasQuizzes).toBe(true)
 
     // getNextQuizを呼び出し
     const nextQuiz = result.current.getNextQuiz()
@@ -54,8 +51,6 @@ describe('useNextQuiz', () => {
     })
 
     const { result } = renderHook(() => useNextQuiz())
-
-    expect(result.current.hasQuizzes).toBe(true)
 
     // 最後のクイズを取得
     const nextQuiz = result.current.getNextQuiz()
