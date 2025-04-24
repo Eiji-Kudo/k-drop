@@ -46,7 +46,7 @@ export default function RootLayout() {
           queryClient.setQueryData(['user'], userData.user)
         }
         setIsUserInitialized(true)
-      } catch (error) {
+      } catch {
         setIsUserInitialized(true)
       }
       try {

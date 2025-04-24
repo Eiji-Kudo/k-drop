@@ -2,12 +2,11 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
 export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
-  const queryClient = useQueryClient()
 
   const { data: currentUser } = useQuery({
     queryKey: ['user'],
