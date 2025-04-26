@@ -11,11 +11,11 @@ import {
 } from 'react-native'
 
 type ResultModalProps = {
-  visible: boolean
   mark: { symbol: '◎' | '×'; color: string } | null
 }
 
-export const ResultModal = ({ visible, mark }: ResultModalProps) => {
+export const ResultModal = ({ mark }: ResultModalProps) => {
+  const visible = !!mark
   const scaleAnim = useRef(new Animated.Value(0)).current
 
   useEffect(() => {

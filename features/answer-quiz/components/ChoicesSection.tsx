@@ -62,7 +62,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
         />
       ))}
 
-      <ResultModal visible={!!mark} mark={mark} />
+      <ResultModal mark={mark} />
 
       {showExplanation && (
         <ExplanationSection
