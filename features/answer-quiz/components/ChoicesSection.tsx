@@ -13,33 +13,37 @@ type ChoicesSectionProps = {
 }
 
 export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
-  const [selected, setSelected] = useState<number | null>(null)
-  const [locked, setLocked] = useState(false)
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+  const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
 
-  const handleChoiceSelection = (choiceIndex: number) => {
-    if (locked) return
+  // 派生値として正誤を計算
+  const isCorrect =
+    selectedChoice !== null ? quiz.correct_choice === selectedChoice : null
 
-    const selectedChoiceNumber = choiceIndex + 1
-    setSelected(selectedChoiceNumber)
-    setLocked(true)
+  const handleChoiceSelection = (index: number) => {
+    if (selectedChoice !== null) return
 
-    const isAnswerCorrect = quiz.correct_choice === selectedChoiceNumber
-    setIsCorrect(isAnswerCorrect)
+    const choiceNum = index + 1
+    setSelectedChoice(choiceNum)
 
+    // 説明表示
     setTimeout(() => setShowExplanation(true), 600)
-    setTimeout(() => setIsCorrect(null), 2000)
+    // リセット＆次へ
+    setTimeout(() => {
+      setShowExplanation(false)
+      // setSelectedChoice(null)
+      onSolved()
+    }, 2000)
   }
 
-  const getChoiceVariant = (choiceIndex: number): ChoiceVariant => {
-    if (!locked) return 'default'
+  const getChoiceVariant = (index: number): ChoiceVariant => {
+    if (selectedChoice === null) return 'default'
 
-    const choiceNumber = choiceIndex + 1
-    if (quiz.correct_choice === choiceNumber) return 'correct'
-    if (selected === choiceNumber) return 'wrong'
+    const choiceNum = index + 1
+    if (quiz.correct_choice === choiceNum) return 'correct'
+    if (selectedChoice === choiceNum) return 'wrong'
     return 'default'
   }
 
@@ -51,7 +55,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
           index={index}
           label={choice}
           variant={getChoiceVariant(index)}
-          disabled={locked}
+          disabled={selectedChoice !== null}
           onPress={() => handleChoiceSelection(index)}
         />
       ))}

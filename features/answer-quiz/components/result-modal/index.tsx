@@ -17,7 +17,7 @@ type ResultModalProps = {
 export const ResultModal = ({ isCorrect }: ResultModalProps) => {
   const visible = isCorrect !== null
   const scaleAnim = useRef(new Animated.Value(0)).current
-  
+
   const color = isCorrect ? Colors.markCorrect : Colors.markWrong
   const symbol = isCorrect ? '◎' : '×'
 

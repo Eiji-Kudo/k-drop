@@ -17,6 +17,7 @@ export function QuizChoice({ index, label, variant, style, ...rest }: Props) {
       {...rest}
       style={[
         styles.choiceButton,
+        // TODO: correct, wrongという文字列での判定を避ける
         variant === 'correct' && styles.choiceButtonCorrect,
         variant === 'wrong' && styles.choiceButtonWrong,
         style,
