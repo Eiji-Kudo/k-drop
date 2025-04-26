@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native'
 import { ExplanationSection } from './ExplanationSection'
 import { ResultModal } from './result-modal'
 
-type ChoiceVariant = 'default' | 'correct' | 'wrong'
+type ChoiceVariant = 'unanswered' | 'correct' | 'wrong'
 type DisplayStep = 'none' | 'modal' | 'explanation'
 
 type ChoicesSectionProps = {
@@ -45,11 +45,11 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
   }, [selectedChoice, onSolved])
 
   const getChoiceVariant = (index: number): ChoiceVariant => {
-    if (selectedChoice === null) return 'default'
+    if (selectedChoice === null) return 'unanswered'
     const choiceNum = index + 1
     if (quiz.correct_choice === choiceNum) return 'correct'
     if (selectedChoice === choiceNum) return 'wrong'
-    return 'default'
+    return 'unanswered'
   }
 
   return (

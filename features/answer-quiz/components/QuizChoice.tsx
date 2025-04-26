@@ -2,7 +2,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
 import { Pressable, PressableProps, StyleSheet, ViewStyle } from 'react-native'
 
-type Variant = 'default' | 'correct' | 'wrong'
+type Variant = 'unanswered' | 'correct' | 'wrong'
 
 type Props = PressableProps & {
   index: number
