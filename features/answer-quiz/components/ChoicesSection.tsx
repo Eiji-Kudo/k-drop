@@ -1,4 +1,3 @@
-import { Colors } from '@/constants/Colors'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { useState } from 'react'
@@ -16,9 +15,7 @@ type ChoicesSectionProps = {
 export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
   const [selected, setSelected] = useState<number | null>(null)
   const [locked, setLocked] = useState(false)
-  const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(
-    null,
-  )
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
@@ -30,14 +27,11 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
     setSelected(selectedChoiceNumber)
     setLocked(true)
 
-    const isCorrect = quiz.correct_choice === selectedChoiceNumber
-    setMark({
-      symbol: isCorrect ? '◎' : '×',
-      color: isCorrect ? Colors.markCorrect : Colors.markWrong,
-    })
+    const isAnswerCorrect = quiz.correct_choice === selectedChoiceNumber
+    setIsCorrect(isAnswerCorrect)
 
     setTimeout(() => setShowExplanation(true), 600)
-    setTimeout(() => setMark(null), 2000)
+    setTimeout(() => setIsCorrect(null), 2000)
   }
 
   const getChoiceVariant = (choiceIndex: number): ChoiceVariant => {
@@ -62,7 +56,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
         />
       ))}
 
-      <ResultModal mark={mark} />
+      <ResultModal isCorrect={isCorrect} />
 
       {showExplanation && (
         <ExplanationSection

@@ -11,20 +11,23 @@ import {
 } from 'react-native'
 
 type ResultModalProps = {
-  mark: { symbol: '◎' | '×'; color: string } | null
+  isCorrect: boolean | null
 }
 
-export const ResultModal = ({ mark }: ResultModalProps) => {
-  const visible = !!mark
+export const ResultModal = ({ isCorrect }: ResultModalProps) => {
+  const visible = isCorrect !== null
   const scaleAnim = useRef(new Animated.Value(0)).current
+  
+  const color = isCorrect ? Colors.markCorrect : Colors.markWrong
+  const symbol = isCorrect ? '◎' : '×'
 
   useEffect(() => {
-    if (mark) {
+    if (isCorrect !== null) {
       Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()
     } else {
       scaleAnim.setValue(0)
     }
-  }, [mark, scaleAnim])
+  }, [isCorrect, scaleAnim])
 
   return (
     <Modal visible={visible} transparent>
@@ -35,25 +38,25 @@ export const ResultModal = ({ mark }: ResultModalProps) => {
             tint="light"
             style={[
               styles.markTextContainer,
-              { borderColor: mark?.color ?? Colors.primary },
+              { borderColor: visible ? color : Colors.primary },
             ]}
           >
             <View style={styles.resultTextContainer}>
               <Text
                 style={[
                   styles.resultText,
-                  { color: mark?.color ?? Colors.primary },
+                  { color: visible ? color : Colors.primary },
                 ]}
               >
-                {mark?.symbol === '◎' ? '正解!' : '不正解'}
+                {isCorrect ? '正解!' : '不正解'}
               </Text>
               <Text
                 style={[
                   styles.markText,
-                  { color: mark?.color ?? Colors.primary },
+                  { color: visible ? color : Colors.primary },
                 ]}
               >
-                {mark?.symbol ?? ''}
+                {visible ? symbol : ''}
               </Text>
             </View>
           </BlurView>
