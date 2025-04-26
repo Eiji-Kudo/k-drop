@@ -5,7 +5,7 @@ import { User } from '@supabase/supabase-js'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
-export function useSyncUnansweredQuizIds(groupId: number | null) {
+export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
 
   const { data: currentUser } = useQuery({
@@ -20,6 +20,7 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     queryKey: ['user_quiz_answer', currentUser?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
       if (!currentUser) return []
+
       const { data, error } = await supabase
         .from('user_quiz_answer')
         .select('*')
@@ -31,17 +32,18 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
   })
 
   const { data: groupQuizzes } = useQuery({
-    queryKey: ['quiz', currentUser?.id, groupId],
+    queryKey: ['quiz', idolGroupId],
     queryFn: async (): Promise<Tables<'quiz'>[]> => {
-      if (!currentUser) return []
+      if (!idolGroupId) return []
+
       const { data, error } = await supabase
         .from('quiz')
         .select('*')
-        .eq('idol_group_id', groupId)
+        .eq('idol_group_id', idolGroupId)
       if (error) throw new Error(error.message)
       return data as Tables<'quiz'>[]
     },
-    enabled: !!currentUser && !!groupId,
+    enabled: !!idolGroupId,
   })
 
   const answeredQuizIds = useMemo(
@@ -68,5 +70,5 @@ export function useSyncUnansweredQuizIds(groupId: number | null) {
     if (!isSame) {
       setSelectedQuizIds(unansweredQuizIds)
     }
-  }, [unansweredQuizIds, selectedQuizIds, setSelectedQuizIds, groupId])
+  }, [unansweredQuizIds, selectedQuizIds, setSelectedQuizIds, idolGroupId])
 }

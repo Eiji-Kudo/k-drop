@@ -16,7 +16,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
   const { selectedQuizIds } = useGlobalContext()
-  const { getNextQuiz, hasQuizzes } = useNextQuiz()
+  const { getNextQuiz } = useNextQuiz()
 
   useSyncUnansweredQuizIds(selectedGroupId)
 
@@ -33,7 +33,7 @@ export default function GroupSelectionScreen() {
 
   const handleContinue = () => {
     if (selectedQuizIds.length === 0) {
-      showErrorToast('問題が選択されていません')
+      showErrorToast('問題がありません')
       return
     }
     const nextQuizId = getNextQuiz()
@@ -63,10 +63,7 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton
-            onPress={handleContinue}
-            disabled={!selectedGroupId || !hasQuizzes}
-          >
+          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId}>
             問題へ進む
           </PrimaryButton>
         </View>
