@@ -1,6 +1,6 @@
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { QuizVariant } from '@/types/quiz'
+import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ExplanationSection } from './ExplanationSection'

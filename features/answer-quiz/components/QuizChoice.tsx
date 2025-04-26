@@ -1,6 +1,6 @@
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
-import { QuizVariant } from '@/types/quiz'
+import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { Pressable, PressableProps, StyleSheet, ViewStyle } from 'react-native'
 
 type Props = PressableProps & {
