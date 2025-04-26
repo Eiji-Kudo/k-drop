@@ -1,13 +1,12 @@
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
+import { QuizVariant } from '@/types/quiz'
 import { Pressable, PressableProps, StyleSheet, ViewStyle } from 'react-native'
-
-type Variant = 'unanswered' | 'correct' | 'wrong'
 
 type Props = PressableProps & {
   index: number
   label: string
-  variant: Variant
+  variant: QuizVariant
   style?: ViewStyle
 }
 
@@ -17,9 +16,8 @@ export function QuizChoice({ index, label, variant, style, ...rest }: Props) {
       {...rest}
       style={[
         styles.choiceButton,
-        // TODO: correct, wrongという文字列での判定を避ける
-        variant === 'correct' && styles.choiceButtonCorrect,
-        variant === 'wrong' && styles.choiceButtonWrong,
+        variant === QuizVariant.CORRECT && styles.choiceButtonCorrect,
+        variant === QuizVariant.INCORRECT && styles.choiceButtonIncorrect,
         style,
       ]}
     >
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.secondary,
     borderColor: Colors.primary,
   },
-  choiceButtonWrong: {
+  choiceButtonIncorrect: {
     backgroundColor: Colors.toastError,
     borderColor: Colors.toastError,
   },

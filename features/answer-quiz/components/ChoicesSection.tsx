@@ -1,11 +1,11 @@
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { useState, useEffect } from 'react'
+import { QuizVariant } from '@/types/quiz'
+import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ExplanationSection } from './ExplanationSection'
 import { ResultModal } from './result-modal'
 
-type ChoiceVariant = 'unanswered' | 'correct' | 'wrong'
 type DisplayStep = 'none' | 'modal' | 'explanation'
 
 type ChoicesSectionProps = {
@@ -44,12 +44,12 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
     return () => timers.forEach(clearTimeout)
   }, [selectedChoice, onSolved])
 
-  const getChoiceVariant = (index: number): ChoiceVariant => {
-    if (selectedChoice === null) return 'unanswered'
+  const getChoiceVariant = (index: number): QuizVariant => {
+    if (selectedChoice === null) return QuizVariant.UNANSWERED
     const choiceNum = index + 1
-    if (quiz.correct_choice === choiceNum) return 'correct'
-    if (selectedChoice === choiceNum) return 'wrong'
-    return 'unanswered'
+    if (quiz.correct_choice === choiceNum) return QuizVariant.CORRECT
+    if (selectedChoice === choiceNum) return QuizVariant.INCORRECT
+    return QuizVariant.UNANSWERED
   }
 
   return (
