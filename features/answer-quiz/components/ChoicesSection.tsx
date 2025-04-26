@@ -9,14 +9,16 @@ import { ResultModal } from './result-modal'
 type ChoiceVariant = 'default' | 'correct' | 'wrong'
 
 type ChoicesSectionProps = {
-  quiz: Tables<'quiz'>  
+  quiz: Tables<'quiz'>
   onSolved: () => void
 }
 
 export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
   const [selected, setSelected] = useState<number | null>(null)
   const [locked, setLocked] = useState(false)
-  const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(null)
+  const [mark, setMark] = useState<{ symbol: '◎' | '×'; color: string } | null>(
+    null,
+  )
   const [showExplanation, setShowExplanation] = useState(false)
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
