@@ -14,6 +14,7 @@ type ChoicesSectionProps = {
 
 export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
+  const [showModal, setshowModal] = useState(false)
   const [showExplanation, setShowExplanation] = useState(false)
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
@@ -29,11 +30,11 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
     setSelectedChoice(choiceNum)
 
     // 説明表示
-    setTimeout(() => setShowExplanation(true), 600)
-    // リセット＆次へ
+    setTimeout(() => setshowModal(true), 600)
+    // 2秒後modalを消す
     setTimeout(() => {
-      setShowExplanation(false)
-      // setSelectedChoice(null)
+      setshowModal(false)
+      setShowExplanation(true)
       onSolved()
     }, 2000)
   }
@@ -60,7 +61,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
         />
       ))}
 
-      <ResultModal isCorrect={isCorrect} />
+      <ResultModal visible={showModal} isCorrect={isCorrect} />
 
       {showExplanation && (
         <ExplanationSection

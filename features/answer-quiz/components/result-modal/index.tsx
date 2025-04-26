@@ -12,10 +12,10 @@ import {
 
 type ResultModalProps = {
   isCorrect: boolean | null
+  visible: boolean
 }
 
-export const ResultModal = ({ isCorrect }: ResultModalProps) => {
-  const visible = isCorrect !== null
+export const ResultModal = ({ isCorrect, visible }: ResultModalProps) => {
   const scaleAnim = useRef(new Animated.Value(0)).current
 
   const color = isCorrect ? Colors.markCorrect : Colors.markWrong
