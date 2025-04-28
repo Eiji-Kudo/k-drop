@@ -7,12 +7,12 @@ export const useQuizQuery = (quizId: string) => {
     queryKey: ['quiz', quizId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('quiz')
+        .from('quizzes')
         .select('*')
         .eq('quiz_id', quizId)
         .single()
       if (error) throw new Error(error.message)
-      return data as Tables<'quiz'>
+      return data as Tables<'quizzes'>
     },
     enabled: !!quizId,
   })

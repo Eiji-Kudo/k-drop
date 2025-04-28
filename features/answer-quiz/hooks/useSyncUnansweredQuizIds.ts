@@ -18,30 +18,30 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
 
   const { data: userQuizAnswers } = useQuery({
     queryKey: ['user_quiz_answer', currentUser?.id],
-    queryFn: async (): Promise<Tables<'user_quiz_answer'>[]> => {
+    queryFn: async (): Promise<Tables<'user_quiz_answers'>[]> => {
       if (!currentUser) return []
 
       const { data, error } = await supabase
-        .from('user_quiz_answer')
+        .from('user_quiz_answers')
         .select('*')
         .eq('user_id', currentUser.id)
       if (error) throw new Error(error.message)
-      return data as Tables<'user_quiz_answer'>[]
+      return data as Tables<'user_quiz_answers'>[]
     },
     enabled: !!currentUser,
   })
 
   const { data: groupQuizzes } = useQuery({
     queryKey: ['quiz', idolGroupId],
-    queryFn: async (): Promise<Tables<'quiz'>[]> => {
+    queryFn: async (): Promise<Tables<'quizzes'>[]> => {
       if (!idolGroupId) return []
 
       const { data, error } = await supabase
-        .from('quiz')
+        .from('quizzes')
         .select('*')
         .eq('idol_group_id', idolGroupId)
       if (error) throw new Error(error.message)
-      return data as Tables<'quiz'>[]
+      return data as Tables<'quizzes'>[]
     },
     enabled: !!idolGroupId,
   })
