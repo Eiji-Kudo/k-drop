@@ -4,15 +4,15 @@ import { useQuery } from '@tanstack/react-query'
 
 export const useQuizQuery = (quizId: string) => {
   return useQuery({
-    queryKey: ['quiz', quizId],
+    queryKey: ['quizzes', quizId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('quiz')
+        .from('quizzes')
         .select('*')
         .eq('quiz_id', quizId)
         .single()
       if (error) throw new Error(error.message)
-      return data as Tables<'quiz'>
+      return data as Tables<'quizzes'>
     },
     enabled: !!quizId,
   })

@@ -22,10 +22,10 @@ export default function GroupSelectionScreen() {
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
-    queryFn: async (): Promise<Tables<'idol_group'>[]> => {
-      const { data, error } = await supabase.from('idol_group').select('*')
+    queryFn: async (): Promise<Tables<'idol_groups'>[]> => {
+      const { data, error } = await supabase.from('idol_groups').select('*')
       if (error) throw new Error(error.message)
-      return data as Tables<'idol_group'>[]
+      return data as Tables<'idol_groups'>[]
     },
   })
 

@@ -9,7 +9,7 @@ import { ResultModal } from './result-modal'
 type DisplayStep = 'none' | 'modal' | 'explanation'
 
 type ChoicesSectionProps = {
-  quiz: Tables<'quiz'>
+  quiz: Tables<'quizzes'>
   onSolved: () => void
 }
 

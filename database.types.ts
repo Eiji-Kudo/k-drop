@@ -34,7 +34,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      app_user: {
+      app_users: {
         Row: {
           app_user_id: number
           line_account_id: string
@@ -52,7 +52,79 @@ export type Database = {
         }
         Relationships: []
       }
-      event: {
+      event_group_participations: {
+        Row: {
+          event_group_participation_id: number
+          event_id: number
+          idol_group_id: number
+          registered_at: string
+        }
+        Insert: {
+          event_group_participation_id?: number
+          event_id: number
+          idol_group_id: number
+          registered_at: string
+        }
+        Update: {
+          event_group_participation_id?: number
+          event_id?: number
+          idol_group_id?: number
+          registered_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'fk_event_group_event'
+            columns: ['event_id']
+            isOneToOne: false
+            referencedRelation: 'events'
+            referencedColumns: ['event_id']
+          },
+          {
+            foreignKeyName: 'fk_event_group_idol_group'
+            columns: ['idol_group_id']
+            isOneToOne: false
+            referencedRelation: 'idol_groups'
+            referencedColumns: ['idol_group_id']
+          },
+        ]
+      }
+      event_participations: {
+        Row: {
+          app_user_id: number
+          event_id: number
+          event_participation_id: number
+          joined_at: string
+        }
+        Insert: {
+          app_user_id: number
+          event_id: number
+          event_participation_id?: number
+          joined_at: string
+        }
+        Update: {
+          app_user_id?: number
+          event_id?: number
+          event_participation_id?: number
+          joined_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'fk_event_participation_app_user'
+            columns: ['app_user_id']
+            isOneToOne: false
+            referencedRelation: 'app_users'
+            referencedColumns: ['app_user_id']
+          },
+          {
+            foreignKeyName: 'fk_event_participation_event'
+            columns: ['event_id']
+            isOneToOne: false
+            referencedRelation: 'events'
+            referencedColumns: ['event_id']
+          },
+        ]
+      }
+      events: {
         Row: {
           created_at: string
           created_by: number
@@ -88,84 +160,12 @@ export type Database = {
             foreignKeyName: 'fk_event_created_by'
             columns: ['created_by']
             isOneToOne: false
-            referencedRelation: 'app_user'
+            referencedRelation: 'app_users'
             referencedColumns: ['app_user_id']
           },
         ]
       }
-      event_group_participation: {
-        Row: {
-          event_group_participation_id: number
-          event_id: number
-          idol_group_id: number
-          registered_at: string
-        }
-        Insert: {
-          event_group_participation_id?: number
-          event_id: number
-          idol_group_id: number
-          registered_at: string
-        }
-        Update: {
-          event_group_participation_id?: number
-          event_id?: number
-          idol_group_id?: number
-          registered_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'fk_event_group_event'
-            columns: ['event_id']
-            isOneToOne: false
-            referencedRelation: 'event'
-            referencedColumns: ['event_id']
-          },
-          {
-            foreignKeyName: 'fk_event_group_idol_group'
-            columns: ['idol_group_id']
-            isOneToOne: false
-            referencedRelation: 'idol_group'
-            referencedColumns: ['idol_group_id']
-          },
-        ]
-      }
-      event_participation: {
-        Row: {
-          app_user_id: number
-          event_id: number
-          event_participation_id: number
-          joined_at: string
-        }
-        Insert: {
-          app_user_id: number
-          event_id: number
-          event_participation_id?: number
-          joined_at: string
-        }
-        Update: {
-          app_user_id?: number
-          event_id?: number
-          event_participation_id?: number
-          joined_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'fk_event_participation_app_user'
-            columns: ['app_user_id']
-            isOneToOne: false
-            referencedRelation: 'app_user'
-            referencedColumns: ['app_user_id']
-          },
-          {
-            foreignKeyName: 'fk_event_participation_event'
-            columns: ['event_id']
-            isOneToOne: false
-            referencedRelation: 'event'
-            referencedColumns: ['event_id']
-          },
-        ]
-      }
-      group_category: {
+      group_categories: {
         Row: {
           category_name: string
           group_category_id: number
@@ -180,7 +180,7 @@ export type Database = {
         }
         Relationships: []
       }
-      group_otaku_layer: {
+      group_otaku_layers: {
         Row: {
           group_otaku_layer_id: number
           layer_name: string
@@ -201,7 +201,7 @@ export type Database = {
         }
         Relationships: []
       }
-      idol_group: {
+      idol_groups: {
         Row: {
           group_category_id: number
           idol_group_id: number
@@ -225,12 +225,12 @@ export type Database = {
             foreignKeyName: 'fk_group_category'
             columns: ['group_category_id']
             isOneToOne: false
-            referencedRelation: 'group_category'
+            referencedRelation: 'group_categories'
             referencedColumns: ['group_category_id']
           },
         ]
       }
-      monthly_score_history: {
+      monthly_score_histories: {
         Row: {
           app_user_id: number
           month: string
@@ -257,12 +257,27 @@ export type Database = {
             foreignKeyName: 'fk_monthly_score_app_user'
             columns: ['app_user_id']
             isOneToOne: false
-            referencedRelation: 'app_user'
+            referencedRelation: 'app_users'
             referencedColumns: ['app_user_id']
           },
         ]
       }
-      quiz: {
+      quiz_difficulties: {
+        Row: {
+          difficulty_name: string
+          quiz_difficulty_id: number
+        }
+        Insert: {
+          difficulty_name: string
+          quiz_difficulty_id?: number
+        }
+        Update: {
+          difficulty_name?: string
+          quiz_difficulty_id?: number
+        }
+        Relationships: []
+      }
+      quizzes: {
         Row: {
           choice1: string
           choice2: string
@@ -304,34 +319,19 @@ export type Database = {
             foreignKeyName: 'fk_quiz_question_idol_group'
             columns: ['idol_group_id']
             isOneToOne: false
-            referencedRelation: 'idol_group'
+            referencedRelation: 'idol_groups'
             referencedColumns: ['idol_group_id']
           },
           {
             foreignKeyName: 'fk_quiz_question_quiz_difficulty'
             columns: ['quiz_difficulty_id']
             isOneToOne: false
-            referencedRelation: 'quiz_difficulty'
+            referencedRelation: 'quiz_difficulties'
             referencedColumns: ['quiz_difficulty_id']
           },
         ]
       }
-      quiz_difficulty: {
-        Row: {
-          difficulty_name: string
-          quiz_difficulty_id: number
-        }
-        Insert: {
-          difficulty_name: string
-          quiz_difficulty_id?: number
-        }
-        Update: {
-          difficulty_name?: string
-          quiz_difficulty_id?: number
-        }
-        Relationships: []
-      }
-      ranking_group: {
+      ranking_groups: {
         Row: {
           app_user_id: number
           display_rank: number
@@ -361,19 +361,19 @@ export type Database = {
             foreignKeyName: 'fk_ranking_group_app_user'
             columns: ['app_user_id']
             isOneToOne: false
-            referencedRelation: 'app_user'
+            referencedRelation: 'app_users'
             referencedColumns: ['app_user_id']
           },
           {
             foreignKeyName: 'fk_ranking_group_idol_group'
             columns: ['idol_group_id']
             isOneToOne: false
-            referencedRelation: 'idol_group'
+            referencedRelation: 'idol_groups'
             referencedColumns: ['idol_group_id']
           },
         ]
       }
-      ranking_total: {
+      ranking_totals: {
         Row: {
           app_user_id: number
           display_rank: number
@@ -400,12 +400,12 @@ export type Database = {
             foreignKeyName: 'fk_ranking_total_app_user'
             columns: ['app_user_id']
             isOneToOne: false
-            referencedRelation: 'app_user'
+            referencedRelation: 'app_users'
             referencedColumns: ['app_user_id']
           },
         ]
       }
-      total_otaku_layer: {
+      total_otaku_layers: {
         Row: {
           layer_name: string
           max_score: number
@@ -426,7 +426,7 @@ export type Database = {
         }
         Relationships: []
       }
-      user_idol_group_score: {
+      user_idol_group_scores: {
         Row: {
           app_user_id: number
           group_otaku_layer_id: number
@@ -453,26 +453,26 @@ export type Database = {
             foreignKeyName: 'fk_user_idol_app_user'
             columns: ['app_user_id']
             isOneToOne: false
-            referencedRelation: 'app_user'
+            referencedRelation: 'app_users'
             referencedColumns: ['app_user_id']
           },
           {
             foreignKeyName: 'fk_user_idol_group_otaku_layer'
             columns: ['group_otaku_layer_id']
             isOneToOne: false
-            referencedRelation: 'group_otaku_layer'
+            referencedRelation: 'group_otaku_layers'
             referencedColumns: ['group_otaku_layer_id']
           },
           {
             foreignKeyName: 'fk_user_idol_idol_group'
             columns: ['idol_group_id']
             isOneToOne: false
-            referencedRelation: 'idol_group'
+            referencedRelation: 'idol_groups'
             referencedColumns: ['idol_group_id']
           },
         ]
       }
-      user_profile: {
+      user_profiles: {
         Row: {
           app_user_id: number
           remaining_drop: number
@@ -502,19 +502,19 @@ export type Database = {
             foreignKeyName: 'fk_app_user'
             columns: ['app_user_id']
             isOneToOne: false
-            referencedRelation: 'app_user'
+            referencedRelation: 'app_users'
             referencedColumns: ['app_user_id']
           },
           {
             foreignKeyName: 'fk_total_otaku_layer'
             columns: ['total_otaku_layer_id']
             isOneToOne: false
-            referencedRelation: 'total_otaku_layer'
+            referencedRelation: 'total_otaku_layers'
             referencedColumns: ['total_otaku_layer_id']
           },
         ]
       }
-      user_quiz_answer: {
+      user_quiz_answers: {
         Row: {
           answered_at: string
           app_user_id: number
@@ -544,14 +544,14 @@ export type Database = {
             foreignKeyName: 'fk_user_quiz'
             columns: ['quiz_id']
             isOneToOne: false
-            referencedRelation: 'quiz'
+            referencedRelation: 'quizzes'
             referencedColumns: ['quiz_id']
           },
           {
             foreignKeyName: 'fk_user_quiz_app_user'
             columns: ['app_user_id']
             isOneToOne: false
-            referencedRelation: 'app_user'
+            referencedRelation: 'app_users'
             referencedColumns: ['app_user_id']
           },
         ]
