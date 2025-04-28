@@ -17,7 +17,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   })
 
   const { data: userQuizAnswers } = useQuery({
-    queryKey: ['user_quiz_answer', currentUser?.id],
+    queryKey: ['user_quiz_answers', currentUser?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answers'>[]> => {
       if (!currentUser) return []
 
@@ -32,7 +32,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   })
 
   const { data: groupQuizzes } = useQuery({
-    queryKey: ['quiz', idolGroupId],
+    queryKey: ['quizzes', idolGroupId],
     queryFn: async (): Promise<Tables<'quizzes'>[]> => {
       if (!idolGroupId) return []
 

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export const useQuizQuery = (quizId: string) => {
   return useQuery({
-    queryKey: ['quiz', quizId],
+    queryKey: ['quizzes', quizId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('quizzes')
