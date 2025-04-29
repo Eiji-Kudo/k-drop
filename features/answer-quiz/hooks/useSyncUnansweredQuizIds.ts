@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef } from 'react'
 
 export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
-  const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
+  const { setSelectedQuizIds } = useGlobalContext()
   const prevUnansweredRef = useRef<number[]>([])
 
   const { data: currentUser } = useQuery({
@@ -59,7 +59,8 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   useEffect(() => {
     if (!setSelectedQuizIds) return
     const changed =
-      JSON.stringify(prevUnansweredRef.current) !== JSON.stringify(unansweredQuizIds)
+      JSON.stringify(prevUnansweredRef.current) !==
+      JSON.stringify(unansweredQuizIds)
     if (changed) {
       setSelectedQuizIds(unansweredQuizIds)
       prevUnansweredRef.current = [...unansweredQuizIds]
