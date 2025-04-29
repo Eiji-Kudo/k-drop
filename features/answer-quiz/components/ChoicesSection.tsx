@@ -78,7 +78,9 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
       {step === 'explanation' && (
         <>
           <View>
-            <ThemedText style={styles.explanationText}>{quiz.explanation}</ThemedText>
+            <ThemedText style={styles.explanationText}>
+              {quiz.explanation}
+            </ThemedText>
           </View>
           <View style={styles.buttonContainer}>
             <PrimaryButton onPress={handleNext}>次へ</PrimaryButton>
