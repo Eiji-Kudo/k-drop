@@ -19,14 +19,10 @@ jest.mock('@/utils/supabase', () => ({
 // Mock useRef to control the prevUnansweredRef value
 jest.mock('react', () => {
   const originalReact = jest.requireActual('react')
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...originalReact,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     useRef: jest.fn().mockImplementation(() => mockRef),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     useEffect: jest.fn().mockImplementation((fn) => fn()),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     useMemo: jest.fn().mockImplementation((fn) => fn()),
   }
 })
@@ -41,7 +37,6 @@ describe('useSyncUnansweredQuizIds', () => {
 
   it('should not call setSelectedQuizIds when there is no context setter', () => {
     // Mock GlobalContext with undefined setSelectedQuizIds
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
     setupQueryMocks(undefined as any, { withUserOnly: true })
 
     renderHook(() => useSyncUnansweredQuizIds(1))
