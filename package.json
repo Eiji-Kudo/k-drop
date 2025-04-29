@@ -21,7 +21,9 @@
   "jest": {
     "preset": "jest-expo",
     "testEnvironment": "jsdom",
-    "testMatch": ["**/?(*.)+(test).[jt]s?(x)"]
+    "testMatch": [
+      "**/?(*.)+(test).[jt]s?(x)"
+    ]
   },
   "dependencies": {
     "@backpackapp-io/react-native-toast": "^0.13.0",
