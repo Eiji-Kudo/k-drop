@@ -62,7 +62,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
 
   useEffect(() => {
     if (!setSelectedQuizIds) return
-    
+
     // Only update if the arrays are actually different in content
     const isSameLength = unansweredQuizIds.length === selectedQuizIds.length
     const isSame =
@@ -70,7 +70,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
       unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
 
     // Check if unansweredQuizIds has changed from previous render
-    const hasUnansweredIdsChanged = 
+    const hasUnansweredIdsChanged =
       unansweredQuizIds.length !== prevUnansweredIdsRef.current.length ||
       unansweredQuizIds.some((id, i) => id !== prevUnansweredIdsRef.current[i])
 
