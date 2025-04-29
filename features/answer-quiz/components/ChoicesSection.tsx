@@ -1,3 +1,4 @@
+import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
@@ -42,7 +43,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
     ]
 
     return () => timers.forEach(clearTimeout)
-  }, [selectedChoice, onSolved])
+  }, [selectedChoice])
 
   const getChoiceVariant = (index: number): QuizVariant => {
     if (selectedChoice === null) return QuizVariant.UNANSWERED
@@ -68,10 +69,12 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
       <ResultModal visible={step === 'modal'} isCorrect={isCorrect} />
 
       {step === 'explanation' && (
-        <ExplanationSection
-          explanation={quiz.explanation}
-          onNextPress={onSolved}
-        />
+        <>
+          <ExplanationSection explanation={quiz.explanation} />
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={onSolved}>次へ</PrimaryButton>
+          </View>
+        </>
       )}
     </View>
   )
@@ -80,5 +83,8 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
 const styles = StyleSheet.create({
   choicesContainer: {
     gap: 16,
+  },
+  buttonContainer: {
+    marginTop: 16,
   },
 })

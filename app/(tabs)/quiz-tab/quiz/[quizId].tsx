@@ -17,7 +17,9 @@ export default function QuizScreen() {
   const { data: quiz } = useQuizQuery(quizId)
 
   const handleSolved = () => {
+    console.log('handleSolved')
     const next = getNextQuiz()
+    console.log('next', next)
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
   }
 
