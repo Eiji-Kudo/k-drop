@@ -4,7 +4,9 @@ type GlobalContextType = {
   themeMode: 'light' | 'dark' | 'system'
   setThemeMode: (mode: 'light' | 'dark' | 'system') => void
   selectedQuizIds: number[]
-  setSelectedQuizIds: (ids: number[]) => void
+  setSelectedQuizIds: (ids: number[] | ((prev: number[]) => number[])) => void
+  answeredQuizIds: number[]
+  setAnsweredQuizIds: (ids: number[] | ((prev: number[]) => number[])) => void
 }
 
 const GlobalContext = createContext<GlobalContextType>({
@@ -12,12 +14,15 @@ const GlobalContext = createContext<GlobalContextType>({
   setThemeMode: () => {},
   selectedQuizIds: [],
   setSelectedQuizIds: () => {},
+  answeredQuizIds: [],
+  setAnsweredQuizIds: () => {},
 })
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [themeMode, setThemeMode] =
     useState<GlobalContextType['themeMode']>('system')
   const [selectedQuizIds, setSelectedQuizIds] = useState<number[]>([])
+  const [answeredQuizIds, setAnsweredQuizIds] = useState<number[]>([])
 
   return (
     <GlobalContext.Provider
@@ -26,6 +31,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setThemeMode,
         selectedQuizIds,
         setSelectedQuizIds,
+        answeredQuizIds,
+        setAnsweredQuizIds,
       }}
     >
       {children}
