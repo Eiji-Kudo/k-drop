@@ -47,7 +47,6 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
       // 2秒後にモーダルを閉じて解説を表示
       setTimeout(() => {
         setStep('explanation')
-        handleNext()
       }, 2000),
     ]
 
