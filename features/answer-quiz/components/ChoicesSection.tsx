@@ -32,9 +32,8 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   }
 
   const handleNext = () => {
-    console.log('handleNext')
     const next = getNextQuiz()
-    console.log('next', next)
+
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
   }
 

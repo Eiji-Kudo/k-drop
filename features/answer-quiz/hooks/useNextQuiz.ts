@@ -9,8 +9,8 @@ export const useNextQuiz = () => {
   const getNextQuiz = () => {
     const remainingQuizIds = selectedQuizIds.filter(
       (id) => !answeredQuizIds.includes(id),
-    );
-    return remainingQuizIds.length ? remainingQuizIds[0] : null;
+    )
+    return remainingQuizIds.length ? remainingQuizIds[0] : null
   }
 
   return {
