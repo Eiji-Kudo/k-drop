@@ -13,11 +13,11 @@ export const useNextQuiz = () => {
 
     // selectedQuizIdsからansweredQuizIdsを除いた配列を作成
     const remainingQuizIds = selectedQuizIds.filter(
-      (id) => !answeredQuizIds.includes(id)
+      (id) => !answeredQuizIds.includes(id),
     )
 
     const nextQuizId = remainingQuizIds[0]
-    
+
     return nextQuizId
   }
 
