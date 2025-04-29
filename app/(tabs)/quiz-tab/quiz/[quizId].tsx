@@ -18,13 +18,13 @@ export default function QuizScreen() {
 
   useEffect(() => {
     navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' }
+      tabBarStyle: { display: 'none' },
     })
 
     return () => {
       // Show bottom tab bar when component unmounts
       navigation.getParent()?.setOptions({
-        tabBarStyle: undefined
+        tabBarStyle: undefined,
       })
     }
   }, [navigation])
