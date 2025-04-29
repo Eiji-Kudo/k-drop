@@ -3,10 +3,11 @@ import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
+  const prevUnansweredIdsRef = useRef<number[]>([])
 
   const { data: currentUser } = useQuery({
     queryKey: ['user'],
@@ -61,14 +62,21 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
 
   useEffect(() => {
     if (!setSelectedQuizIds) return
-
+    
+    // Only update if the arrays are actually different in content
     const isSameLength = unansweredQuizIds.length === selectedQuizIds.length
     const isSame =
       isSameLength &&
       unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
 
-    if (!isSame) {
+    // Check if unansweredQuizIds has changed from previous render
+    const hasUnansweredIdsChanged = 
+      unansweredQuizIds.length !== prevUnansweredIdsRef.current.length ||
+      unansweredQuizIds.some((id, i) => id !== prevUnansweredIdsRef.current[i])
+
+    if (!isSame && hasUnansweredIdsChanged) {
       setSelectedQuizIds(unansweredQuizIds)
+      prevUnansweredIdsRef.current = [...unansweredQuizIds]
     }
-  }, [unansweredQuizIds, selectedQuizIds, setSelectedQuizIds, idolGroupId])
+  }, [unansweredQuizIds, setSelectedQuizIds, idolGroupId])
 }
