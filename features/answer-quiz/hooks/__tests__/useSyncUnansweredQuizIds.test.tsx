@@ -22,7 +22,7 @@ jest.mock('react', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...originalReact,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     useRef: jest.fn().mockImplementation(() => mockRef),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     useEffect: jest.fn().mockImplementation((fn) => fn()),
