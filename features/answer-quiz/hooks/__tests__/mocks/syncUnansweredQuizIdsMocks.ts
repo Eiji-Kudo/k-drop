@@ -136,16 +136,17 @@ export const createMockUserQuizAnswers = (): Tables<'user_quiz_answers'>[] => [
   },
 ]
 
-export const createSingleMockUserQuizAnswer = (): Tables<'user_quiz_answers'>[] => [
-  {
-    app_user_id: 1,
-    quiz_id: 1,
-    selected_choice: 2,
-    is_correct: true,
-    answered_at: '2023-01-01',
-    user_quiz_answer_id: 1,
-  },
-]
+export const createSingleMockUserQuizAnswer =
+  (): Tables<'user_quiz_answers'>[] => [
+    {
+      app_user_id: 1,
+      quiz_id: 1,
+      selected_choice: 2,
+      is_correct: true,
+      answered_at: '2023-01-01',
+      user_quiz_answer_id: 1,
+    },
+  ]
 
 // Mock query implementations
 export const setupQueryMocks = (
@@ -156,39 +157,40 @@ export const setupQueryMocks = (
     withUserOnly?: boolean
     limitedQuizzes?: boolean
     singleAnswer?: boolean
-  }
+  },
 ): void => {
-  const { 
-    withUserAnswers = true, 
-    withQuizzes = true, 
-    withUserOnly = false, 
+  const {
+    withUserAnswers = true,
+    withQuizzes = true,
+    withUserOnly = false,
     limitedQuizzes = false,
-    singleAnswer = false 
+    singleAnswer = false,
   } = options || {}
-  
+
   ;(useGlobalContext as jest.Mock).mockReturnValue({
     setSelectedQuizIds: mockSetSelectedQuizIds,
   })
-
-  ;(useQuery as jest.Mock).mockImplementation(({ queryKey }: { queryKey: string[] }) => {
-    if (queryKey[0] === 'user') {
-      return { data: { id: 'user-123' } }
-    }
-    if (withUserOnly) {
-      return { data: undefined }
-    }
-    if (queryKey[0] === 'user_quiz_answers' && withUserAnswers) {
-      if (singleAnswer) {
-        return { data: createSingleMockUserQuizAnswer() }
+  ;(useQuery as jest.Mock).mockImplementation(
+    ({ queryKey }: { queryKey: string[] }) => {
+      if (queryKey[0] === 'user') {
+        return { data: { id: 'user-123' } }
       }
-      return { data: createMockUserQuizAnswers() }
-    }
-    if (queryKey[0] === 'quizzes' && withQuizzes) {
-      if (limitedQuizzes) {
-        return { data: createLimitedMockQuizzes() }
+      if (withUserOnly) {
+        return { data: undefined }
       }
-      return { data: createMockQuizzes() }
-    }
-    return { data: [] }
-  })
+      if (queryKey[0] === 'user_quiz_answers' && withUserAnswers) {
+        if (singleAnswer) {
+          return { data: createSingleMockUserQuizAnswer() }
+        }
+        return { data: createMockUserQuizAnswers() }
+      }
+      if (queryKey[0] === 'quizzes' && withQuizzes) {
+        if (limitedQuizzes) {
+          return { data: createLimitedMockQuizzes() }
+        }
+        return { data: createMockQuizzes() }
+      }
+      return { data: [] }
+    },
+  )
 }
