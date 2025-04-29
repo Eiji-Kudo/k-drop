@@ -2,6 +2,8 @@ import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
+import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
+import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ExplanationSection } from './ExplanationSection'
@@ -11,10 +13,10 @@ type DisplayStep = 'none' | 'modal' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  onSolved: () => void
 }
 
-export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
+export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
+  const { getNextQuiz } = useNextQuiz()
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [step, setStep] = useState<DisplayStep>('none')
 
@@ -29,6 +31,13 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
     setSelectedChoice(index + 1)
   }
 
+  const handleSolved = () => {
+    console.log('handleSolved')
+    const next = getNextQuiz()
+    console.log('next', next)
+    router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
+  }
+
   useEffect(() => {
     if (selectedChoice === null) return
 
@@ -38,7 +47,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
       // 2秒後にモーダルを閉じて解説を表示
       setTimeout(() => {
         setStep('explanation')
-        onSolved()
+        handleSolved()
       }, 2000),
     ]
 
@@ -72,7 +81,7 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
         <>
           <ExplanationSection explanation={quiz.explanation} />
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={onSolved}>次へ</PrimaryButton>
+            <PrimaryButton onPress={handleSolved}>次へ</PrimaryButton>
           </View>
         </>
       )}
@@ -81,10 +90,10 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
 }
 
 const styles = StyleSheet.create({
-  choicesContainer: {
-    gap: 16,
-  },
   buttonContainer: {
     marginTop: 16,
+  },
+  choicesContainer: {
+    gap: 16,
   },
 })
