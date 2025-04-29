@@ -23,7 +23,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
       const { data, error } = await supabase
         .from('user_quiz_answers')
         .select('*')
-        .eq('user_id', currentUser?.id ?? 0)
+        .eq('app_user_id', currentUser?.id ?? 0)
       if (error) throw new Error(error.message)
       return data as Tables<'user_quiz_answers'>[]
     },
