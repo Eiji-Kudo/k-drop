@@ -19,6 +19,7 @@ jest.mock('@/utils/supabase', () => ({
 // Mock useRef to control the prevUnansweredRef value
 jest.mock('react', () => {
   const originalReact = jest.requireActual('react')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...originalReact,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
