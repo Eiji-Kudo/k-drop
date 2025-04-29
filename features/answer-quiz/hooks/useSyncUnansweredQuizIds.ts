@@ -3,10 +3,11 @@ import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
-  const { selectedQuizIds, setSelectedQuizIds } = useGlobalContext()
+  const { setSelectedQuizIds } = useGlobalContext()
+  const prevUnansweredRef = useRef<number[]>([])
 
   const { data: currentUser } = useQuery({
     queryKey: ['user'],
@@ -16,30 +17,26 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
     },
   })
 
-  const { data: userQuizAnswers } = useQuery({
+  const { data: userQuizAnswers = [] } = useQuery({
     queryKey: ['user_quiz_answers', currentUser?.id],
     queryFn: async (): Promise<Tables<'user_quiz_answers'>[]> => {
-      if (!currentUser) return []
-
       const { data, error } = await supabase
         .from('user_quiz_answers')
         .select('*')
-        .eq('user_id', currentUser.id)
+        .eq('app_user_id', currentUser?.id ?? 0)
       if (error) throw new Error(error.message)
       return data as Tables<'user_quiz_answers'>[]
     },
     enabled: !!currentUser,
   })
 
-  const { data: groupQuizzes } = useQuery({
+  const { data: groupQuizzes = [] } = useQuery({
     queryKey: ['quizzes', idolGroupId],
     queryFn: async (): Promise<Tables<'quizzes'>[]> => {
-      if (!idolGroupId) return []
-
       const { data, error } = await supabase
         .from('quizzes')
         .select('*')
-        .eq('idol_group_id', idolGroupId)
+        .eq('idol_group_id', idolGroupId ?? 0)
       if (error) throw new Error(error.message)
       return data as Tables<'quizzes'>[]
     },
@@ -47,28 +44,26 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
   })
 
   const answeredQuizIds = useMemo(
-    () => userQuizAnswers?.map((a) => a.quiz_id) ?? [],
+    () => userQuizAnswers.map((a) => a.quiz_id),
     [userQuizAnswers],
   )
 
   const unansweredQuizIds = useMemo(
     () =>
       groupQuizzes
-        ?.filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
-        .map((quiz) => quiz.quiz_id) ?? [],
+        .filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
+        .map((quiz) => quiz.quiz_id),
     [groupQuizzes, answeredQuizIds],
   )
 
   useEffect(() => {
     if (!setSelectedQuizIds) return
-
-    const isSameLength = unansweredQuizIds.length === selectedQuizIds.length
-    const isSame =
-      isSameLength &&
-      unansweredQuizIds.every((id, i) => id === selectedQuizIds[i])
-
-    if (!isSame) {
+    const changed =
+      JSON.stringify(prevUnansweredRef.current) !==
+      JSON.stringify(unansweredQuizIds)
+    if (changed) {
       setSelectedQuizIds(unansweredQuizIds)
+      prevUnansweredRef.current = [...unansweredQuizIds]
     }
-  }, [unansweredQuizIds, selectedQuizIds, setSelectedQuizIds, idolGroupId])
+  }, [unansweredQuizIds, setSelectedQuizIds])
 }
