@@ -1,3 +1,4 @@
+import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
@@ -6,7 +7,6 @@ import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { ExplanationSection } from './ExplanationSection'
 import { ResultModal } from './result-modal'
 
 type DisplayStep = 'none' | 'modal' | 'explanation'
@@ -77,7 +77,9 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 
       {step === 'explanation' && (
         <>
-          <ExplanationSection explanation={quiz.explanation} />
+          <View>
+            <ThemedText style={styles.explanationText}>{quiz.explanation}</ThemedText>
+          </View>
           <View style={styles.buttonContainer}>
             <PrimaryButton onPress={handleNext}>次へ</PrimaryButton>
           </View>
@@ -93,5 +95,9 @@ const styles = StyleSheet.create({
   },
   choicesContainer: {
     gap: 16,
+  },
+  explanationText: {
+    fontSize: 14,
+    lineHeight: 20,
   },
 })
