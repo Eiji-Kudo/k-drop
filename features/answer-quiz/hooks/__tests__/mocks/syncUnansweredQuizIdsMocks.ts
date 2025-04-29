@@ -6,13 +6,12 @@
 
 import { useGlobalContext } from '@/context/GlobalContext'
 import { useQuery } from '@tanstack/react-query'
+import { mockRef } from './mockData'
+import { createLimitedMockQuizzes, createMockQuizzes } from './mockQuizzes'
 import {
-  createLimitedMockQuizzes,
-  createMockQuizzes,
   createMockUserQuizAnswers,
   createSingleMockUserQuizAnswer,
-  mockRef,
-} from './mockData'
+} from './mockUserQuizAnswers'
 
 // Setup mocks
 export const setupMocks = (): void => {
