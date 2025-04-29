@@ -16,6 +16,10 @@ export const useNextQuiz = () => {
       (id) => !answeredQuizIds.includes(id),
     )
 
+    if (remainingQuizIds.length === 0) {
+      return null
+    }
+
     const nextQuizId = remainingQuizIds[0]
 
     return nextQuizId
