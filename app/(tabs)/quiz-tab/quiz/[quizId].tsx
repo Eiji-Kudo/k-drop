@@ -1,25 +1,44 @@
-import { router, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 
 import { Colors } from '@/constants/Colors'
+import { useGlobalContext } from '@/context/GlobalContext'
 import { ChoicesSection } from '@/features/answer-quiz/components/ChoicesSection'
 import { QuestionPrompt } from '@/features/answer-quiz/components/QuestionPrompt'
 import { QuizHeader } from '@/features/answer-quiz/components/QuizHeader'
-import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { useQuizQuery } from '@/features/answer-quiz/hooks/useQuizQuery'
+import { useEffect } from 'react'
 
 export default function QuizScreen() {
-  const { getNextQuiz } = useNextQuiz()
   const { quizId } = useLocalSearchParams()
+  const { setAnsweredQuizIds } = useGlobalContext()
+  const navigation = useNavigation()
 
   if (typeof quizId !== 'string') throw new Error('Invalid quizId')
 
-  const { data: quiz } = useQuizQuery(quizId)
+  useEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: { display: 'none' },
+    })
 
-  const handleSolved = () => {
-    const next = getNextQuiz()
-    router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
-  }
+    return () => {
+      // Show bottom tab bar when component unmounts
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined,
+      })
+    }
+  }, [navigation])
+
+  useEffect(() => {
+    setAnsweredQuizIds((prev) => {
+      if (prev.includes(Number(quizId))) {
+        return prev
+      }
+      return [...prev, Number(quizId)]
+    })
+  }, [quizId, setAnsweredQuizIds])
+
+  const { data: quiz } = useQuizQuery(quizId)
 
   if (!quiz) return null
 
@@ -28,7 +47,7 @@ export default function QuizScreen() {
       <SafeAreaView style={styles.safeAreaView}>
         <QuizHeader />
         <QuestionPrompt prompt={quiz.prompt} />
-        <ChoicesSection quiz={quiz} onSolved={handleSolved} />
+        <ChoicesSection quiz={quiz} />
       </SafeAreaView>
     </ScrollView>
   )

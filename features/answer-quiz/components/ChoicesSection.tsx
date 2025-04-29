@@ -1,19 +1,22 @@
+import { ThemedText } from '@/components/ThemedText'
+import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
+import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
+import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { ExplanationSection } from './ExplanationSection'
 import { ResultModal } from './result-modal'
 
 type DisplayStep = 'none' | 'modal' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  onSolved: () => void
 }
 
-export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
+export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
+  const { getNextQuiz } = useNextQuiz()
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [step, setStep] = useState<DisplayStep>('none')
 
@@ -28,6 +31,12 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
     setSelectedChoice(index + 1)
   }
 
+  const handleNext = () => {
+    const next = getNextQuiz()
+
+    router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
+  }
+
   useEffect(() => {
     if (selectedChoice === null) return
 
@@ -37,12 +46,11 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
       // 2秒後にモーダルを閉じて解説を表示
       setTimeout(() => {
         setStep('explanation')
-        onSolved()
       }, 2000),
     ]
 
     return () => timers.forEach(clearTimeout)
-  }, [selectedChoice, onSolved])
+  }, [selectedChoice])
 
   const getChoiceVariant = (index: number): QuizVariant => {
     if (selectedChoice === null) return QuizVariant.UNANSWERED
@@ -68,17 +76,30 @@ export const ChoicesSection = ({ quiz, onSolved }: ChoicesSectionProps) => {
       <ResultModal visible={step === 'modal'} isCorrect={isCorrect} />
 
       {step === 'explanation' && (
-        <ExplanationSection
-          explanation={quiz.explanation}
-          onNextPress={onSolved}
-        />
+        <>
+          <View>
+            <ThemedText style={styles.explanationText}>
+              {quiz.explanation}
+            </ThemedText>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={handleNext}>次へ</PrimaryButton>
+          </View>
+        </>
       )}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    marginTop: 16,
+  },
   choicesContainer: {
     gap: 16,
+  },
+  explanationText: {
+    fontSize: 14,
+    lineHeight: 20,
   },
 })
