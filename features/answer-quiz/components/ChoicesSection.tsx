@@ -31,8 +31,8 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
     setSelectedChoice(index + 1)
   }
 
-  const handleSolved = () => {
-    console.log('handleSolved')
+  const handleNext = () => {
+    console.log('handleNext')
     const next = getNextQuiz()
     console.log('next', next)
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
@@ -47,7 +47,7 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
       // 2秒後にモーダルを閉じて解説を表示
       setTimeout(() => {
         setStep('explanation')
-        handleSolved()
+        handleNext()
       }, 2000),
     ]
 
@@ -81,7 +81,7 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
         <>
           <ExplanationSection explanation={quiz.explanation} />
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={handleSolved}>次へ</PrimaryButton>
+            <PrimaryButton onPress={handleNext}>次へ</PrimaryButton>
           </View>
         </>
       )}
