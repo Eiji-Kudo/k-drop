@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 
 import { Colors } from '@/constants/Colors'
@@ -12,8 +12,22 @@ import { useEffect } from 'react'
 export default function QuizScreen() {
   const { quizId } = useLocalSearchParams()
   const { setAnsweredQuizIds } = useGlobalContext()
+  const navigation = useNavigation()
 
   if (typeof quizId !== 'string') throw new Error('Invalid quizId')
+
+  useEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: { display: 'none' }
+    })
+
+    return () => {
+      // Show bottom tab bar when component unmounts
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined
+      })
+    }
+  }, [navigation])
 
   useEffect(() => {
     setAnsweredQuizIds((prev) => {
