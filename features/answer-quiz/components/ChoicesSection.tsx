@@ -21,36 +21,26 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const { getNextQuiz } = useNextQuiz()
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
-  const { appUserId, error: userError } = useAppUser()
+  const { appUserId } = useAppUser()
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
-
   const isCorrect =
     selectedChoice !== null ? quiz.correct_choice === selectedChoice : null
 
-  // Debug user ID issues
-  useEffect(() => {
-    if (userError) {
-      console.error('Error getting app_user_id:', userError)
-    }
-  }, [appUserId, userError])
+
 
   const handleChoiceSelection = async (index: number) => {
     if (selectedChoice !== null) return
-
     const choiceNumber = index + 1
     setSelectedChoice(choiceNumber)
 
-    // Record answer to the database
     if (appUserId) {
-      const isAnswerCorrect = quiz.correct_choice === choiceNumber
-
       try {
         await supabase.from('user_quiz_answers').insert({
           app_user_id: appUserId,
           quiz_id: quiz.quiz_id,
           selected_choice: choiceNumber,
-          is_correct: isAnswerCorrect,
+          is_correct: quiz.correct_choice === choiceNumber,
           answered_at: new Date().toISOString(),
         })
       } catch (error) {
@@ -89,9 +79,7 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
           onPress={() => handleChoiceSelection(index)}
         />
       ))}
-
       <ResultModal visible={displayPhase === 'result'} isCorrect={isCorrect} />
-
       {displayPhase === 'explanation' && (
         <>
           <View>
@@ -109,14 +97,7 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    marginTop: 16,
-  },
-  choicesContainer: {
-    gap: 16,
-  },
-  explanationText: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
+  buttonContainer: { marginTop: 16 },
+  choicesContainer: { gap: 16 },
+  explanationText: { fontSize: 14, lineHeight: 20 },
 })
