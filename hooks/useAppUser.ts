@@ -17,7 +17,7 @@ export function useAppUser() {
   })
 
   // Get the app_user_id using the auth user's ID
-  const appUserQuery = useQuery<number | null   >({
+  const appUserQuery = useQuery<number | null>({
     queryKey: ['appUser', authUserQuery.data?.id],
     queryFn: async () => {
       if (!authUserQuery.data?.id) {
