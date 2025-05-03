@@ -1,6 +1,11 @@
 import { supabase } from '@/utils/supabase'
 import { User } from '@supabase/supabase-js'
-export async function signUpNewUser() {
+import { Session } from '@supabase/supabase-js'
+
+export async function signUpNewUser(): Promise<{
+  session: Session | null
+  user: User | null
+}> {
   const { data: sessionData, error: sessionError } =
     await supabase.auth.getSession()
 
@@ -28,11 +33,15 @@ export async function signUpNewUser() {
     await ensureUserRecords(data.user)
   }
 
-  return data
+  // Cast to the correct return type
+  return {
+    session: data.session,
+    user: data.user,
+  }
 }
 
-async function ensureUserRecords(user: User) {
-  if (!user?.id) return
+async function ensureUserRecords(user: User): Promise<number | null> {
+  if (!user?.id) return null
 
   try {
     const { data: existingUser } = await supabase
@@ -42,7 +51,7 @@ async function ensureUserRecords(user: User) {
       .maybeSingle()
 
     if (existingUser?.app_user_id) {
-      return existingUser.app_user_id
+      return existingUser.app_user_id as number
     }
 
     const { data: newUser, error: userError } = await supabase
@@ -73,9 +82,10 @@ async function ensureUserRecords(user: User) {
         return null
       }
 
-      return newUser.app_user_id
+      return newUser.app_user_id as number
     }
-  } catch (error) {
+    return null
+  } catch {
     return null
   }
 }

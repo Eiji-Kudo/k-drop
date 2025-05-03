@@ -27,8 +27,6 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const isCorrect =
     selectedChoice !== null ? quiz.correct_choice === selectedChoice : null
 
-
-
   const handleChoiceSelection = async (index: number) => {
     if (selectedChoice !== null) return
     const choiceNumber = index + 1
