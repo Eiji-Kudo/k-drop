@@ -7,7 +7,7 @@ import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
@@ -35,12 +35,14 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
     setSelectedChoice(choiceNumber)
 
     if (appUserId) {
+      const isAnswerCorrect = quiz.correct_choice === choiceNumber
+
       try {
         await supabase.from('user_quiz_answers').insert({
           app_user_id: appUserId,
           quiz_id: quiz.quiz_id,
           selected_choice: choiceNumber,
-          is_correct: quiz.correct_choice === choiceNumber,
+          is_correct: isAnswerCorrect,
           answered_at: new Date().toISOString(),
         })
       } catch (error) {
