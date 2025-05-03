@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
-type DisplayStep = 'none' | 'modal' | 'explanation'
+type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
@@ -18,7 +18,7 @@ type ChoicesSectionProps = {
 export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const { getNextQuiz } = useNextQuiz()
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
-  const [step, setStep] = useState<DisplayStep>('none')
+  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
 
@@ -42,10 +42,10 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 
     const timers = [
       // 0.6秒後にモーダルを表示
-      setTimeout(() => setStep('modal'), 600),
+      setTimeout(() => setDisplayPhase('result'), 600),
       // 2秒後にモーダルを閉じて解説を表示
       setTimeout(() => {
-        setStep('explanation')
+        setDisplayPhase('explanation')
       }, 2000),
     ]
 
@@ -73,9 +73,9 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
         />
       ))}
 
-      <ResultModal visible={step === 'modal'} isCorrect={isCorrect} />
+      <ResultModal visible={displayPhase === 'result'} isCorrect={isCorrect} />
 
-      {step === 'explanation' && (
+      {displayPhase === 'explanation' && (
         <>
           <View>
             <ThemedText style={styles.explanationText}>
