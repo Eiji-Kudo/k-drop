@@ -5,7 +5,7 @@ import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { router } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
@@ -29,6 +29,9 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
     if (selectedChoice !== null) return
 
     setSelectedChoice(index + 1)
+
+    setTimeout(() => setDisplayPhase('result'), 600)
+    setTimeout(() => setDisplayPhase('explanation'), 2000)
   }
 
   const handleNext = () => {
@@ -36,21 +39,6 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
   }
-
-  useEffect(() => {
-    if (selectedChoice === null) return
-
-    const timers = [
-      // 0.6秒後にモーダルを表示
-      setTimeout(() => setDisplayPhase('result'), 600),
-      // 2秒後にモーダルを閉じて解説を表示
-      setTimeout(() => {
-        setDisplayPhase('explanation')
-      }, 2000),
-    ]
-
-    return () => timers.forEach(clearTimeout)
-  }, [selectedChoice])
 
   const getChoiceVariant = (index: number): QuizVariant => {
     if (selectedChoice === null) return QuizVariant.UNANSWERED
