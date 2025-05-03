@@ -4,8 +4,10 @@ import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
+import { useAppUser } from '@/hooks/useAppUser'
+import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
@@ -19,16 +21,44 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const { getNextQuiz } = useNextQuiz()
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
+  const { appUserId, error: userError } = useAppUser()
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
 
   const isCorrect =
     selectedChoice !== null ? quiz.correct_choice === selectedChoice : null
 
-  const handleChoiceSelection = (index: number) => {
+  // Debug user ID issues
+  useEffect(() => {
+    if (userError) {
+      console.error('Error getting app_user_id:', userError)
+    }
+  }, [appUserId, userError])
+
+  const handleChoiceSelection = async (index: number) => {
     if (selectedChoice !== null) return
 
-    setSelectedChoice(index + 1)
+    const choiceNumber = index + 1
+    setSelectedChoice(choiceNumber)
+
+    // Record answer to the database
+    if (appUserId) {
+      const isAnswerCorrect = quiz.correct_choice === choiceNumber
+
+      try {
+        await supabase.from('user_quiz_answers').insert({
+          app_user_id: appUserId,
+          quiz_id: quiz.quiz_id,
+          selected_choice: choiceNumber,
+          is_correct: isAnswerCorrect,
+          answered_at: new Date().toISOString(),
+        })
+      } catch (error) {
+        console.error('Failed to record quiz answer:', error)
+      }
+    } else {
+      console.error('Cannot record answer: app_user_id not found')
+    }
 
     setTimeout(() => setDisplayPhase('result'), 600)
     setTimeout(() => setDisplayPhase('explanation'), 2000)
@@ -36,7 +66,6 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 
   const handleNext = () => {
     const next = getNextQuiz()
-
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
   }
 
