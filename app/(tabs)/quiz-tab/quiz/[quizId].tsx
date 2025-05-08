@@ -6,7 +6,7 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { ChoicesSection } from '@/features/answer-quiz/components/ChoicesSection'
 import { QuestionPrompt } from '@/features/answer-quiz/components/QuestionPrompt'
 import { QuizHeader } from '@/features/answer-quiz/components/QuizHeader'
-import { useQuizQuery } from '@/features/answer-quiz/hooks/useQuizQuery'
+import { useQuiz } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useEffect } from 'react'
 
 export default function QuizScreen() {
@@ -42,7 +42,7 @@ export default function QuizScreen() {
     })
   }, [quizId, setAnsweredQuizIds])
 
-  const { data: quiz } = useQuizQuery(quizId)
+  const { data: quiz } = useQuiz(quizId)
 
   if (!quiz) return null
 
