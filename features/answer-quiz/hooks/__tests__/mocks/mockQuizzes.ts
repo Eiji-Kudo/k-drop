@@ -4,10 +4,10 @@
  * @jest-ignore
  */
 
-import { QuizWithChoices } from '../../useQuizQuery'
+import { Tables } from '@/database.types'
 
 // Mock data for quizzes
-export const createMockQuizzes = (): QuizWithChoices[] => [
+export const createMockQuizzes = () => [
   {
     quiz_id: 1,
     idol_group_id: 1,
@@ -143,7 +143,7 @@ export const createMockQuizzes = (): QuizWithChoices[] => [
 ]
 
 // Shorter quiz list for the last test case
-export const createLimitedMockQuizzes = (): QuizWithChoices[] => [
+export const createLimitedMockQuizzes = () => [
   {
     quiz_id: 1,
     idol_group_id: 1,

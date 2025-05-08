@@ -2,9 +2,10 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
-import { QuizWithChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
+import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { useAppUser } from '@/hooks/useAppUser'
+import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -14,31 +15,32 @@ import { ResultModal } from './result-modal'
 type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
-  quiz: QuizWithChoices
+  quiz: Tables<'quizzes'>
 }
 
 export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const { getNextQuiz } = useNextQuiz()
+  const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
   const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
   const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
   const { appUserId } = useAppUser()
 
   // Find the correct choice
-  const correctChoiceId = quiz.choices.find(
+  const correctChoiceId = choices.find(
     (choice) => choice.is_correct,
   )?.quiz_choice_id
 
   // Determine if the selected choice is correct
   const isCorrect =
     selectedChoiceId !== null
-      ? (quiz.choices.find((c) => c.quiz_choice_id === selectedChoiceId)
+      ? (choices.find((c) => c.quiz_choice_id === selectedChoiceId)
           ?.is_correct ?? false)
       : null
 
   const handleChoiceSelection = async (index: number) => {
     if (selectedChoiceId !== null) return
 
-    const choice = quiz.choices[index]
+    const choice = choices[index]
     setSelectedChoiceId(choice.quiz_choice_id)
 
     if (appUserId) {
@@ -69,7 +71,7 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const getChoiceVariant = (index: number): QuizVariant => {
     if (selectedChoiceId === null) return QuizVariant.UNANSWERED
 
-    const choice = quiz.choices[index]
+    const choice = choices[index]
 
     if (choice.is_correct) return QuizVariant.CORRECT
     if (choice.quiz_choice_id === selectedChoiceId) return QuizVariant.INCORRECT
@@ -79,7 +81,7 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 
   return (
     <View style={styles.choicesContainer}>
-      {quiz.choices.map((choice, index) => (
+      {choices.map((choice, index) => (
         <QuizChoice
           key={choice.quiz_choice_id}
           index={index}

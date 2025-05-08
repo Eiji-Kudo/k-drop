@@ -2,7 +2,10 @@ import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
 
-// Hook for fetching quiz data
+
+
+
+
 export const useQuiz = (quizId: number) => {
   return useQuery({
     queryKey: ['quiz', quizId],
@@ -14,13 +17,13 @@ export const useQuiz = (quizId: number) => {
         .single()
 
       if (error) throw new Error(error.message)
-      return data as Tables<'quizzes'>
+      return data
     },
     enabled: !!quizId,
   })
 }
 
-// Hook for fetching quiz choices
+
 export const useQuizChoices = (quizId: number) => {
   return useQuery({
     queryKey: ['quizChoices', quizId],
@@ -32,7 +35,7 @@ export const useQuizChoices = (quizId: number) => {
         .order('quiz_choice_id') // Order by ID to ensure consistent order
 
       if (error) throw new Error(error.message)
-      return data 
+      return data
     },
     enabled: !!quizId,
   })
