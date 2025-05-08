@@ -262,6 +262,35 @@ export type Database = {
           },
         ]
       }
+      quiz_choices: {
+        Row: {
+          choice_text: string
+          is_correct: boolean
+          quiz_choice_id: number
+          quiz_id: number
+        }
+        Insert: {
+          choice_text: string
+          is_correct?: boolean
+          quiz_choice_id?: number
+          quiz_id: number
+        }
+        Update: {
+          choice_text?: string
+          is_correct?: boolean
+          quiz_choice_id?: number
+          quiz_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'quiz_choices_quiz_id_fkey'
+            columns: ['quiz_id']
+            isOneToOne: false
+            referencedRelation: 'quizzes'
+            referencedColumns: ['quiz_id']
+          },
+        ]
+      }
       quiz_difficulties: {
         Row: {
           difficulty_name: string
@@ -279,11 +308,6 @@ export type Database = {
       }
       quizzes: {
         Row: {
-          choice1: string
-          choice2: string
-          choice3: string
-          choice4: string
-          correct_choice: number
           explanation: string
           idol_group_id: number
           prompt: string
@@ -291,11 +315,6 @@ export type Database = {
           quiz_id: number
         }
         Insert: {
-          choice1: string
-          choice2: string
-          choice3: string
-          choice4: string
-          correct_choice: number
           explanation: string
           idol_group_id: number
           prompt: string
@@ -303,11 +322,6 @@ export type Database = {
           quiz_id?: number
         }
         Update: {
-          choice1?: string
-          choice2?: string
-          choice3?: string
-          choice4?: string
-          correct_choice?: number
           explanation?: string
           idol_group_id?: number
           prompt?: string

@@ -1,8 +1,8 @@
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
-import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
+import { QuizWithChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
@@ -14,33 +14,40 @@ import { ResultModal } from './result-modal'
 type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
-  quiz: Tables<'quizzes'>
+  quiz: QuizWithChoices
 }
 
 export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const { getNextQuiz } = useNextQuiz()
-  const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
+  const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
   const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
   const { appUserId } = useAppUser()
 
-  const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
+  // Find the correct choice
+  const correctChoiceId = quiz.choices.find(
+    (choice) => choice.is_correct,
+  )?.quiz_choice_id
+
+  // Determine if the selected choice is correct
   const isCorrect =
-    selectedChoice !== null ? quiz.correct_choice === selectedChoice : null
+    selectedChoiceId !== null
+      ? (quiz.choices.find((c) => c.quiz_choice_id === selectedChoiceId)
+          ?.is_correct ?? false)
+      : null
 
   const handleChoiceSelection = async (index: number) => {
-    if (selectedChoice !== null) return
-    const choiceNumber = index + 1
-    setSelectedChoice(choiceNumber)
+    if (selectedChoiceId !== null) return
+
+    const choice = quiz.choices[index]
+    setSelectedChoiceId(choice.quiz_choice_id)
 
     if (appUserId) {
-      const isAnswerCorrect = quiz.correct_choice === choiceNumber
-
       try {
         await supabase.from('user_quiz_answers').insert({
           app_user_id: appUserId,
           quiz_id: quiz.quiz_id,
-          selected_choice: choiceNumber,
-          is_correct: isAnswerCorrect,
+          selected_choice: index + 1, // Keep the 1-based index for backward compatibility
+          is_correct: choice.is_correct,
           answered_at: new Date().toISOString(),
         })
       } catch (error) {
@@ -56,26 +63,29 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 
   const handleNext = () => {
     const next = getNextQuiz()
-    router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
+    router.push(next ? `/quiz-tab/quiz/${next.toString()}` : '/quiz-tab/result')
   }
 
   const getChoiceVariant = (index: number): QuizVariant => {
-    if (selectedChoice === null) return QuizVariant.UNANSWERED
-    const choiceNum = index + 1
-    if (quiz.correct_choice === choiceNum) return QuizVariant.CORRECT
-    if (selectedChoice === choiceNum) return QuizVariant.INCORRECT
+    if (selectedChoiceId === null) return QuizVariant.UNANSWERED
+
+    const choice = quiz.choices[index]
+
+    if (choice.is_correct) return QuizVariant.CORRECT
+    if (choice.quiz_choice_id === selectedChoiceId) return QuizVariant.INCORRECT
+
     return QuizVariant.UNANSWERED
   }
 
   return (
     <View style={styles.choicesContainer}>
-      {choices.map((choice, index) => (
+      {quiz.choices.map((choice, index) => (
         <QuizChoice
-          key={index}
+          key={choice.quiz_choice_id}
           index={index}
-          label={choice}
+          label={choice.choice_text}
           variant={getChoiceVariant(index)}
-          disabled={selectedChoice !== null}
+          disabled={selectedChoiceId !== null}
           onPress={() => handleChoiceSelection(index)}
         />
       ))}

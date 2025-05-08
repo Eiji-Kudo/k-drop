@@ -10,10 +10,13 @@ import { useQuizQuery } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useEffect } from 'react'
 
 export default function QuizScreen() {
-  const { quizIdParam } = useLocalSearchParams()
+  const params = useLocalSearchParams()
   const { setAnsweredQuizIds } = useGlobalContext()
   const navigation = useNavigation()
 
+  const quizIdParam = Array.isArray(params.quizId)
+    ? params.quizId[0]
+    : params.quizId
   const quizId = Number(quizIdParam)
 
   if (isNaN(quizId)) throw new Error('Invalid quizId')
@@ -24,7 +27,6 @@ export default function QuizScreen() {
     })
 
     return () => {
-      // Show bottom tab bar when component unmounts
       navigation.getParent()?.setOptions({
         tabBarStyle: undefined,
       })

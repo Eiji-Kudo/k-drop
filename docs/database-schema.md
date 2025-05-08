@@ -50,23 +50,24 @@ erDiagram
         int quiz_difficulty_id PK "NOT NULL"
         string difficulty_name "NOT NULL"
     }
-    quiz_question {
-        int quiz_question_id PK "NOT NULL"
+    quizzes {
+        int quiz_id PK "NOT NULL"
         int idol_group_id FK "NOT NULL"
         int quiz_difficulty_id FK "NOT NULL"
-        text question_text "NOT NULL"
-        string choice1 "NOT NULL"
-        string choice2 "NOT NULL"
-        string choice3 "NOT NULL"
-        string choice4 "NOT NULL"
-        int correct_choice "NOT NULL"
+        text prompt "NOT NULL"
         text explanation "NOT NULL"
     }
-    user_quiz_answer {
+    quiz_choices {
+        int quiz_choice_id PK "NOT NULL"
+        int quiz_id FK "NOT NULL"
+        string choice_text "NOT NULL"
+        boolean is_correct "NOT NULL, indicates if this choice is correct"
+    }
+    user_quiz_answers {
         int user_quiz_answer_id PK "NOT NULL"
         int app_user_id FK "NOT NULL"
-        int quiz_question_id FK "NOT NULL"
-        int selected_choice "NOT NULL"
+        int quiz_id FK "NOT NULL"
+        int selected_choice "NOT NULL, 1-based index of selected choice"
         boolean is_correct "NOT NULL"
         datetime answered_at "NOT NULL"
     }
@@ -132,15 +133,17 @@ erDiagram
     user_idol_group_score }|--|| group_otaku_layer : "belongs to (group layer)"
     group_otaku_layer ||--|{ user_idol_group_score : "has many"
 
-    idol_group ||--|{ quiz_question : "has many"
-    quiz_difficulty ||--|{ quiz_question : "has many"
-    quiz_question }|--|| idol_group : "belongs to"
-    quiz_question }|--|| quiz_difficulty : "belongs to"
+    idol_group ||--|{ quizzes : "has many"
+    quiz_difficulty ||--|{ quizzes : "has many"
+    quizzes }|--|| idol_group : "belongs to"
+    quizzes }|--|| quiz_difficulty : "belongs to"
+    quizzes ||--|{ quiz_choices : "has many choices"
+    quiz_choices }|--|| quizzes : "belongs to"
 
-    app_user ||--|{ user_quiz_answer : "has many"
-    user_quiz_answer }|--|| app_user : "belongs to"
-    quiz_question ||--|{ user_quiz_answer : "has many"
-    user_quiz_answer }|--|| quiz_question : "belongs to"
+    app_user ||--|{ user_quiz_answers : "has many"
+    user_quiz_answers }|--|| app_user : "belongs to"
+    quizzes ||--|{ user_quiz_answers : "has many"
+    user_quiz_answers }|--|| quizzes : "belongs to"
 
     app_user ||--|{ ranking_total : "has one total ranking entry"
     ranking_total }|--|| app_user : "belongs to"
