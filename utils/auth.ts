@@ -1,6 +1,5 @@
 import { supabase } from '@/utils/supabase'
-import { User } from '@supabase/supabase-js'
-import { Session } from '@supabase/supabase-js'
+import { Session, User } from '@supabase/supabase-js'
 
 export async function signUpNewUser(): Promise<{
   session: Session | null
@@ -15,7 +14,7 @@ export async function signUpNewUser(): Promise<{
 
   if (sessionData?.session) {
     const user = sessionData.session.user
-    await ensureUserRecords(user)
+    await findOrCreateUser(user)
 
     return {
       session: sessionData.session,
@@ -30,7 +29,7 @@ export async function signUpNewUser(): Promise<{
   }
 
   if (data.user) {
-    await ensureUserRecords(data.user)
+    await findOrCreateUser(data.user)
   }
 
   return {
@@ -39,7 +38,7 @@ export async function signUpNewUser(): Promise<{
   }
 }
 
-async function ensureUserRecords(user: User): Promise<number | null> {
+async function findOrCreateUser(user: User): Promise<number | null> {
   if (!user?.id) return null
 
   const { data: existingUser } = await supabase
