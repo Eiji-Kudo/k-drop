@@ -4,12 +4,14 @@ import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
+import { useAppUser } from '@/hooks/useAppUser'
+import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
-type DisplayStep = 'none' | 'modal' | 'explanation'
+type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
@@ -18,39 +20,44 @@ type ChoicesSectionProps = {
 export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const { getNextQuiz } = useNextQuiz()
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
-  const [step, setStep] = useState<DisplayStep>('none')
+  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
+  const { appUserId } = useAppUser()
 
   const choices = [quiz.choice1, quiz.choice2, quiz.choice3, quiz.choice4]
-
   const isCorrect =
     selectedChoice !== null ? quiz.correct_choice === selectedChoice : null
 
-  const handleChoiceSelection = (index: number) => {
+  const handleChoiceSelection = async (index: number) => {
     if (selectedChoice !== null) return
+    const choiceNumber = index + 1
+    setSelectedChoice(choiceNumber)
 
-    setSelectedChoice(index + 1)
+    if (appUserId) {
+      const isAnswerCorrect = quiz.correct_choice === choiceNumber
+
+      try {
+        await supabase.from('user_quiz_answers').insert({
+          app_user_id: appUserId,
+          quiz_id: quiz.quiz_id,
+          selected_choice: choiceNumber,
+          is_correct: isAnswerCorrect,
+          answered_at: new Date().toISOString(),
+        })
+      } catch (error) {
+        console.error('Failed to record quiz answer:', error)
+      }
+    } else {
+      console.error('Cannot record answer: app_user_id not found')
+    }
+
+    setTimeout(() => setDisplayPhase('result'), 600)
+    setTimeout(() => setDisplayPhase('explanation'), 2000)
   }
 
   const handleNext = () => {
     const next = getNextQuiz()
-
     router.push(next ? `/quiz-tab/quiz/${next}` : '/quiz-tab/result')
   }
-
-  useEffect(() => {
-    if (selectedChoice === null) return
-
-    const timers = [
-      // 0.6秒後にモーダルを表示
-      setTimeout(() => setStep('modal'), 600),
-      // 2秒後にモーダルを閉じて解説を表示
-      setTimeout(() => {
-        setStep('explanation')
-      }, 2000),
-    ]
-
-    return () => timers.forEach(clearTimeout)
-  }, [selectedChoice])
 
   const getChoiceVariant = (index: number): QuizVariant => {
     if (selectedChoice === null) return QuizVariant.UNANSWERED
@@ -72,10 +79,8 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
           onPress={() => handleChoiceSelection(index)}
         />
       ))}
-
-      <ResultModal visible={step === 'modal'} isCorrect={isCorrect} />
-
-      {step === 'explanation' && (
+      <ResultModal visible={displayPhase === 'result'} isCorrect={isCorrect} />
+      {displayPhase === 'explanation' && (
         <>
           <View>
             <ThemedText style={styles.explanationText}>
@@ -92,14 +97,7 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    marginTop: 16,
-  },
-  choicesContainer: {
-    gap: 16,
-  },
-  explanationText: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
+  buttonContainer: { marginTop: 16 },
+  choicesContainer: { gap: 16 },
+  explanationText: { fontSize: 14, lineHeight: 20 },
 })

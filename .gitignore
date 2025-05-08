@@ -41,3 +41,5 @@ ios/
 android/
 
 .env
+
+**/.claude/settings.local.json

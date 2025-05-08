@@ -10,11 +10,13 @@ import { useQuizQuery } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useEffect } from 'react'
 
 export default function QuizScreen() {
-  const { quizId } = useLocalSearchParams()
+  const { quizIdParam } = useLocalSearchParams()
   const { setAnsweredQuizIds } = useGlobalContext()
   const navigation = useNavigation()
 
-  if (typeof quizId !== 'string') throw new Error('Invalid quizId')
+  const quizId = Number(quizIdParam)
+
+  if (isNaN(quizId)) throw new Error('Invalid quizId')
 
   useEffect(() => {
     navigation.getParent()?.setOptions({
@@ -31,10 +33,10 @@ export default function QuizScreen() {
 
   useEffect(() => {
     setAnsweredQuizIds((prev) => {
-      if (prev.includes(Number(quizId))) {
+      if (prev.includes(quizId)) {
         return prev
       }
-      return [...prev, Number(quizId)]
+      return [...prev, quizId]
     })
   }, [quizId, setAnsweredQuizIds])
 
