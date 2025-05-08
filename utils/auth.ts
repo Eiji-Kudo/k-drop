@@ -33,7 +33,6 @@ export async function signUpNewUser(): Promise<{
     await ensureUserRecords(data.user)
   }
 
-  // Cast to the correct return type
   return {
     session: data.session,
     user: data.user,
