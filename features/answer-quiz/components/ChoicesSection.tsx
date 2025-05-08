@@ -25,12 +25,6 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
   const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
   const { appUserId } = useAppUser()
 
-  // Find the correct choice
-  const correctChoiceId = choices.find(
-    (choice) => choice.is_correct,
-  )?.quiz_choice_id
-
-  // Determine if the selected choice is correct
   const isCorrect =
     selectedChoiceId !== null
       ? (choices.find((c) => c.quiz_choice_id === selectedChoiceId)

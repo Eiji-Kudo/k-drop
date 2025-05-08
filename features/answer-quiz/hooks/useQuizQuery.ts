@@ -1,10 +1,5 @@
-import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
-
-
-
-
 
 export const useQuiz = (quizId: number) => {
   return useQuery({
@@ -22,7 +17,6 @@ export const useQuiz = (quizId: number) => {
     enabled: !!quizId,
   })
 }
-
 
 export const useQuizChoices = (quizId: number) => {
   return useQuery({

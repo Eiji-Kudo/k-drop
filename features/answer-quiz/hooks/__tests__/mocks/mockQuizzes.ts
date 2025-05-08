@@ -4,8 +4,6 @@
  * @jest-ignore
  */
 
-import { Tables } from '@/database.types'
-
 // Mock data for quizzes
 export const createMockQuizzes = () => [
   {
