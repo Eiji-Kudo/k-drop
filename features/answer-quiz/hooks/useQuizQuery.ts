@@ -1,8 +1,7 @@
-import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
 
-export const useQuizQuery = (quizId: string) => {
+export const useQuizQuery = (quizId: number) => {
   return useQuery({
     queryKey: ['quizzes', quizId],
     queryFn: async () => {
@@ -12,7 +11,7 @@ export const useQuizQuery = (quizId: string) => {
         .eq('quiz_id', quizId)
         .single()
       if (error) throw new Error(error.message)
-      return data as Tables<'quizzes'>
+      return data
     },
     enabled: !!quizId,
   })

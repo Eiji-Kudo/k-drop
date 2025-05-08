@@ -50,7 +50,7 @@ async function ensureUserRecords(user: User): Promise<number | null> {
     .maybeSingle()
 
   if (existingUser?.app_user_id) {
-    return existingUser.app_user_id as number
+    return existingUser.app_user_id
   }
 
   const { data: newUser, error: userError } = await supabase
@@ -81,7 +81,7 @@ async function ensureUserRecords(user: User): Promise<number | null> {
       return null
     }
 
-    return newUser.app_user_id as number
+    return newUser.app_user_id
   }
   return null
 }

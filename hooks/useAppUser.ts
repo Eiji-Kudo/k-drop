@@ -38,7 +38,7 @@ export function useAppUser() {
         throw new Error('No app_user_id found for the current user')
       }
 
-      return data.app_user_id as number
+      return data.app_user_id
     },
     enabled: !!authUserQuery.data?.id,
   })

@@ -21,7 +21,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
         .eq('app_user_id', appUserId)
 
       if (error) throw new Error(error.message)
-      return data as Tables<'user_quiz_answers'>[]
+      return data
     },
     enabled: !!appUserId,
   })
@@ -34,7 +34,7 @@ export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
         .select('*')
         .eq('idol_group_id', idolGroupId ?? 0)
       if (error) throw new Error(error.message)
-      return data as Tables<'quizzes'>[]
+      return data
     },
     enabled: !!idolGroupId,
   })

@@ -25,7 +25,7 @@ export default function GroupSelectionScreen() {
     queryFn: async (): Promise<Tables<'idol_groups'>[]> => {
       const { data, error } = await supabase.from('idol_groups').select('*')
       if (error) throw new Error(error.message)
-      return data as Tables<'idol_groups'>[]
+      return data
     },
   })
 
