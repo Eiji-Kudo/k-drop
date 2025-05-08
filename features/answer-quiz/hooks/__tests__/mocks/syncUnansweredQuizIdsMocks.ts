@@ -6,8 +6,9 @@
 
 import { useGlobalContext } from '@/context/GlobalContext'
 import { useQuery } from '@tanstack/react-query'
+import { createLimitedMockQuizzes } from './limitedMockQuizzes'
 import { mockRef } from './mockData'
-import { createLimitedMockQuizzes, createMockQuizzes } from './mockQuizzes'
+import { createMockQuizzes } from './mockQuizzes'
 import {
   createMockUserQuizAnswers,
   createSingleMockUserQuizAnswer,
