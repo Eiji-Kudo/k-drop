@@ -41,7 +41,7 @@ INSERT INTO quiz_difficulties (difficulty_name) VALUES
   ('上級'),
   ('超上級');
 
--- quizzes - updated for new schema without choice columns
+-- quizzes
 INSERT INTO quizzes
   (idol_group_id, quiz_difficulty_id, prompt, explanation)
 VALUES
@@ -53,7 +53,7 @@ VALUES
   (2, 1, 'BTSは何人グループ？', '7人組グループでデビュー。'),
   (2, 1, 'BTSのマンネは次のうちだれ？', 'グクは1997年9月1日生まれのグループで最年少メンバー。');
 
--- quiz_choices - new table for the choices
+-- quiz_choices
 INSERT INTO quiz_choices (quiz_id, choice_text, is_correct) VALUES
   -- Quiz 1: TWICEのデビュー曲
   (1, 'Like OOH-AHH', true),
