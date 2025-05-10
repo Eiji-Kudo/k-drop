@@ -11,9 +11,7 @@ import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import QuizScreen from '../[quizId]'
 
 // Mock all dependencies at once
-;[
-  '@/utils/supabase',
-].forEach((mod) => jest.mock(mod))
+;['@/utils/supabase'].forEach((mod) => jest.mock(mod))
 jest.mock('@/hooks/useAppUser', () => ({
   useAppUser: jest.fn(),
 }))

@@ -7,9 +7,7 @@ import { useQuizChoices } from '../../hooks/useQuizQuery'
 import { ChoicesSection } from '../ChoicesSection'
 
 // Mock dependencies
-const mocks = [
-  '@/utils/supabase',
-]
+const mocks = ['@/utils/supabase']
 mocks.forEach((mod) => jest.mock(mod))
 jest.mock('@/hooks/useAppUser', () => ({
   useAppUser: jest.fn(),
