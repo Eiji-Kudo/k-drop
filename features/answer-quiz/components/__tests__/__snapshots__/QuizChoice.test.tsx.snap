@@ -2,7 +2,6 @@
 
 exports[`QuizChoice applies correct styling when answer is correct 1`] = `
 <div
-  data-testid="quiz-choice"
   onClick={[MockFunction]}
   style={
     [
@@ -29,7 +28,6 @@ exports[`QuizChoice applies correct styling when answer is correct 1`] = `
 
 exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
 <div
-  data-testid="quiz-choice"
   onClick={[MockFunction]}
   style={
     [
@@ -56,7 +54,6 @@ exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
 
 exports[`QuizChoice renders correctly with the right label 1`] = `
 <div
-  data-testid="quiz-choice"
   onClick={[MockFunction]}
   style={
     [

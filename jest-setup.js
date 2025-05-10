@@ -57,7 +57,7 @@ jest.mock('@/features/answer-quiz/components/result-modal', () => ({
   ResultModal: jest.fn().mockImplementation(({ visible, isCorrect }) => null),
 }))
 
-// Mock ThemedText - we only need the absolute path
+// Mock ThemedText
 jest.mock('@/components/ThemedText', () => ({
   ThemedText: jest.fn((props) => props.children),
 }))
@@ -118,7 +118,6 @@ jest.mock('react-native', () => {
         return (
           <div
             {...props}
-            data-testid={testID}
             testID={testID}
             onClick={onPress}
             style={style}
@@ -129,22 +128,22 @@ jest.mock('react-native', () => {
       },
     ),
     View: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>
+      <div testID={testID} {...props}>
         {children}
       </div>
     )),
     Text: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>
+      <div testID={testID} {...props}>
         {children}
       </div>
     )),
     ScrollView: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>
+      <div testID={testID} {...props}>
         {children}
       </div>
     )),
     SafeAreaView: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>
+      <div testID={testID} {...props}>
         {children}
       </div>
     )),

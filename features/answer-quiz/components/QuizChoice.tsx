@@ -16,7 +16,6 @@ export function QuizChoice({ index, label, variant, style, ...rest }: Props) {
     <Pressable
       {...rest}
       testID="quiz-choice"
-      data-testid="quiz-choice"
       style={[
         styles.choiceButton,
         variant === QuizVariant.CORRECT && styles.choiceButtonCorrect,

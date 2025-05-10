@@ -16,7 +16,7 @@ type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  testDisplayPhase?: DisplayPhase // テスト用に表示フェーズを強制設定
+  testDisplayPhase?: DisplayPhase // For testing only - forces display phase
 }
 
 export const ChoicesSection = (props: ChoicesSectionProps) => {
@@ -75,6 +75,11 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
     return QuizVariant.UNANSWERED
   }
 
+  // Determine if we should show the result modal
+  const showResultModal = displayPhase === 'result' || props.testDisplayPhase === 'explanation'
+  // Determine if we should show the explanation
+  const showExplanation = displayPhase === 'explanation' || props.testDisplayPhase === 'explanation'
+
   return (
     <View style={styles.choicesContainer}>
       {choices.map((choice, index) => (
@@ -87,12 +92,8 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
           onPress={() => handleChoiceSelection(index)}
         />
       ))}
-      {(displayPhase === 'result' ||
-        props.testDisplayPhase === 'explanation') && (
-        <ResultModal visible={true} isCorrect={isCorrect} />
-      )}
-      {(displayPhase === 'explanation' ||
-        props.testDisplayPhase === 'explanation') && (
+      {showResultModal && <ResultModal visible={true} isCorrect={isCorrect} />}
+      {showExplanation && (
         <>
           <View testID="explanation-container">
             <ThemedText style={styles.explanationText}>
