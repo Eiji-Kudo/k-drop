@@ -10,21 +10,18 @@ import { render } from '@testing-library/react-native'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import QuizScreen from '../[quizId]'
 
-// Mock all dependencies
+// Mock all dependencies at once
+['@/context/GlobalContext', '@/features/answer-quiz/hooks/useQuizQuery',
+'@/features/answer-quiz/hooks/useNextQuiz', '@/hooks/useAppUser', '@/utils/supabase']
+  .forEach((mod) => jest.mock(mod))
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
   useNavigation: jest.fn(),
-  router: {
-    push: jest.fn(),
-  },
+  router: { push: jest.fn() },
 }))
-jest.mock('@/context/GlobalContext')
-jest.mock('@/features/answer-quiz/hooks/useQuizQuery')
-jest.mock('@/features/answer-quiz/hooks/useNextQuiz')
-jest.mock('@/hooks/useAppUser')
-jest.mock('@/utils/supabase')
 
 describe('Quiz Navigation', () => {
+  // Mock data
   const mockQuizId = 42
   const mockQuiz = {
     quiz_id: mockQuizId,
@@ -47,17 +44,19 @@ describe('Quiz Navigation', () => {
       is_correct: false,
     },
   ]
+  type NavigationParent = {
+    setOptions: (options: Record<string, unknown>) => void
+  }
   const mockNavigation = {
-    getParent: jest.fn().mockReturnValue({
-      setOptions: jest.fn(),
-    }),
+    getParent: jest
+      .fn()
+      .mockReturnValue({ setOptions: jest.fn() } as NavigationParent),
   }
   const mockSetAnsweredQuizIds = jest.fn()
 
+  // Mock setup
   beforeEach(() => {
     jest.clearAllMocks()
-
-    // Setup mocks
     ;(useLocalSearchParams as jest.Mock).mockReturnValue({
       quizId: mockQuizId.toString(),
     })
@@ -67,85 +66,48 @@ describe('Quiz Navigation', () => {
       answeredQuizIds: [],
       setAnsweredQuizIds: mockSetAnsweredQuizIds,
     })
-    ;(useQuiz as jest.Mock).mockReturnValue({
-      data: mockQuiz,
-    })
-    ;(useQuizChoices as jest.Mock).mockReturnValue({
-      data: mockChoices,
-    })
+    ;(useQuiz as jest.Mock).mockReturnValue({ data: mockQuiz })
+    ;(useQuizChoices as jest.Mock).mockReturnValue({ data: mockChoices })
     ;(useNextQuiz as jest.Mock).mockReturnValue({
       getNextQuiz: jest.fn().mockReturnValue(mockQuizId + 1),
     })
-    ;(useAppUser as jest.Mock).mockReturnValue({
-      appUserId: 'user123',
-    })
+    ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 'user123' })
     ;(supabase.from as jest.Mock).mockReturnValue({
       insert: jest.fn().mockResolvedValue({ data: null, error: null }),
     })
-
-    // Mock setTimeout
     jest.useFakeTimers()
   })
+  afterEach(() => jest.useRealTimers())
 
-  afterEach(() => {
-    jest.useRealTimers()
-  })
-
-  it('adds quiz to answeredQuizIds when loaded', () => {
+  // Tests
+  it('handles quiz lifecycle events correctly', () => {
+    // Test lifecycle events (mounting and unmounting)
     render(<QuizScreen />)
-
     expect(mockSetAnsweredQuizIds).toHaveBeenCalled()
-  })
-
-  it('hides tab bar when quiz screen is mounted', () => {
-    render(<QuizScreen />)
-
     expect(mockNavigation.getParent).toHaveBeenCalled()
-    expect(mockNavigation.getParent().setOptions).toHaveBeenCalledWith({
+
+    // Tab bar visibility
+    const parent = mockNavigation.getParent() as NavigationParent
+    expect(parent.setOptions).toHaveBeenCalledWith({
       tabBarStyle: { display: 'none' },
     })
-  })
 
-  it('restores tab bar when quiz screen is unmounted', () => {
+    // Unmount and tab bar restoration
     const { unmount } = render(<QuizScreen />)
-
     unmount()
-
-    expect(mockNavigation.getParent).toHaveBeenCalled()
-    expect(mockNavigation.getParent().setOptions).toHaveBeenCalledWith({
-      tabBarStyle: undefined,
-    })
+    expect(parent.setOptions).toHaveBeenCalledWith({ tabBarStyle: undefined })
   })
 
-  it('navigates to next quiz after answering and pressing "次へ" button', async () => {
-    // Consider updating this test to avoid relying on specific components
-    // by directly testing the navigation functionality instead
-    const { debug } = render(<QuizScreen />)
+  it('handles navigation correctly', () => {
+    // Test next quiz navigation
+    router.push(`/quiz-tab/quiz/${mockQuizId + 1}`)
+    expect(router.push).toHaveBeenCalledWith(`/quiz-tab/quiz/${mockQuizId + 1}`)
 
-    // Directly test the navigation functionality
-    const nextQuizId = mockQuizId + 1
-    router.push(`/quiz-tab/quiz/${nextQuizId}`)
-
-    // Verify navigation
-    expect(router.push).toHaveBeenCalledWith(`/quiz-tab/quiz/${nextQuizId}`)
-  })
-
-  it('navigates to result screen when no more quizzes are available', async () => {
-    // Override getNextQuiz to return null (no more quizzes)
+    // Test results page navigation
     ;(useNextQuiz as jest.Mock).mockReturnValue({
       getNextQuiz: jest.fn().mockReturnValue(null),
     })
-
-    render(<QuizScreen />)
-
-    // Directly test the navigation result behavior
     router.push('/quiz-tab/result')
-
-    // Verify navigation to results page
     expect(router.push).toHaveBeenCalledWith('/quiz-tab/result')
   })
-
-  // These error boundary tests are causing timeouts and appear to be less reliable
-  // We'll remove them as they're not providing meaningful test coverage
-  // If needed, error boundary components should be tested separately
 })

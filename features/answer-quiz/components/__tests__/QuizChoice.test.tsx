@@ -1,7 +1,6 @@
 /**
  * Simplified test for QuizChoice component
  */
-import React from 'react'
 import renderer from 'react-test-renderer'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'

@@ -1,10 +1,10 @@
 import { Colors } from '@/constants/Colors'
-import React from 'react'
+import { Component, ReactNode } from 'react'
 import { Text, View } from 'react-native'
 
 type ErrorBoundaryProps = {
-  children: React.ReactNode
-  fallback?: React.ReactNode
+  children: ReactNode
+  fallback?: ReactNode
 }
 
 type ErrorBoundaryState = {
@@ -12,7 +12,7 @@ type ErrorBoundaryState = {
   error?: Error
 }
 
-export class ErrorBoundary extends React.Component<
+export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {

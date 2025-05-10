@@ -45,9 +45,6 @@ const useQuizRecording = () => {
 // We'll simplify to just test the core functionality without using renderHook
 describe('Quiz Answer Recording', () => {
   const mockAppUserId = 'user123'
-  const mockQuizId = 42
-  const mockChoiceIndex = 2
-  const mockIsCorrect = true
 
   beforeEach(() => {
     jest.clearAllMocks()
