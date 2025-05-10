@@ -53,7 +53,9 @@ describe('useSyncUnansweredQuizIds', () => {
       }),
     }))
 
-    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), {
+      wrapper,
+    })
 
     // Wait for queries to resolve
     await queryClient.refetchQueries()
@@ -71,15 +73,23 @@ describe('useSyncUnansweredQuizIds', () => {
     ;(supabase.from as jest.Mock).mockImplementation((table) => ({
       select: () => ({
         eq: () => ({
-          data: table === 'user_quiz_answers' 
-            ? [{ quiz_id: 1 }, { quiz_id: 2 }]
-            : [{ quiz_id: 1 }, { quiz_id: 2 }, { quiz_id: 3 }, { quiz_id: 4 }],
+          data:
+            table === 'user_quiz_answers'
+              ? [{ quiz_id: 1 }, { quiz_id: 2 }]
+              : [
+                  { quiz_id: 1 },
+                  { quiz_id: 2 },
+                  { quiz_id: 3 },
+                  { quiz_id: 4 },
+                ],
           error: null,
         }),
       }),
     }))
 
-    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), {
+      wrapper,
+    })
 
     // Wait for queries to resolve
     await queryClient.refetchQueries()
@@ -99,16 +109,20 @@ describe('useSyncUnansweredQuizIds', () => {
       quizzes: [{ quiz_id: 1 }, { quiz_id: 2 }],
     } as const
 
-    ;(supabase.from as jest.Mock).mockImplementation((table: keyof typeof mockData) => ({
-      select: () => ({
-        eq: () => ({
-          data: mockData[table],
-          error: null,
+    ;(supabase.from as jest.Mock).mockImplementation(
+      (table: keyof typeof mockData) => ({
+        select: () => ({
+          eq: () => ({
+            data: mockData[table],
+            error: null,
+          }),
         }),
       }),
-    }))
+    )
 
-    const { result, rerender } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+    const { result, rerender } = renderHook(() => useSyncUnansweredQuizIds(1), {
+      wrapper,
+    })
 
     // Wait for initial queries to resolve
     await queryClient.refetchQueries()
