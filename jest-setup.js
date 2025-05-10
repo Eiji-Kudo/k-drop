@@ -62,18 +62,6 @@ jest.mock('@/components/ThemedText', () => ({
   ThemedText: jest.fn((props) => props.children),
 }))
 
-// Mock Colors
-jest.mock('@/constants/Colors', () => ({
-  Colors: {
-    background: '#FFFFFF',
-    border: '#CCCCCC',
-    primary: '#007AFF',
-    secondary: '#4CD964',
-    text: '#000000',
-    toastError: '#FF3B30',
-  },
-}))
-
 // Mock QuizVariant
 jest.mock('@/features/answer-quiz/constants/quizVariant', () => ({
   QuizVariant: {

@@ -6,15 +6,15 @@ exports[`QuizChoice applies correct styling when answer is correct 1`] = `
   style={
     [
       {
-        "borderColor": "#CCCCCC",
+        "borderColor": "#F0C2D9",
         "borderRadius": 8,
         "borderWidth": 1,
         "paddingHorizontal": 16,
         "paddingVertical": 12,
       },
       {
-        "backgroundColor": "#4CD964",
-        "borderColor": "#007AFF",
+        "backgroundColor": "#FFD9EB",
+        "borderColor": "#FF9FCC",
       },
       false,
       undefined,
@@ -32,7 +32,7 @@ exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
   style={
     [
       {
-        "borderColor": "#CCCCCC",
+        "borderColor": "#F0C2D9",
         "borderRadius": 8,
         "borderWidth": 1,
         "paddingHorizontal": 16,
@@ -40,8 +40,8 @@ exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
       },
       false,
       {
-        "backgroundColor": "#FF3B30",
-        "borderColor": "#FF3B30",
+        "backgroundColor": "#F44336",
+        "borderColor": "#F44336",
       },
       undefined,
     ]
@@ -58,7 +58,7 @@ exports[`QuizChoice renders correctly with the right label 1`] = `
   style={
     [
       {
-        "borderColor": "#CCCCCC",
+        "borderColor": "#F0C2D9",
         "borderRadius": 8,
         "borderWidth": 1,
         "paddingHorizontal": 16,
