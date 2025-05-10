@@ -116,12 +116,7 @@ jest.mock('react-native', () => {
     Pressable: jest.fn(
       ({ children, onPress, testID, style, disabled, ...props }) => {
         return (
-          <div
-            {...props}
-            testID={testID}
-            onClick={onPress}
-            style={style}
-          >
+          <div {...props} testID={testID} onClick={onPress} style={style}>
             {children}
           </div>
         )
