@@ -1,0 +1,226 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuizChoice applies correct styling when answer is correct 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "borderColor": "#F0C2D9",
+        "borderRadius": 8,
+        "borderWidth": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 12,
+      },
+      {
+        "backgroundColor": "#FFD9EB",
+        "borderColor": "#FF9FCC",
+      },
+      false,
+      undefined,
+    ]
+  }
+  testID="quiz-choice"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#11181C",
+        },
+        {
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          "fontSize": 16,
+          "fontWeight": "500",
+        },
+      ]
+    }
+  >
+    1. Test Option
+  </Text>
+</View>
+`;
+
+exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "borderColor": "#F0C2D9",
+        "borderRadius": 8,
+        "borderWidth": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 12,
+      },
+      false,
+      {
+        "backgroundColor": "#F44336",
+        "borderColor": "#F44336",
+      },
+      undefined,
+    ]
+  }
+  testID="quiz-choice"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#11181C",
+        },
+        {
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          "fontSize": 16,
+          "fontWeight": "500",
+        },
+      ]
+    }
+  >
+    1. Test Option
+  </Text>
+</View>
+`;
+
+exports[`QuizChoice renders correctly with the right label 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "borderColor": "#F0C2D9",
+        "borderRadius": 8,
+        "borderWidth": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 12,
+      },
+      false,
+      false,
+      undefined,
+    ]
+  }
+  testID="quiz-choice"
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#11181C",
+        },
+        {
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          "fontSize": 16,
+          "fontWeight": "500",
+        },
+      ]
+    }
+  >
+    1. Test Option
+  </Text>
+</View>
+`;

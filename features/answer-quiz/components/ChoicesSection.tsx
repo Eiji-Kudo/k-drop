@@ -1,11 +1,11 @@
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
+import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
-import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
+import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useAppUser } from '@/hooks/useAppUser'
-import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -16,9 +16,11 @@ type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
+  testDisplayPhase?: DisplayPhase // For testing only - forces display phase
 }
 
-export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
+export const ChoicesSection = (props: ChoicesSectionProps) => {
+  const { quiz } = props
   const { getNextQuiz } = useNextQuiz()
   const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
   const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
@@ -73,6 +75,13 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
     return QuizVariant.UNANSWERED
   }
 
+  // Determine if we should show the result modal
+  const showResultModal =
+    displayPhase === 'result' || props.testDisplayPhase === 'explanation'
+  // Determine if we should show the explanation
+  const showExplanation =
+    displayPhase === 'explanation' || props.testDisplayPhase === 'explanation'
+
   return (
     <View style={styles.choicesContainer}>
       {choices.map((choice, index) => (
@@ -85,10 +94,10 @@ export const ChoicesSection = ({ quiz }: ChoicesSectionProps) => {
           onPress={() => handleChoiceSelection(index)}
         />
       ))}
-      <ResultModal visible={displayPhase === 'result'} isCorrect={isCorrect} />
-      {displayPhase === 'explanation' && (
+      {showResultModal && <ResultModal visible={true} isCorrect={isCorrect} />}
+      {showExplanation && (
         <>
-          <View>
+          <View testID="explanation-container">
             <ThemedText style={styles.explanationText}>
               {quiz.explanation}
             </ThemedText>

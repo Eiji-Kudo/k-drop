@@ -18,16 +18,6 @@ import {
 export const setupMocks = (): void => {
   jest.mock('@/context/GlobalContext')
   jest.mock('@tanstack/react-query')
-  jest.mock('@/utils/supabase', () => ({
-    supabase: {
-      auth: {
-        getUser: jest.fn(),
-      },
-      from: jest.fn().mockReturnThis(),
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-    },
-  }))
 
   jest.mock('react', () => {
     const originalReact = jest.requireActual('react')
