@@ -14,10 +14,6 @@ jest.mock('@/utils/supabase', () => ({
   },
 }))
 
-// Mock setTimeout and setImmediate
-jest.useFakeTimers()
-global.setImmediate = jest.fn((cb) => setTimeout(cb, 0))
-
 // Mock ResultModal
 jest.mock('@/features/answer-quiz/components/result-modal', () => ({
   ResultModal: jest.fn().mockImplementation(({ visible, isCorrect }) => null),
