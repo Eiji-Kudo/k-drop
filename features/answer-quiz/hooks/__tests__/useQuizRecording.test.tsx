@@ -1,6 +1,5 @@
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
-import { act, renderHook } from '@testing-library/react-native'
 
 // Mock dependencies
 jest.mock('@/utils/supabase')
@@ -10,7 +9,11 @@ jest.mock('@/hooks/useAppUser')
 const useQuizRecording = () => {
   const { appUserId } = useAppUser()
 
-  const recordQuizAnswer = async (quizId: number, choiceIndex: number, isCorrect: boolean) => {
+  const recordQuizAnswer = async (
+    quizId: number,
+    choiceIndex: number,
+    isCorrect: boolean,
+  ) => {
     if (!appUserId) {
       console.error('Cannot record answer: app_user_id not found')
       return false

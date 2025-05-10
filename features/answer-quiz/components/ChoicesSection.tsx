@@ -87,10 +87,12 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
           onPress={() => handleChoiceSelection(index)}
         />
       ))}
-      {(displayPhase === 'result' || props.testDisplayPhase === 'explanation') && (
+      {(displayPhase === 'result' ||
+        props.testDisplayPhase === 'explanation') && (
         <ResultModal visible={true} isCorrect={isCorrect} />
       )}
-      {(displayPhase === 'explanation' || props.testDisplayPhase === 'explanation') && (
+      {(displayPhase === 'explanation' ||
+        props.testDisplayPhase === 'explanation') && (
         <>
           <View testID="explanation-container">
             <ThemedText style={styles.explanationText}>

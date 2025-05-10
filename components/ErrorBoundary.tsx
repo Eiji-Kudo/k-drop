@@ -2,17 +2,20 @@ import { Colors } from '@/constants/Colors'
 import React from 'react'
 import { Text, View } from 'react-native'
 
-interface ErrorBoundaryProps {
+type ErrorBoundaryProps = {
   children: React.ReactNode
   fallback?: React.ReactNode
 }
 
-interface ErrorBoundaryState {
+type ErrorBoundaryState = {
   hasError: boolean
   error?: Error
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false }
@@ -24,12 +27,21 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-          <Text style={{ color: Colors.error, textAlign: 'center' }}>
-            {this.state.error?.message || 'Something went wrong'}
-          </Text>
-        </View>
+      return (
+        this.props.fallback || (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 20,
+            }}
+          >
+            <Text style={{ color: Colors.error, textAlign: 'center' }}>
+              {this.state.error?.message || 'Something went wrong'}
+            </Text>
+          </View>
+        )
       )
     }
 

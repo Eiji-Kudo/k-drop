@@ -14,11 +14,21 @@ jest.mock('@/utils/supabase')
 jest.mock('@/components/ui/button/PrimaryButton', () => {
   const reactNative = require('react-native')
   return {
-    PrimaryButton: ({ children, onPress }: { children: React.ReactNode, onPress: () => void }) => (
-      <reactNative.Pressable testID="next-button" data-testid="next-button" onPress={onPress}>
+    PrimaryButton: ({
+      children,
+      onPress,
+    }: {
+      children: React.ReactNode
+      onPress: () => void
+    }) => (
+      <reactNative.Pressable
+        testID="next-button"
+        data-testid="next-button"
+        onPress={onPress}
+      >
         <reactNative.Text>{children}</reactNative.Text>
       </reactNative.Pressable>
-    )
+    ),
   }
 })
 jest.mock('expo-router', () => ({
@@ -91,11 +101,11 @@ describe('ChoicesSection', () => {
 
   it('renders all quiz choices correctly', () => {
     const { getAllByTestId } = render(<ChoicesSection quiz={mockQuiz} />)
-    
+
     // Check if all choice buttons are rendered
     const choiceButtons = getAllByTestId('quiz-choice')
     expect(choiceButtons.length).toBe(4)
-    
+
     // Verify choice texts (formatted as "1. Option A")
     expect(choiceButtons[0]).toHaveTextContent('1. Option A')
     expect(choiceButtons[1]).toHaveTextContent('2. Option B')
@@ -105,9 +115,9 @@ describe('ChoicesSection', () => {
 
   it('shows explanation and next button when in explanation phase', () => {
     const { getByTestId } = render(
-      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />
+      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
     )
-    
+
     const explanation = getByTestId('explanation-container')
     const nextButton = getByTestId('next-button')
     expect(explanation).toBeTruthy()
@@ -116,21 +126,21 @@ describe('ChoicesSection', () => {
 
   it('disables choices after selection', () => {
     const { getAllByTestId } = render(<ChoicesSection quiz={mockQuiz} />)
-    
+
     // Select the first choice
     const choiceButtons = getAllByTestId('quiz-choice')
     fireEvent.press(choiceButtons[0])
-    
+
     // Try to select another choice (should be disabled)
     fireEvent.press(choiceButtons[1])
-    
+
     // Check that supabase insert was called only once
     expect(supabase.from('user_quiz_answers').insert).toHaveBeenCalledTimes(1)
   })
 
   it('navigates to next quiz when "次へ" button is pressed', () => {
     const { getByTestId } = render(
-      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />
+      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
     )
 
     const nextButton = getByTestId('next-button')
@@ -145,7 +155,7 @@ describe('ChoicesSection', () => {
     })
 
     const { getByTestId } = render(
-      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />
+      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
     )
 
     const nextButton = getByTestId('next-button')

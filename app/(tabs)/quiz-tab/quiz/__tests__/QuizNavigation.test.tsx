@@ -1,9 +1,12 @@
 import { useGlobalContext } from '@/context/GlobalContext'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
-import { useQuiz, useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
+import {
+  useQuiz,
+  useQuizChoices,
+} from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
-import { act, fireEvent, render } from '@testing-library/react-native'
+import { render } from '@testing-library/react-native'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import QuizScreen from '../[quizId]'
 
@@ -53,7 +56,7 @@ describe('Quiz Navigation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    
+
     // Setup mocks
     ;(useLocalSearchParams as jest.Mock).mockReturnValue({
       quizId: mockQuizId.toString(),
@@ -90,13 +93,13 @@ describe('Quiz Navigation', () => {
 
   it('adds quiz to answeredQuizIds when loaded', () => {
     render(<QuizScreen />)
-    
+
     expect(mockSetAnsweredQuizIds).toHaveBeenCalled()
   })
 
   it('hides tab bar when quiz screen is mounted', () => {
     render(<QuizScreen />)
-    
+
     expect(mockNavigation.getParent).toHaveBeenCalled()
     expect(mockNavigation.getParent().setOptions).toHaveBeenCalledWith({
       tabBarStyle: { display: 'none' },
@@ -105,9 +108,9 @@ describe('Quiz Navigation', () => {
 
   it('restores tab bar when quiz screen is unmounted', () => {
     const { unmount } = render(<QuizScreen />)
-    
+
     unmount()
-    
+
     expect(mockNavigation.getParent).toHaveBeenCalled()
     expect(mockNavigation.getParent().setOptions).toHaveBeenCalledWith({
       tabBarStyle: undefined,

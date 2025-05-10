@@ -13,42 +13,48 @@ describe('QuizChoice', () => {
 
   // Basic render test
   it('renders correctly with the right label', () => {
-    const tree = renderer.create(
-      <QuizChoice
-        index={0}
-        label="Test Option"
-        variant={QuizVariant.UNANSWERED}
-        onPress={mockOnPress}
-      />
-    ).toJSON()
-    
+    const tree = renderer
+      .create(
+        <QuizChoice
+          index={0}
+          label="Test Option"
+          variant={QuizVariant.UNANSWERED}
+          onPress={mockOnPress}
+        />,
+      )
+      .toJSON()
+
     expect(tree).toMatchSnapshot()
   })
 
   // Verify correct styling for correct answers
   it('applies correct styling when answer is correct', () => {
-    const tree = renderer.create(
-      <QuizChoice
-        index={0}
-        label="Test Option"
-        variant={QuizVariant.CORRECT}
-        onPress={mockOnPress}
-      />
-    ).toJSON()
+    const tree = renderer
+      .create(
+        <QuizChoice
+          index={0}
+          label="Test Option"
+          variant={QuizVariant.CORRECT}
+          onPress={mockOnPress}
+        />,
+      )
+      .toJSON()
 
     expect(tree).toMatchSnapshot()
   })
 
   // Verify correct styling for incorrect answers
   it('applies incorrect styling when answer is incorrect', () => {
-    const tree = renderer.create(
-      <QuizChoice
-        index={0}
-        label="Test Option"
-        variant={QuizVariant.INCORRECT}
-        onPress={mockOnPress}
-      />
-    ).toJSON()
+    const tree = renderer
+      .create(
+        <QuizChoice
+          index={0}
+          label="Test Option"
+          variant={QuizVariant.INCORRECT}
+          onPress={mockOnPress}
+        />,
+      )
+      .toJSON()
 
     expect(tree).toMatchSnapshot()
   })
