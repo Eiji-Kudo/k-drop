@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuizChoice applies correct styling when answer is correct 1`] = `
+<div
+  data-testid="quiz-choice"
+  onClick={[MockFunction]}
+  style={
+    [
+      {
+        "borderColor": "#CCCCCC",
+        "borderRadius": 8,
+        "borderWidth": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 12,
+      },
+      {
+        "backgroundColor": "#4CD964",
+        "borderColor": "#007AFF",
+      },
+      false,
+      undefined,
+    ]
+  }
+  testID="quiz-choice"
+>
+  1. Test Option
+</div>
+`;
+
+exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
+<div
+  data-testid="quiz-choice"
+  onClick={[MockFunction]}
+  style={
+    [
+      {
+        "borderColor": "#CCCCCC",
+        "borderRadius": 8,
+        "borderWidth": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 12,
+      },
+      false,
+      {
+        "backgroundColor": "#FF3B30",
+        "borderColor": "#FF3B30",
+      },
+      undefined,
+    ]
+  }
+  testID="quiz-choice"
+>
+  1. Test Option
+</div>
+`;
+
+exports[`QuizChoice renders correctly with the right label 1`] = `
+<div
+  data-testid="quiz-choice"
+  onClick={[MockFunction]}
+  style={
+    [
+      {
+        "borderColor": "#CCCCCC",
+        "borderRadius": 8,
+        "borderWidth": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 12,
+      },
+      false,
+      false,
+      undefined,
+    ]
+  }
+  testID="quiz-choice"
+>
+  1. Test Option
+</div>
+`;

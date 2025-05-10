@@ -15,7 +15,7 @@ jest.mock('@/components/ui/button/PrimaryButton', () => {
   const reactNative = require('react-native')
   return {
     PrimaryButton: ({ children, onPress }: { children: React.ReactNode, onPress: () => void }) => (
-      <reactNative.Pressable testID="next-button" onPress={onPress}>
+      <reactNative.Pressable testID="next-button" data-testid="next-button" onPress={onPress}>
         <reactNative.Text>{children}</reactNative.Text>
       </reactNative.Pressable>
     )
@@ -129,11 +129,11 @@ describe('ChoicesSection', () => {
   })
 
   it('navigates to next quiz when "次へ" button is pressed', () => {
-    const { getByText } = render(
+    const { getByTestId } = render(
       <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />
     )
-    
-    const nextButton = getByText('次へ')
+
+    const nextButton = getByTestId('next-button')
     fireEvent.press(nextButton)
     expect(router.push).toHaveBeenCalledWith('/quiz-tab/quiz/2')
   })
@@ -143,12 +143,12 @@ describe('ChoicesSection', () => {
     ;(useNextQuiz as jest.Mock).mockReturnValue({
       getNextQuiz: jest.fn().mockReturnValue(null),
     })
-    
-    const { getByText } = render(
+
+    const { getByTestId } = render(
       <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />
     )
-    
-    const nextButton = getByText('次へ')
+
+    const nextButton = getByTestId('next-button')
     fireEvent.press(nextButton)
     expect(router.push).toHaveBeenCalledWith('/quiz-tab/result')
   })
