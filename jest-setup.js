@@ -16,17 +16,6 @@ jest.mock('@/utils/supabase', () => ({
   },
 }))
 
-jest.mock('expo-router', () => ({
-  router: {
-    push: jest.fn(),
-  },
-  useLocalSearchParams: jest.fn().mockReturnValue({}),
-  useNavigation: jest.fn().mockReturnValue({
-    getParent: jest.fn().mockReturnValue({
-      setOptions: jest.fn(),
-    }),
-  }),
-}))
 
 // Mock setTimeout and setImmediate
 jest.useFakeTimers()
