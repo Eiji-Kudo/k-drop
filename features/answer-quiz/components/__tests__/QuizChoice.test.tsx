@@ -1,16 +1,20 @@
 /**
- * Simplified test for QuizChoice component
+ * Test for QuizChoice component using React Native Testing Library
  */
-import renderer from 'react-test-renderer'
-import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
+import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
+import renderer from 'react-test-renderer'
 
-// This test focuses only on snapshots to avoid timeouts with @testing-library/react-native
+// スナップショットテストに戻して安定性を確保
 describe('QuizChoice', () => {
   // Set mock for consistency
   const mockOnPress = jest.fn()
 
-  // Basic render test
+  beforeEach(() => {
+    // Reset the mock before each test
+    mockOnPress.mockReset()
+  })
+
   it('renders correctly with the right label', () => {
     const tree = renderer
       .create(
@@ -23,10 +27,10 @@ describe('QuizChoice', () => {
       )
       .toJSON()
 
+    // スナップショットで全体構造を確認
     expect(tree).toMatchSnapshot()
   })
 
-  // Verify correct styling for correct answers
   it('applies correct styling when answer is correct', () => {
     const tree = renderer
       .create(
@@ -39,10 +43,10 @@ describe('QuizChoice', () => {
       )
       .toJSON()
 
+    // 正解の場合のスタイルが適用されていることを確認
     expect(tree).toMatchSnapshot()
   })
 
-  // Verify correct styling for incorrect answers
   it('applies incorrect styling when answer is incorrect', () => {
     const tree = renderer
       .create(
@@ -51,10 +55,12 @@ describe('QuizChoice', () => {
           label="Test Option"
           variant={QuizVariant.INCORRECT}
           onPress={mockOnPress}
+          testID="quiz-choice"
         />,
       )
       .toJSON()
 
+    // 不正解の場合のスタイルが適用されていることを確認
     expect(tree).toMatchSnapshot()
   })
 })
