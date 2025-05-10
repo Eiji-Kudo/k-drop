@@ -13,8 +13,3 @@ jest.mock('@/utils/supabase', () => ({
     }),
   },
 }))
-
-// Mock ResultModal
-jest.mock('@/features/answer-quiz/components/result-modal', () => ({
-  ResultModal: jest.fn().mockImplementation(({ visible, isCorrect }) => null),
-}))
