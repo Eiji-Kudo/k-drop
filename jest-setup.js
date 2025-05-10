@@ -31,29 +31,10 @@ jest.mock('@/components/ThemedText', () => ({
   ThemedText: jest.fn((props) => props.children),
 }))
 
-// Mock required React Native components
-jest.mock('react-native/src/private/animated/NativeAnimatedHelper', () => {
-  return {
-    __esModule: true,
-    default: {
-      setWaitingForIdentifier: jest.fn(),
-      unsetWaitingForIdentifier: jest.fn(),
-      API: {},
-    },
-  }
-})
 
-// Mock NativeSettingsManager
-jest.mock('react-native/Libraries/Settings/NativeSettingsManager', () => {
-  return {
-    __esModule: true,
-    default: {
-      getConstants: jest.fn(() => ({})),
-      getSettings: jest.fn(() => ({})),
-      setValues: jest.fn(),
-    },
-  }
-})
+
+
+
 
 // Mock the React Native modules
 jest.mock('react-native', () => {
