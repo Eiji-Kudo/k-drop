@@ -76,9 +76,11 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
   }
 
   // Determine if we should show the result modal
-  const showResultModal = displayPhase === 'result' || props.testDisplayPhase === 'explanation'
+  const showResultModal =
+    displayPhase === 'result' || props.testDisplayPhase === 'explanation'
   // Determine if we should show the explanation
-  const showExplanation = displayPhase === 'explanation' || props.testDisplayPhase === 'explanation'
+  const showExplanation =
+    displayPhase === 'explanation' || props.testDisplayPhase === 'explanation'
 
   return (
     <View style={styles.choicesContainer}>

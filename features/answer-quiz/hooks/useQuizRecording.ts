@@ -40,4 +40,4 @@ export const useQuizRecording = () => {
   }
 
   return { recordQuizAnswer }
-} 
+}

@@ -28,9 +28,11 @@ describe('Quiz Answer Recording', () => {
 
   it('validates the hook can be imported and used', () => {
     // This test simply verifies that the useQuizRecording hook is being mocked correctly
-    const { useQuizRecording } = require('@/features/answer-quiz/hooks/useQuizRecording')
+    const {
+      useQuizRecording,
+    } = require('@/features/answer-quiz/hooks/useQuizRecording')
     expect(typeof useQuizRecording).toBe('function')
-    
+
     // This is a minimal test that confirms the mock is working
     const { recordQuizAnswer } = useQuizRecording()
     expect(typeof recordQuizAnswer).toBe('function')
