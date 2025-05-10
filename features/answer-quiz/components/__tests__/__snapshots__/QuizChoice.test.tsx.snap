@@ -50,7 +50,29 @@ exports[`QuizChoice applies correct styling when answer is correct 1`] = `
   }
   testID="quiz-choice"
 >
-  1. Test Option
+  <Text
+    style={
+      [
+        {
+          "color": "#11181C",
+        },
+        {
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          "fontSize": 16,
+          "fontWeight": "500",
+        },
+      ]
+    }
+  >
+    1. Test Option
+  </Text>
 </View>
 `;
 
@@ -104,7 +126,29 @@ exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
   }
   testID="quiz-choice"
 >
-  1. Test Option
+  <Text
+    style={
+      [
+        {
+          "color": "#11181C",
+        },
+        {
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          "fontSize": 16,
+          "fontWeight": "500",
+        },
+      ]
+    }
+  >
+    1. Test Option
+  </Text>
 </View>
 `;
 
@@ -155,6 +199,28 @@ exports[`QuizChoice renders correctly with the right label 1`] = `
   }
   testID="quiz-choice"
 >
-  1. Test Option
+  <Text
+    style={
+      [
+        {
+          "color": "#11181C",
+        },
+        {
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          "fontSize": 16,
+          "fontWeight": "500",
+        },
+      ]
+    }
+  >
+    1. Test Option
+  </Text>
 </View>
 `;
