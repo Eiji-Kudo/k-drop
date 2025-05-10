@@ -62,15 +62,6 @@ jest.mock('@/components/ThemedText', () => ({
   ThemedText: jest.fn((props) => props.children),
 }))
 
-// Mock QuizVariant
-jest.mock('@/features/answer-quiz/constants/quizVariant', () => ({
-  QuizVariant: {
-    UNANSWERED: 'unanswered',
-    CORRECT: 'correct',
-    INCORRECT: 'incorrect',
-  },
-}))
-
 // Mock required React Native components
 jest.mock('react-native/src/private/animated/NativeAnimatedHelper', () => {
   return {
