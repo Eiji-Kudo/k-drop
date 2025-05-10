@@ -5,16 +5,6 @@ import { mockRef, setupQueryMocks } from './mocks/syncUnansweredQuizIdsMocks'
 // Setup mocks
 jest.mock('@/context/GlobalContext')
 jest.mock('@tanstack/react-query')
-jest.mock('@/utils/supabase', () => ({
-  supabase: {
-    auth: {
-      getUser: jest.fn(),
-    },
-    from: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    eq: jest.fn().mockReturnThis(),
-  },
-}))
 
 // Mock useRef to control the prevUnansweredRef value
 jest.mock('react', () => {
