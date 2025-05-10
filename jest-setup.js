@@ -13,7 +13,11 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 
 // Mock Expo modules
 jest.mock('expo-constants', () => ({
-  default: { expoConfig: { extra: { supabaseUrl: 'test-url', supabaseAnonKey: 'test-key' } } },
+  default: {
+    expoConfig: {
+      extra: { supabaseUrl: 'test-url', supabaseAnonKey: 'test-key' },
+    },
+  },
 }))
 
 // Mock Supabase
@@ -25,7 +29,9 @@ jest.mock('@/utils/supabase', () => ({
       eq: jest.fn().mockReturnThis(),
       order: jest.fn().mockReturnThis(),
       single: jest.fn().mockReturnThis(),
-      then: jest.fn().mockImplementation((callback) => callback({ data: [], error: null })),
+      then: jest
+        .fn()
+        .mockImplementation((callback) => callback({ data: [], error: null })),
     }),
   },
 }))
@@ -53,7 +59,7 @@ jest.mock('@/features/answer-quiz/components/result-modal', () => ({
 
 // Mock ThemedText - we only need the absolute path
 jest.mock('@/components/ThemedText', () => ({
-  ThemedText: jest.fn(props => props.children),
+  ThemedText: jest.fn((props) => props.children),
 }))
 
 // Mock Colors
@@ -107,40 +113,50 @@ jest.mock('react-native', () => {
 
   // Mock components and modules
   return {
-    Pressable: jest.fn(({ children, onPress, testID, style, disabled, ...props }) => {
-      return (
-        <div
-          {...props}
-          data-testid={testID}
-          testID={testID}
-          onClick={onPress}
-          style={style}
-        >
-          {children}
-        </div>
-      )
-    }),
+    Pressable: jest.fn(
+      ({ children, onPress, testID, style, disabled, ...props }) => {
+        return (
+          <div
+            {...props}
+            data-testid={testID}
+            testID={testID}
+            onClick={onPress}
+            style={style}
+          >
+            {children}
+          </div>
+        )
+      },
+    ),
     View: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>{children}</div>
+      <div testID={testID} data-testid={testID} {...props}>
+        {children}
+      </div>
     )),
     Text: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>{children}</div>
+      <div testID={testID} data-testid={testID} {...props}>
+        {children}
+      </div>
     )),
     ScrollView: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>{children}</div>
+      <div testID={testID} data-testid={testID} {...props}>
+        {children}
+      </div>
     )),
     SafeAreaView: jest.fn(({ children, testID, ...props }) => (
-      <div testID={testID} data-testid={testID} {...props}>{children}</div>
+      <div testID={testID} data-testid={testID} {...props}>
+        {children}
+      </div>
     )),
     Animated: {
       ...RN.Animated,
-      Value: function(val) {
+      Value: function (val) {
         this.val = val
         this.setValue = jest.fn()
         this.interpolate = jest.fn(() => ({ interpolate: jest.fn() }))
       },
-      timing: jest.fn(() => ({ start: jest.fn(cb => cb && cb()) })),
-      spring: jest.fn(() => ({ start: jest.fn(cb => cb && cb()) })),
+      timing: jest.fn(() => ({ start: jest.fn((cb) => cb && cb()) })),
+      spring: jest.fn(() => ({ start: jest.fn((cb) => cb && cb()) })),
       add: jest.fn(),
       multiply: jest.fn(),
       divide: jest.fn(),
@@ -152,7 +168,7 @@ jest.mock('react-native', () => {
       clearWatch: jest.fn(),
     },
     StyleSheet: {
-      create: styles => styles,
+      create: (styles) => styles,
       flatten: jest.fn(),
     },
     NativeModules: {
