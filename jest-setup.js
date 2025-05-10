@@ -1,5 +1,3 @@
-
-
 // Mock Supabase
 jest.mock('@/utils/supabase', () => ({
   supabase: {
@@ -16,7 +14,6 @@ jest.mock('@/utils/supabase', () => ({
   },
 }))
 
-
 // Mock setTimeout and setImmediate
 jest.useFakeTimers()
 global.setImmediate = jest.fn((cb) => setTimeout(cb, 0))
@@ -30,11 +27,6 @@ jest.mock('@/features/answer-quiz/components/result-modal', () => ({
 jest.mock('@/components/ThemedText', () => ({
   ThemedText: jest.fn((props) => props.children),
 }))
-
-
-
-
-
 
 // Mock the React Native modules
 jest.mock('react-native', () => {
@@ -112,5 +104,3 @@ jest.mock('react-native', () => {
     },
   }
 })
-
-
