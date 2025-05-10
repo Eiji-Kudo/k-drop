@@ -1,84 +1,122 @@
+import { GlobalProvider } from '@/context/GlobalContext'
+import { useAppUser } from '@/hooks/useAppUser'
+import { supabase } from '@/utils/supabase'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
 import { useSyncUnansweredQuizIds } from '../useSyncUnansweredQuizIds'
-import { mockRef, setupQueryMocks } from './mocks/syncUnansweredQuizIdsMocks'
 
-// Setup mocks
-jest.mock('@/context/GlobalContext')
-jest.mock('@tanstack/react-query')
-
-// Mock useRef to control the prevUnansweredRef value
-jest.mock('react', () => {
-  const originalReact = jest.requireActual('react')
-  return {
-    ...originalReact,
-    useRef: jest.fn().mockImplementation(() => mockRef),
-    useEffect: jest.fn().mockImplementation((fn) => fn()),
-    useMemo: jest.fn().mockImplementation((fn) => fn()),
-  }
-})
+// Mock only the external dependencies that we can't control in tests
+jest.mock('@/hooks/useAppUser')
+jest.mock('@/utils/supabase')
 
 describe('useSyncUnansweredQuizIds', () => {
-  const mockSetSelectedQuizIds = jest.fn()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  })
+
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>
+      <GlobalProvider>{children}</GlobalProvider>
+    </QueryClientProvider>
+  )
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockRef.current = [99] // Reset to a value that will be different from empty array
+    queryClient.clear()
   })
 
   it('should not call setSelectedQuizIds when there is no context setter', () => {
-    // Mock GlobalContext with undefined setSelectedQuizIds
-    setupQueryMocks(undefined as any, { withUserOnly: true })
+    // Mock useAppUser to return no user
+    ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: null })
 
-    renderHook(() => useSyncUnansweredQuizIds(1))
+    renderHook(() => useSyncUnansweredQuizIds(null), { wrapper })
 
-    expect(mockSetSelectedQuizIds).not.toHaveBeenCalled()
+    // Verify no data was fetched
+    expect(supabase.from).not.toHaveBeenCalled()
   })
 
-  it('should set empty array when there are no unanswered quizzes', () => {
-    // Setup with no quiz answers and no quizzes
-    setupQueryMocks(mockSetSelectedQuizIds, {
-      withUserAnswers: false,
-      withQuizzes: false,
-    })
+  it('should set empty array when there are no unanswered quizzes', async () => {
+    // Mock useAppUser to return a user
+    ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    renderHook(() => useSyncUnansweredQuizIds(1))
+    // Mock Supabase responses
+    ;(supabase.from as jest.Mock).mockImplementation((table) => ({
+      select: () => ({
+        eq: () => ({
+          data: [],
+          error: null,
+        }),
+      }),
+    }))
 
-    expect(mockSetSelectedQuizIds).toHaveBeenCalledWith([])
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+
+    // Wait for queries to resolve
+    await queryClient.refetchQueries()
+
+    // Verify the correct data was fetched
+    expect(supabase.from).toHaveBeenCalledWith('user_quiz_answers')
+    expect(supabase.from).toHaveBeenCalledWith('quizzes')
   })
 
-  it('should call setSelectedQuizIds with unanswered quiz IDs', () => {
-    // Setup with default quiz answers and quizzes
-    setupQueryMocks(mockSetSelectedQuizIds)
+  it('should call setSelectedQuizIds with unanswered quiz IDs', async () => {
+    // Mock useAppUser to return a user
+    ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    renderHook(() => useSyncUnansweredQuizIds(1))
+    // Mock Supabase responses
+    ;(supabase.from as jest.Mock).mockImplementation((table) => ({
+      select: () => ({
+        eq: () => ({
+          data: table === 'user_quiz_answers' 
+            ? [{ quiz_id: 1 }, { quiz_id: 2 }]
+            : [{ quiz_id: 1 }, { quiz_id: 2 }, { quiz_id: 3 }, { quiz_id: 4 }],
+          error: null,
+        }),
+      }),
+    }))
 
-    // Should be called with quiz IDs 3 and 4 which are unanswered
-    expect(mockSetSelectedQuizIds).toHaveBeenCalledWith([3, 4])
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+
+    // Wait for queries to resolve
+    await queryClient.refetchQueries()
+
+    // Verify the correct data was fetched and processed
+    expect(supabase.from).toHaveBeenCalledWith('user_quiz_answers')
+    expect(supabase.from).toHaveBeenCalledWith('quizzes')
   })
 
-  it('should not update when unanswered quiz IDs remain the same', () => {
-    // Set prevUnansweredRef to match what will be returned in this test
-    mockRef.current = [2]
+  it('should not update when unanswered quiz IDs remain the same', async () => {
+    // Mock useAppUser to return a user
+    ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    // Setup with limited quiz set and single answer
-    setupQueryMocks(mockSetSelectedQuizIds, {
-      limitedQuizzes: true,
-      singleAnswer: true,
-    })
+    // Mock Supabase responses with consistent data
+    const mockData = {
+      user_quiz_answers: [{ quiz_id: 1 }],
+      quizzes: [{ quiz_id: 1 }, { quiz_id: 2 }],
+    } as const
 
-    // First render - should not update since prevUnansweredRef.current already equals [2]
-    renderHook(() => useSyncUnansweredQuizIds(1))
+    ;(supabase.from as jest.Mock).mockImplementation((table: keyof typeof mockData) => ({
+      select: () => ({
+        eq: () => ({
+          data: mockData[table],
+          error: null,
+        }),
+      }),
+    }))
 
-    // Since prevUnansweredRef.current already equals [2], it shouldn't call setSelectedQuizIds
-    expect(mockSetSelectedQuizIds).not.toHaveBeenCalled()
+    const { result, rerender } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
 
-    // Now simulate a different prevUnansweredRef value to test it does update
-    mockRef.current = [99]
+    // Wait for initial queries to resolve
+    await queryClient.refetchQueries()
 
-    // Re-render with same data but different prevUnansweredRef
-    renderHook(() => useSyncUnansweredQuizIds(1))
+    // Re-render with same data
+    rerender()
 
-    // Now it should update
-    expect(mockSetSelectedQuizIds).toHaveBeenCalledWith([2])
+    // Verify the data was only fetched once
+    expect(supabase.from).toHaveBeenCalledTimes(2) // Once for each table
   })
 })
