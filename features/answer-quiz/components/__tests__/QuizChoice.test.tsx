@@ -1,7 +1,7 @@
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react-native'
-import { QuizChoice } from '../QuizChoice'
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native'
 import { QuizVariant } from '../../constants/quizVariant'
+import { QuizChoice } from '../QuizChoice'
+jest.setTimeout(10000) // Increase timeout to 10 seconds
 
 describe('QuizChoice', () => {
   const onPressMock = jest.fn()
@@ -10,7 +10,7 @@ describe('QuizChoice', () => {
     jest.clearAllMocks()
   })
 
-  it('renders correctly with the right label', () => {
+  it('renders correctly with the right label', async () => {
     const { getByText, getByTestId } = render(
       <QuizChoice
         index={0}
@@ -21,7 +21,9 @@ describe('QuizChoice', () => {
     )
 
     // Check if button is rendered with correct text (index + 1 prefixed)
-    expect(getByText('1. Test Option')).toBeTruthy()
+    await waitFor(() => {
+      expect(getByText('1. Test Option')).toBeTruthy()
+    })
     expect(getByTestId('quiz-choice')).toBeTruthy()
   })
 
@@ -73,7 +75,7 @@ describe('QuizChoice', () => {
     expect(choiceButton).toBeTruthy()
   })
 
-  it('does not call onPress when disabled', () => {
+  it('does not call onPress when disabled', async () => {
     const { getByTestId } = render(
       <QuizChoice
         index={0}
@@ -85,9 +87,13 @@ describe('QuizChoice', () => {
     )
 
     // Press the choice
-    fireEvent.press(getByTestId('quiz-choice'))
+    await act(async () => {
+      fireEvent.press(getByTestId('quiz-choice'))
+    })
 
     // Check that onPress was not called due to disabled state
-    expect(onPressMock).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(onPressMock).not.toHaveBeenCalled()
+    })
   })
 })

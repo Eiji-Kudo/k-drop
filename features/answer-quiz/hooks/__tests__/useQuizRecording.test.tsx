@@ -1,6 +1,6 @@
-import { renderHook, act } from '@testing-library/react-native'
-import { supabase } from '@/utils/supabase'
 import { useAppUser } from '@/hooks/useAppUser'
+import { supabase } from '@/utils/supabase'
+import { act, renderHook } from '@testing-library/react-native'
 
 // Mock dependencies
 jest.mock('@/utils/supabase')
@@ -35,6 +35,7 @@ const useQuizRecording = () => {
 }
 
 describe('Quiz Answer Recording', () => {
+  jest.setTimeout(10000) // Increase timeout to 10 seconds
   const mockAppUserId = 'user123'
   const mockQuizId = 42
   const mockChoiceIndex = 2

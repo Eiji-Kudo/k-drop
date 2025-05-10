@@ -18,4 +18,5 @@ export const Colors = {
   disabledText: '#888888',
   markCorrect: '#68c1f1',
   markIncorrect: '#f56f6f',
+  error: '#d32f2f',
 }

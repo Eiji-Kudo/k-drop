@@ -1,14 +1,11 @@
-import React from 'react'
-import { render, fireEvent, act } from '@testing-library/react-native'
-import QuizScreen from '../[quizId]'
-import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useGlobalContext } from '@/context/GlobalContext'
-import { useQuiz } from '@/features/answer-quiz/hooks/useQuizQuery'
-import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
+import { useQuiz, useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
-import { router } from 'expo-router'
+import { act, fireEvent, render } from '@testing-library/react-native'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import QuizScreen from '../[quizId]'
 
 // Mock all dependencies
 jest.mock('expo-router', () => ({
@@ -172,15 +169,33 @@ describe('Quiz Navigation', () => {
     expect(router.push).toHaveBeenCalledWith('/quiz-tab/result')
   })
 
-  it('handles invalid quizId parameter gracefully', () => {
+  it('handles invalid quizId parameter gracefully with error boundary', async () => {
     // Mock an invalid quizId
     ;(useLocalSearchParams as jest.Mock).mockReturnValue({
       quizId: 'invalid',
     })
     
-    // We need to wrap the render in a try-catch because it should throw an error
-    expect(() => {
-      render(<QuizScreen />)
-    }).toThrow('Invalid quizId')
+    const { findByText } = render(<QuizScreen />)
+    expect(await findByText('Invalid quizId')).toBeTruthy()
+  })
+
+  it('renders default error message when error boundary catches unknown error', async () => {
+    // Mock an error being thrown in QuizScreenContent
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+    const mockError = new Error('Test error')
+    
+    // Override QuizScreenContent to throw error
+    jest.doMock('../[quizId]', () => {
+      const original = jest.requireActual('../[quizId]')
+      return {
+        ...original,
+        QuizScreenContent: () => {
+          throw mockError
+        }
+      }
+    })
+    
+    const { findByText } = render(<QuizScreen />)
+    expect(await findByText('Test error')).toBeTruthy()
   })
 })
