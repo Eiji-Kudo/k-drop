@@ -23,6 +23,12 @@
     "testEnvironment": "jsdom",
     "testMatch": [
       "**/?(*.)+(test).[jt]s?(x)"
+    ],
+    "setupFilesAfterEnv": [
+      "./jest-setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@testing-library/react-native)"
     ]
   },
   "dependencies": {
@@ -62,6 +68,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.3.0",
