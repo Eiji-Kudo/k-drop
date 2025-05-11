@@ -6,7 +6,6 @@ import { useNextQuiz } from '../../hooks/useNextQuiz'
 import { useQuizChoices } from '../../hooks/useQuizQuery'
 import { ChoicesSection } from '../ChoicesSection'
 
-// Mock dependencies
 const mocks = ['@/utils/supabase']
 mocks.forEach((mod) => jest.mock(mod))
 jest.mock('@/hooks/useAppUser', () => ({
@@ -39,7 +38,6 @@ jest.mock('@/components/ui/button/PrimaryButton', () => ({
 }))
 
 describe('ChoicesSection', () => {
-  // Mock data
   const mockQuiz = {
     quiz_id: 1,
     prompt: 'Test Question',
@@ -47,25 +45,21 @@ describe('ChoicesSection', () => {
     idol_group_id: 1,
     quiz_difficulty_id: 1,
   }
-  // Generate mock choices more concisely
   const mockChoices = Array.from({ length: 4 }, (_, i) => ({
     quiz_choice_id: 101 + i,
     quiz_id: 1,
-    choice_text: `Option ${String.fromCharCode(65 + i)}`, // A, B, C, D
-    is_correct: i === 0, // First one is correct
+    choice_text: `Option ${String.fromCharCode(65 + i)}`,
+    is_correct: i === 0,
   }))
 
-  // Setup mocks
   beforeEach(() => {
     jest.clearAllMocks()
-    // Mock hooks
     ;(useQuizChoices as jest.Mock).mockReturnValue({ data: mockChoices })
     ;(useNextQuiz as jest.Mock).mockReturnValue({
       getNextQuiz: jest.fn().mockReturnValue(2),
     })
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 'user123' })
 
-    // Setup Supabase mock with a new call for each test
     const mockInsert = jest.fn().mockResolvedValue({ data: null, error: null })
     ;(supabase.from as jest.Mock).mockReturnValue({
       insert: mockInsert,
@@ -77,24 +71,18 @@ describe('ChoicesSection', () => {
   afterEach(() => jest.useRealTimers())
 
   it('renders content and handles user interactions correctly', () => {
-    // Test rendering choices
     const { getAllByTestId } = render(<ChoicesSection quiz={mockQuiz} />)
     const choiceButtons = getAllByTestId('quiz-choice')
     expect(choiceButtons.length).toBe(4)
     expect(choiceButtons[0]).toHaveTextContent('1. Option A')
 
-    // Test explanation phase display
     const { getByTestId } = render(
       <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
     )
     expect(getByTestId('explanation-container')).toBeTruthy()
-
-    // For choice selection behavior, we'll just test that the component renders correctly
-    // without depending on mock behavior implementation details
   })
 
   it('handles navigation correctly', () => {
-    // Test next quiz navigation
     const { getByTestId } = render(
       <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
     )
@@ -102,7 +90,6 @@ describe('ChoicesSection', () => {
     pressNext()
     expect(router.push).toHaveBeenCalledWith('/quiz-tab/quiz/2')
 
-    // Test results navigation
     ;(useNextQuiz as jest.Mock).mockReturnValue({
       getNextQuiz: jest.fn().mockReturnValue(null),
     })
