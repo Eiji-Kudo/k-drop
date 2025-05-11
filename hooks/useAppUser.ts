@@ -2,12 +2,7 @@ import { supabase } from '@/utils/supabase'
 import { useQuery } from '@tanstack/react-query'
 import { User } from '@supabase/supabase-js'
 
-/**
- * Hook to get the app_user_id corresponding to the authenticated user
- * This provides a centralized way to access the app_user_id across the app
- */
 export function useAppUser() {
-  // Get the auth user from Supabase
   const authUserQuery = useQuery<User | null>({
     queryKey: ['user'],
     queryFn: async () => {
@@ -16,7 +11,6 @@ export function useAppUser() {
     },
   })
 
-  // Get the app_user_id using the auth user's ID
   const appUserQuery = useQuery<number | null>({
     queryKey: ['appUser', authUserQuery.data?.id],
     queryFn: async () => {

@@ -12,6 +12,7 @@ const DEFAULT_DURATION = 5000
  * @param message 表示するメッセージ
  * @param options その他のトーストオプション
  */
+// eslint-disable-next-line import/no-unused-modules
 export const showToast = (message: string, options?: Partial<ToastOptions>) => {
   toast(message, {
     position: ToastPosition.BOTTOM,

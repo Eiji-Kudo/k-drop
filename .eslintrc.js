@@ -16,6 +16,7 @@ module.exports = {
     'react-native',
     'prettier',
     'unused-imports',
+    'import',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -52,6 +53,12 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
     'unused-imports/no-unused-imports': 'error',
+    'import/no-unused-modules': [
+      'error',
+      {
+        unusedExports: true,
+      },
+    ],
     'no-restricted-imports': [
       'error',
       {
@@ -83,6 +90,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-redundant-type-constituents': 'off',
         'max-lines': 'off',
+        'import/no-unused-modules': 'off',
       },
     },
     {
@@ -94,5 +102,13 @@ module.exports = {
         '@typescript-eslint/no-unsafe-argument': 'off',
       },
     },
+    {
+      // Expo Router uses file-based routing, so these exports are used implicitly
+      files: ['app.config.ts', 'app/**/*.tsx', 'app/**/*.ts'],
+      rules: {
+        'import/no-unused-modules': 'off',
+      },
+    },
+    // We've removed useColorScheme.ts and useColorScheme.web.ts, and added a specific disable comment for showToast
   ],
 }

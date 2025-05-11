@@ -8,12 +8,14 @@ type Props = PressableProps & {
   label: string
   variant: QuizVariant
   style?: ViewStyle
+  disabled?: boolean
 }
 
 export function QuizChoice({ index, label, variant, style, ...rest }: Props) {
   return (
     <Pressable
       {...rest}
+      testID="quiz-choice"
       style={[
         styles.choiceButton,
         variant === QuizVariant.CORRECT && styles.choiceButtonCorrect,
