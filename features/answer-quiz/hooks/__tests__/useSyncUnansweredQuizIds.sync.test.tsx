@@ -5,10 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
 import { useSyncUnansweredQuizIds } from '../useSyncUnansweredQuizIds'
 
-// Mock useAppUser hook
 jest.mock('@/hooks/useAppUser')
 
-// Mock supabase.from to avoid unbound method lint error
 const mockFrom = jest.fn()
 
 describe('useSyncUnansweredQuizIds - synchronization', () => {
@@ -30,7 +28,6 @@ describe('useSyncUnansweredQuizIds - synchronization', () => {
     jest.clearAllMocks()
     queryClient.clear()
 
-    // Reset and setup mock for each test
     mockFrom.mockReset()
     Object.defineProperty(supabase, 'from', {
       value: mockFrom,
@@ -38,10 +35,8 @@ describe('useSyncUnansweredQuizIds - synchronization', () => {
   })
 
   it('should call setSelectedQuizIds with unanswered quiz IDs', async () => {
-    // Mock useAppUser to return a user
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    // Mock quiz answers and quizzes
     mockFrom.mockImplementation((table) => ({
       select: () => ({
         eq: () => {
@@ -68,19 +63,15 @@ describe('useSyncUnansweredQuizIds - synchronization', () => {
       wrapper,
     })
 
-    // Wait for queries to resolve
     await queryClient.refetchQueries()
 
-    // Verify the correct data was fetched and processed
     expect(mockFrom).toHaveBeenCalledWith('user_quiz_answers')
     expect(mockFrom).toHaveBeenCalledWith('quizzes')
   })
 
   it('should not update when unanswered quiz IDs remain the same', async () => {
-    // Mock useAppUser to return a user
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    // Mock consistent quiz answers and quizzes
     mockFrom.mockImplementation((table) => ({
       select: () => ({
         eq: () => {
@@ -102,13 +93,10 @@ describe('useSyncUnansweredQuizIds - synchronization', () => {
       wrapper,
     })
 
-    // Wait for initial queries to resolve
     await queryClient.refetchQueries()
 
-    // Re-render with same data
     rerender()
 
-    // Verify the data was only fetched once
-    expect(mockFrom).toHaveBeenCalledTimes(2) // Once for each table
+    expect(mockFrom).toHaveBeenCalledTimes(2)
   })
 })
