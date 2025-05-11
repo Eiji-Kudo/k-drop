@@ -1,17 +1,11 @@
-/**
- * Test for QuizChoice component using React Native Testing Library
- */
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import renderer from 'react-test-renderer'
 
-// スナップショットテストに戻して安定性を確保
 describe('QuizChoice', () => {
-  // Set mock for consistency
   const mockOnPress = jest.fn()
 
   beforeEach(() => {
-    // Reset the mock before each test
     mockOnPress.mockReset()
   })
 
@@ -27,7 +21,6 @@ describe('QuizChoice', () => {
       )
       .toJSON()
 
-    // スナップショットで全体構造を確認
     expect(tree).toMatchSnapshot()
   })
 
@@ -43,7 +36,6 @@ describe('QuizChoice', () => {
       )
       .toJSON()
 
-    // 正解の場合のスタイルが適用されていることを確認
     expect(tree).toMatchSnapshot()
   })
 
@@ -60,7 +52,6 @@ describe('QuizChoice', () => {
       )
       .toJSON()
 
-    // 不正解の場合のスタイルが適用されていることを確認
     expect(tree).toMatchSnapshot()
   })
 })
