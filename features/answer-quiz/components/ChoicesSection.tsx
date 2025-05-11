@@ -16,7 +16,7 @@ type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  testDisplayPhase?: DisplayPhase // For testing only - forces display phase
+  testDisplayPhase?: DisplayPhase 
 }
 
 export const ChoicesSection = (props: ChoicesSectionProps) => {
@@ -75,10 +75,8 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
     return QuizVariant.UNANSWERED
   }
 
-  // Determine if we should show the result modal
   const showResultModal =
     displayPhase === 'result' || props.testDisplayPhase === 'explanation'
-  // Determine if we should show the explanation
   const showExplanation =
     displayPhase === 'explanation' || props.testDisplayPhase === 'explanation'
 
