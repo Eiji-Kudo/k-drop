@@ -18,20 +18,6 @@ import {
 export const setupMocks = (): void => {
   jest.mock('@/context/GlobalContext')
   jest.mock('@tanstack/react-query')
-
-  jest.mock('react', () => {
-    const originalReact = jest.requireActual('react')
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return {
-      ...originalReact,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      useRef: jest.fn().mockImplementation(() => mockRef),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      useEffect: jest.fn().mockImplementation((fn) => fn()),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      useMemo: jest.fn().mockImplementation((fn) => fn()),
-    }
-  })
 }
 
 // Re-export the mockRef for tests to use
