@@ -53,9 +53,12 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error',
     'unused-imports/no-unused-imports': 'error',
-    'import/no-unused-modules': ['error', {
-      unusedExports: true,
-    }],
+    'import/no-unused-modules': [
+      'error',
+      {
+        unusedExports: true,
+      },
+    ],
     'no-restricted-imports': [
       'error',
       {
@@ -101,11 +104,7 @@ module.exports = {
     },
     {
       // Expo Router uses file-based routing, so these exports are used implicitly
-      files: [
-        'app.config.ts',
-        'app/**/*.tsx',
-        'app/**/*.ts'
-      ],
+      files: ['app.config.ts', 'app/**/*.tsx', 'app/**/*.ts'],
       rules: {
         'import/no-unused-modules': 'off',
       },
