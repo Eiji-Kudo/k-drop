@@ -1,7 +1,6 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 
-import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Colors } from '@/constants/Colors'
 import { useGlobalContext } from '@/context/GlobalContext'
 import { ChoicesSection } from '@/features/answer-quiz/components/ChoicesSection'
@@ -10,7 +9,7 @@ import { QuizHeader } from '@/features/answer-quiz/components/QuizHeader'
 import { useQuiz } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { useEffect } from 'react'
 
-function QuizScreenContent() {
+export default function QuizScreen() {
   const params = useLocalSearchParams()
   const { setAnsweredQuizIds } = useGlobalContext()
   const navigation = useNavigation()
@@ -55,14 +54,6 @@ function QuizScreenContent() {
         <ChoicesSection quiz={quiz} />
       </SafeAreaView>
     </ScrollView>
-  )
-}
-
-export default function QuizScreen() {
-  return (
-    <ErrorBoundary>
-      <QuizScreenContent />
-    </ErrorBoundary>
   )
 }
 
