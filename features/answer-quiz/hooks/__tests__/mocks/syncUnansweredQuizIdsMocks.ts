@@ -14,12 +14,6 @@ import {
   createSingleMockUserQuizAnswer,
 } from './mockUserQuizAnswers'
 
-// Setup mocks
-export const setupMocks = (): void => {
-  jest.mock('@/context/GlobalContext')
-  jest.mock('@tanstack/react-query')
-}
-
 // Re-export the mockRef for tests to use
 export { mockRef }
 
