@@ -97,7 +97,7 @@ describe('useSyncUnansweredQuizIds - integration', () => {
     const mockFromImplementation = jest.fn()
     ;(supabase.from as jest.Mock) = mockFromImplementation
 
-    mockFromImplementation.mockImplementation((table) => ({
+    mockFromImplementation.mockImplementation((_table) => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       then: jest
