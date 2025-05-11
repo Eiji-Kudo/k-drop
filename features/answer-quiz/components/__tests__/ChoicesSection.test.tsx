@@ -18,24 +18,6 @@ jest.mock('../../hooks/useNextQuiz', () => ({
   useNextQuiz: jest.fn(),
 }))
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }))
-jest.mock('@/components/ui/button/PrimaryButton', () => ({
-  PrimaryButton: (props: {
-    children: React.ReactNode
-    onPress: () => void
-  }) => {
-    const RN = require('react-native')
-    const pressHandler = () => props.onPress()
-    return (
-      <RN.Pressable
-        testID="next-button"
-        data-testid="next-button"
-        onPress={pressHandler}
-      >
-        <RN.Text>{props.children}</RN.Text>
-      </RN.Pressable>
-    )
-  },
-}))
 
 describe('ChoicesSection', () => {
   const mockQuiz = {
