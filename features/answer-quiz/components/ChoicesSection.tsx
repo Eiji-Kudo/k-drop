@@ -16,7 +16,7 @@ type DisplayPhase = 'question' | 'result' | 'explanation'
 
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  testDisplayPhase?: DisplayPhase 
+  testDisplayPhase?: DisplayPhase
 }
 
 export const ChoicesSection = (props: ChoicesSectionProps) => {
