@@ -2,58 +2,29 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
+import { useQuizAnswer } from '@/features/answer-quiz/hooks/useQuizAnswer'
+import { useQuizNavigation } from '@/features/answer-quiz/hooks/useQuizNavigation'
+import { useQuizPhase } from '@/features/answer-quiz/hooks/useQuizPhase'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
-import { getChoiceVariant, isChoiceCorrect, recordQuizAnswer } from '@/features/answer-quiz/utils/quizUtils'
-import { useAppUser } from '@/hooks/useAppUser'
-import { router } from 'expo-router'
-import { useState } from 'react'
+import { getChoiceVariant } from '@/features/answer-quiz/utils/quizUtils'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
-type DisplayPhase = 'question' | 'result' | 'explanation'
-
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  testDisplayPhase?: DisplayPhase
+  testDisplayPhase?: 'question' | 'result' | 'explanation'
 }
 
 export const ChoicesSection = (props: ChoicesSectionProps) => {
-  const { quiz } = props
-  const { getNextQuiz } = useNextQuiz()
+  const { quiz, testDisplayPhase } = props
   const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
-  const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
-  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
-  const { appUserId } = useAppUser()
 
-  const isCorrect = isChoiceCorrect(selectedChoiceId, choices)
-
-  const handleChoiceSelection = async (index: number) => {
-    if (selectedChoiceId !== null) return
-
-    const choice = choices[index]
-    setSelectedChoiceId(choice.quiz_choice_id)
-
-    await recordQuizAnswer(
-      appUserId, 
-      quiz.quiz_id, 
-      index, 
-      choice.is_correct
-    )
-
-    setTimeout(() => setDisplayPhase('result'), 600)
-    setTimeout(() => setDisplayPhase('explanation'), 2000)
-  }
-
-  const handleNext = () => {
-    const next = getNextQuiz()
-    router.push(next ? `/quiz-tab/quiz/${next.toString()}` : '/quiz-tab/result')
-  }
-
-  const showResultModal =
-    displayPhase === 'result' || props.testDisplayPhase === 'explanation'
-  const showExplanation =
-    displayPhase === 'explanation' || props.testDisplayPhase === 'explanation'
+  const { selectedChoiceId, displayPhase, isCorrect } = useQuizPhase(
+    choices,
+    testDisplayPhase,
+  )
+  const { onSelect } = useQuizAnswer(quiz.quiz_id, choices)
+  const { goNext } = useQuizNavigation()
 
   return (
     <View style={styles.choicesContainer}>
@@ -64,11 +35,16 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
           label={choice.choice_text}
           variant={getChoiceVariant(index, choices, selectedChoiceId)}
           disabled={selectedChoiceId !== null}
-          onPress={() => handleChoiceSelection(index)}
+          onPress={() => onSelect(index)}
         />
       ))}
-      {showResultModal && <ResultModal visible={true} isCorrect={isCorrect} />}
-      {showExplanation && (
+
+      {(displayPhase === 'result' || testDisplayPhase === 'explanation') && (
+        <ResultModal visible={true} isCorrect={isCorrect} />
+      )}
+
+      {(displayPhase === 'explanation' ||
+        testDisplayPhase === 'explanation') && (
         <>
           <View testID="explanation-container">
             <ThemedText style={styles.explanationText}>
@@ -76,7 +52,7 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
             </ThemedText>
           </View>
           <View style={styles.buttonContainer}>
-            <PrimaryButton testID="next-button" onPress={handleNext}>
+            <PrimaryButton testID="next-button" onPress={goNext}>
               次へ
             </PrimaryButton>
           </View>

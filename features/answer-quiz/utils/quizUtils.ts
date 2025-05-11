@@ -7,11 +7,14 @@ import { supabase } from '@/utils/supabase'
  */
 export function isChoiceCorrect(
   selectedChoiceId: number | null,
-  choices: Tables<'quiz_choices'>[]
+  choices: Tables<'quiz_choices'>[],
 ): boolean | null {
   if (selectedChoiceId === null) return null
-  
-  return choices.find((c) => c.quiz_choice_id === selectedChoiceId)?.is_correct ?? false
+
+  return (
+    choices.find((c) => c.quiz_choice_id === selectedChoiceId)?.is_correct ??
+    false
+  )
 }
 
 /**
@@ -21,13 +24,13 @@ export async function recordQuizAnswer(
   appUserId: number | null | undefined,
   quizId: number,
   choiceIndex: number,
-  isCorrect: boolean
+  isCorrect: boolean,
 ): Promise<void> {
   if (!appUserId) {
     console.error('Cannot record answer: app_user_id not found')
     return
   }
-  
+
   try {
     await supabase.from('user_quiz_answers').insert({
       app_user_id: appUserId,
@@ -47,7 +50,7 @@ export async function recordQuizAnswer(
 export function getChoiceVariant(
   index: number,
   choices: Tables<'quiz_choices'>[],
-  selectedChoiceId: number | null
+  selectedChoiceId: number | null,
 ): QuizVariant {
   if (selectedChoiceId === null) return QuizVariant.UNANSWERED
 
@@ -57,4 +60,4 @@ export function getChoiceVariant(
   if (choice.quiz_choice_id === selectedChoiceId) return QuizVariant.INCORRECT
 
   return QuizVariant.UNANSWERED
-} 
+}
