@@ -7,15 +7,11 @@
 import { useGlobalContext } from '@/context/GlobalContext'
 import { useQuery } from '@tanstack/react-query'
 import { createLimitedMockQuizzes } from './limitedMockQuizzes'
-import { mockRef } from './mockData'
 import { createMockQuizzes } from './mockQuizzes'
 import {
   createMockUserQuizAnswers,
   createSingleMockUserQuizAnswer,
 } from './mockUserQuizAnswers'
-
-// Re-export the mockRef for tests to use
-export { mockRef }
 
 // Mock query implementations
 export const setupQueryMocks = (
