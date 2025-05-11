@@ -104,7 +104,7 @@ module.exports = {
       files: [
         'app.config.ts',
         'app/**/*.tsx',
-        'app/**/*.ts',
+        'app/**/*.ts'
       ],
       rules: {
         'import/no-unused-modules': 'off',
