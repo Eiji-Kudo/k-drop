@@ -5,9 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
 import { useSyncUnansweredQuizIds } from '../useSyncUnansweredQuizIds'
 
-// Mock only the external dependencies that we can't control in tests
+// Mock useAppUser hook
 jest.mock('@/hooks/useAppUser')
-jest.mock('@/utils/supabase')
 
 describe('useSyncUnansweredQuizIds', () => {
   const queryClient = new QueryClient({
@@ -29,11 +28,14 @@ describe('useSyncUnansweredQuizIds', () => {
     queryClient.clear()
   })
 
-  it('should not call setSelectedQuizIds when there is no context setter', () => {
+  it('should not call setSelectedQuizIds when there is no context setter', async () => {
     // Mock useAppUser to return no user
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: null })
 
     renderHook(() => useSyncUnansweredQuizIds(null), { wrapper })
+
+    // Wait for queries to resolve
+    await queryClient.refetchQueries()
 
     // Verify no data was fetched
     expect(supabase.from).not.toHaveBeenCalled()
@@ -43,19 +45,14 @@ describe('useSyncUnansweredQuizIds', () => {
     // Mock useAppUser to return a user
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    // Mock Supabase responses
+    // Mock empty quiz answers and quizzes
     ;(supabase.from as jest.Mock).mockImplementation((table) => ({
       select: () => ({
-        eq: () => ({
-          data: [],
-          error: null,
-        }),
+        eq: () => Promise.resolve({ data: [], error: null }),
       }),
     }))
 
-    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), {
-      wrapper,
-    })
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
 
     // Wait for queries to resolve
     await queryClient.refetchQueries()
@@ -69,27 +66,30 @@ describe('useSyncUnansweredQuizIds', () => {
     // Mock useAppUser to return a user
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    // Mock Supabase responses
+    // Mock quiz answers and quizzes
     ;(supabase.from as jest.Mock).mockImplementation((table) => ({
       select: () => ({
-        eq: () => ({
-          data:
-            table === 'user_quiz_answers'
-              ? [{ quiz_id: 1 }, { quiz_id: 2 }]
-              : [
-                  { quiz_id: 1 },
-                  { quiz_id: 2 },
-                  { quiz_id: 3 },
-                  { quiz_id: 4 },
-                ],
-          error: null,
-        }),
+        eq: () => {
+          if (table === 'user_quiz_answers') {
+            return Promise.resolve({
+              data: [{ quiz_id: 1 }, { quiz_id: 2 }],
+              error: null,
+            })
+          }
+          return Promise.resolve({
+            data: [
+              { quiz_id: 1 },
+              { quiz_id: 2 },
+              { quiz_id: 3 },
+              { quiz_id: 4 },
+            ],
+            error: null,
+          })
+        },
       }),
     }))
 
-    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), {
-      wrapper,
-    })
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
 
     // Wait for queries to resolve
     await queryClient.refetchQueries()
@@ -103,26 +103,25 @@ describe('useSyncUnansweredQuizIds', () => {
     // Mock useAppUser to return a user
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    // Mock Supabase responses with consistent data
-    const mockData = {
-      user_quiz_answers: [{ quiz_id: 1 }],
-      quizzes: [{ quiz_id: 1 }, { quiz_id: 2 }],
-    } as const
-
-    ;(supabase.from as jest.Mock).mockImplementation(
-      (table: keyof typeof mockData) => ({
-        select: () => ({
-          eq: () => ({
-            data: mockData[table],
+    // Mock consistent quiz answers and quizzes
+    ;(supabase.from as jest.Mock).mockImplementation((table) => ({
+      select: () => ({
+        eq: () => {
+          if (table === 'user_quiz_answers') {
+            return Promise.resolve({
+              data: [{ quiz_id: 1 }],
+              error: null,
+            })
+          }
+          return Promise.resolve({
+            data: [{ quiz_id: 1 }, { quiz_id: 2 }],
             error: null,
-          }),
-        }),
+          })
+        },
       }),
-    )
+    }))
 
-    const { result, rerender } = renderHook(() => useSyncUnansweredQuizIds(1), {
-      wrapper,
-    })
+    const { result, rerender } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
 
     // Wait for initial queries to resolve
     await queryClient.refetchQueries()
