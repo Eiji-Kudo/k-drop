@@ -1,21 +1,20 @@
+import { useGlobalContext } from '@/context/GlobalContext'
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
 import { fireEvent, render } from '@testing-library/react-native'
 import { router } from 'expo-router'
-import { useNextQuiz } from '../../hooks/useNextQuiz'
 import { useQuizChoices } from '../../hooks/useQuizQuery'
 import { ChoicesSection } from '../ChoicesSection'
 
-const mocks = ['@/utils/supabase']
-mocks.forEach((mod) => jest.mock(mod))
+jest.mock('@/utils/supabase')
 jest.mock('@/hooks/useAppUser', () => ({
   useAppUser: jest.fn(),
 }))
+jest.mock('@/context/GlobalContext', () => ({
+  useGlobalContext: jest.fn(),
+}))
 jest.mock('../../hooks/useQuizQuery', () => ({
   useQuizChoices: jest.fn(),
-}))
-jest.mock('../../hooks/useNextQuiz', () => ({
-  useNextQuiz: jest.fn(),
 }))
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }))
 
@@ -37,10 +36,11 @@ describe('ChoicesSection', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useQuizChoices as jest.Mock).mockReturnValue({ data: mockChoices })
-    ;(useNextQuiz as jest.Mock).mockReturnValue({
-      getNextQuiz: jest.fn().mockReturnValue(2),
-    })
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 'user123' })
+    ;(useGlobalContext as jest.Mock).mockReturnValue({
+      selectedQuizIds: [1, 2, 3],
+      answeredQuizIds: [],
+    })
 
     const mockInsert = jest.fn().mockResolvedValue({ data: null, error: null })
     ;(supabase.from as jest.Mock).mockReturnValue({
@@ -50,7 +50,10 @@ describe('ChoicesSection', () => {
     jest.useFakeTimers()
   })
 
-  afterEach(() => jest.useRealTimers())
+  afterEach(() => {
+    jest.useRealTimers()
+    jest.clearAllMocks()
+  })
 
   it('renders content and handles user interactions correctly', () => {
     const { getAllByTestId } = render(<ChoicesSection quiz={mockQuiz} />)
@@ -64,22 +67,31 @@ describe('ChoicesSection', () => {
     expect(getByTestId('explanation-container')).toBeTruthy()
   })
 
-  it('handles navigation correctly', () => {
+  it('handles navigation to next quiz correctly', () => {
+    ;(useGlobalContext as jest.Mock).mockReturnValue({
+      selectedQuizIds: [1, 2, 3],
+      answeredQuizIds: [1],
+    })
+
     const { getByTestId } = render(
       <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
     )
-    const pressNext = () => fireEvent.press(getByTestId('next-button'))
-    pressNext()
-    expect(router.push).toHaveBeenCalledWith('/quiz-tab/quiz/2')
 
-    ;(useNextQuiz as jest.Mock).mockReturnValue({
-      getNextQuiz: jest.fn().mockReturnValue(null),
+    fireEvent.press(getByTestId('next-button'))
+    expect(router.push).toHaveBeenCalledWith('/quiz-tab/quiz/2')
+  })
+
+  it('handles navigation to results when all quizzes are answered', () => {
+    ;(useGlobalContext as jest.Mock).mockReturnValue({
+      selectedQuizIds: [1, 2, 3],
+      answeredQuizIds: [1, 2, 3],
     })
-    const { getByTestId: getResultsButton } = render(
+
+    const { getByTestId } = render(
       <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
     )
-    const pressButton = () => fireEvent.press(getResultsButton('next-button'))
-    pressButton()
+
+    fireEvent.press(getByTestId('next-button'))
     expect(router.push).toHaveBeenCalledWith('/quiz-tab/result')
   })
 })

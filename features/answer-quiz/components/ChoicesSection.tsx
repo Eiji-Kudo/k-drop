@@ -101,7 +101,9 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
             </ThemedText>
           </View>
           <View style={styles.buttonContainer}>
-            <PrimaryButton testID="next-button" onPress={handleNext}>次へ</PrimaryButton>
+            <PrimaryButton testID="next-button" onPress={handleNext}>
+              次へ
+            </PrimaryButton>
           </View>
         </>
       )}
