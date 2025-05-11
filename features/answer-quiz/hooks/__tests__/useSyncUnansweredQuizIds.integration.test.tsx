@@ -35,7 +35,7 @@ describe('useSyncUnansweredQuizIds - integration', () => {
   })
 
   it('should sync unanswered quiz IDs using actual useAppUser', async () => {
-    // First create mock responses
+    // Create mock responses
     const userQuizAnswersMock = [{ quiz_id: 1 }, { quiz_id: 2 }]
     const quizzesMock = [
       { quiz_id: 1 },
@@ -43,24 +43,26 @@ describe('useSyncUnansweredQuizIds - integration', () => {
       { quiz_id: 3 },
       { quiz_id: 4 },
     ]
-    
+
     // Setup "then" implementation
     const mockThen = jest.fn().mockImplementation((callback) => {
-      // Simulate async behavior
       return Promise.resolve().then(() => {
         // Get the table name from closure
-        const table = mockThen.mock.instances[0]?.tableName
-        
-        if (table === 'user_quiz_answers') {
+        const instances = mockThen.mock.instances
+        const firstInstance = instances.length > 0 ? instances[0] : null
+        const table =
+          firstInstance && typeof firstInstance === 'object'
+            ? ((firstInstance as Record<string, unknown>).tableName as string)
+            : undefined
+
+        if (table === 'user_quiz_answers')
           return callback({ data: userQuizAnswersMock, error: null })
-        }
-        if (table === 'quizzes') {
+        if (table === 'quizzes')
           return callback({ data: quizzesMock, error: null })
-        }
         return callback({ data: [], error: null })
       })
     })
-    
+
     // Setup the from mock
     const mockFrom = jest.fn().mockImplementation((tableName) => {
       const mockObj = {
@@ -73,7 +75,7 @@ describe('useSyncUnansweredQuizIds - integration', () => {
       mockThen.mock.instances.push(mockObj)
       return mockObj
     })
-    
+
     // Assign the mock
     ;(supabase.from as jest.Mock) = mockFrom
 
@@ -93,9 +95,12 @@ describe('useSyncUnansweredQuizIds - integration', () => {
     queryClient.clear()
 
     // Override the useAppUser hook for this test
-    const useAppUser = require('@/hooks/useAppUser').useAppUser
-    ;(useAppUser as jest.Mock).mockReturnValue({
-      appUserId: null, // No app user found
+    const appUserModule = require('@/hooks/useAppUser') as {
+      useAppUser: jest.Mock
+    }
+    const useAppUser = appUserModule.useAppUser
+    useAppUser.mockReturnValue({
+      appUserId: null,
       loading: false,
       error: null,
       authUser: null,
@@ -105,20 +110,17 @@ describe('useSyncUnansweredQuizIds - integration', () => {
     const mockFromImplementation = jest.fn()
     ;(supabase.from as jest.Mock) = mockFromImplementation
 
-    // Setup mock for 'quizzes' to be called in the test
-    // This is called because we provide idolGroupId=1 in the test
+    // Setup mock for 'quizzes' to be called in the test (idolGroupId=1 in the test)
     mockFromImplementation.mockImplementation((table) => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
-      then: jest.fn().mockImplementation((callback) => {
-        return Promise.resolve().then(() => {
-          return callback({ data: [], error: null })
-        })
-      }),
+      then: jest
+        .fn()
+        .mockImplementation((callback) =>
+          Promise.resolve().then(() => callback({ data: [], error: null })),
+        ),
     }))
-
-    // When idolGroupId is non-null but appUserId is null,
-    // the quizzes query will run but the user_quiz_answers query won't
+    // When idolGroupId is non-null but appUserId is null, only quizzes query runs
 
     // Render the hook
     renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })

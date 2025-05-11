@@ -26,6 +26,9 @@ describe('useSyncUnansweredQuizIds - initialization', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     queryClient.clear()
+
+    // Create a spy on the from method to avoid unbound-method errors
+    jest.spyOn(supabase, 'from')
   })
 
   it('should not call setSelectedQuizIds when there is no context setter', async () => {
@@ -37,20 +40,18 @@ describe('useSyncUnansweredQuizIds - initialization', () => {
     // Wait for queries to resolve
     await queryClient.refetchQueries()
 
-    // Verify no data was fetched
-    expect(supabase.from).not.toHaveBeenCalled()
+    // We can safely check the spy created in beforeEach
+    expect(jest.spyOn(supabase, 'from')).not.toHaveBeenCalled()
   })
 
   it('should set empty array when there are no unanswered quizzes', async () => {
     // Mock useAppUser to return a user
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    // Mock empty quiz answers and quizzes
-    ;(supabase.from as jest.Mock).mockImplementation((table) => ({
-      select: () => ({
-        eq: () => Promise.resolve({ data: [], error: null }),
-      }),
-    }))
+    // Clear previous mocks before setting up new ones
+    jest.clearAllMocks()
+
+    // Mock empty quiz answers and quizzes - the mock is already set up in jest-setup.js
 
     renderHook(() => useSyncUnansweredQuizIds(1), {
       wrapper,
@@ -59,8 +60,9 @@ describe('useSyncUnansweredQuizIds - initialization', () => {
     // Wait for queries to resolve
     await queryClient.refetchQueries()
 
-    // Verify the correct data was fetched
-    expect(supabase.from).toHaveBeenCalledWith('user_quiz_answers')
-    expect(supabase.from).toHaveBeenCalledWith('quizzes')
+    // We can safely check the spy created in beforeEach
+    const fromSpy = jest.spyOn(supabase, 'from')
+    expect(fromSpy).toHaveBeenCalledWith('user_quiz_answers')
+    expect(fromSpy).toHaveBeenCalledWith('quizzes')
   })
 })
