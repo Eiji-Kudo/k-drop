@@ -52,7 +52,9 @@ describe('useSyncUnansweredQuizIds', () => {
       }),
     }))
 
-    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), {
+      wrapper,
+    })
 
     // Wait for queries to resolve
     await queryClient.refetchQueries()
@@ -89,7 +91,9 @@ describe('useSyncUnansweredQuizIds', () => {
       }),
     }))
 
-    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+    const { result } = renderHook(() => useSyncUnansweredQuizIds(1), {
+      wrapper,
+    })
 
     // Wait for queries to resolve
     await queryClient.refetchQueries()
@@ -121,7 +125,9 @@ describe('useSyncUnansweredQuizIds', () => {
       }),
     }))
 
-    const { result, rerender } = renderHook(() => useSyncUnansweredQuizIds(1), { wrapper })
+    const { result, rerender } = renderHook(() => useSyncUnansweredQuizIds(1), {
+      wrapper,
+    })
 
     // Wait for initial queries to resolve
     await queryClient.refetchQueries()
