@@ -2,11 +2,10 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
+import { getChoiceVariant, isChoiceCorrect, recordQuizAnswer } from '@/features/answer-quiz/utils/quizUtils'
 import { useAppUser } from '@/hooks/useAppUser'
-import { supabase } from '@/utils/supabase'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
@@ -27,11 +26,7 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
   const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
   const { appUserId } = useAppUser()
 
-  const isCorrect =
-    selectedChoiceId !== null
-      ? (choices.find((c) => c.quiz_choice_id === selectedChoiceId)
-          ?.is_correct ?? false)
-      : null
+  const isCorrect = isChoiceCorrect(selectedChoiceId, choices)
 
   const handleChoiceSelection = async (index: number) => {
     if (selectedChoiceId !== null) return
@@ -39,21 +34,12 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
     const choice = choices[index]
     setSelectedChoiceId(choice.quiz_choice_id)
 
-    if (appUserId) {
-      try {
-        await supabase.from('user_quiz_answers').insert({
-          app_user_id: appUserId,
-          quiz_id: quiz.quiz_id,
-          selected_choice: index + 1, // Keep the 1-based index for backward compatibility
-          is_correct: choice.is_correct,
-          answered_at: new Date().toISOString(),
-        })
-      } catch (error) {
-        console.error('Failed to record quiz answer:', error)
-      }
-    } else {
-      console.error('Cannot record answer: app_user_id not found')
-    }
+    await recordQuizAnswer(
+      appUserId, 
+      quiz.quiz_id, 
+      index, 
+      choice.is_correct
+    )
 
     setTimeout(() => setDisplayPhase('result'), 600)
     setTimeout(() => setDisplayPhase('explanation'), 2000)
@@ -62,17 +48,6 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
   const handleNext = () => {
     const next = getNextQuiz()
     router.push(next ? `/quiz-tab/quiz/${next.toString()}` : '/quiz-tab/result')
-  }
-
-  const getChoiceVariant = (index: number): QuizVariant => {
-    if (selectedChoiceId === null) return QuizVariant.UNANSWERED
-
-    const choice = choices[index]
-
-    if (choice.is_correct) return QuizVariant.CORRECT
-    if (choice.quiz_choice_id === selectedChoiceId) return QuizVariant.INCORRECT
-
-    return QuizVariant.UNANSWERED
   }
 
   const showResultModal =
@@ -87,7 +62,7 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
           key={choice.quiz_choice_id}
           index={index}
           label={choice.choice_text}
-          variant={getChoiceVariant(index)}
+          variant={getChoiceVariant(index, choices, selectedChoiceId)}
           disabled={selectedChoiceId !== null}
           onPress={() => handleChoiceSelection(index)}
         />
