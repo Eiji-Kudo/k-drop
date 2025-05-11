@@ -7,8 +7,6 @@ import { useSyncUnansweredQuizIds } from '../useSyncUnansweredQuizIds'
 
 jest.mock('@/hooks/useAppUser')
 
-const mockFrom = jest.fn()
-
 describe('useSyncUnansweredQuizIds - synchronization', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -27,17 +25,12 @@ describe('useSyncUnansweredQuizIds - synchronization', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     queryClient.clear()
-
-    mockFrom.mockReset()
-    Object.defineProperty(supabase, 'from', {
-      value: mockFrom,
-    })
   })
 
   it('should call setSelectedQuizIds with unanswered quiz IDs', async () => {
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    mockFrom.mockImplementation((table) => ({
+    ;(supabase.from as jest.Mock).mockImplementation((table) => ({
       select: () => ({
         eq: () => {
           if (table === 'user_quiz_answers') {
@@ -65,14 +58,14 @@ describe('useSyncUnansweredQuizIds - synchronization', () => {
 
     await queryClient.refetchQueries()
 
-    expect(mockFrom).toHaveBeenCalledWith('user_quiz_answers')
-    expect(mockFrom).toHaveBeenCalledWith('quizzes')
+    expect(supabase.from).toHaveBeenCalledWith('user_quiz_answers')
+    expect(supabase.from).toHaveBeenCalledWith('quizzes')
   })
 
   it('should not update when unanswered quiz IDs remain the same', async () => {
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
-    mockFrom.mockImplementation((table) => ({
+    ;(supabase.from as jest.Mock).mockImplementation((table) => ({
       select: () => ({
         eq: () => {
           if (table === 'user_quiz_answers') {
@@ -97,6 +90,6 @@ describe('useSyncUnansweredQuizIds - synchronization', () => {
 
     rerender()
 
-    expect(mockFrom).toHaveBeenCalledTimes(2)
+    expect(supabase.from).toHaveBeenCalledTimes(2)
   })
 })

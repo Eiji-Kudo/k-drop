@@ -8,9 +8,6 @@ import { useSyncUnansweredQuizIds } from '../useSyncUnansweredQuizIds'
 // Mock useAppUser hook
 jest.mock('@/hooks/useAppUser')
 
-// Mock supabase.from to avoid unbound method lint error
-const mockFrom = jest.fn()
-
 describe('useSyncUnansweredQuizIds - initialization', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -29,12 +26,6 @@ describe('useSyncUnansweredQuizIds - initialization', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     queryClient.clear()
-
-    // Reset and setup mock for each test
-    mockFrom.mockReset()
-    Object.defineProperty(supabase, 'from', {
-      value: mockFrom,
-    })
   })
 
   it('should not call setSelectedQuizIds when there is no context setter', async () => {
@@ -47,7 +38,7 @@ describe('useSyncUnansweredQuizIds - initialization', () => {
     await queryClient.refetchQueries()
 
     // Verify no data was fetched
-    expect(mockFrom).not.toHaveBeenCalled()
+    expect(supabase.from).not.toHaveBeenCalled()
   })
 
   it('should set empty array when there are no unanswered quizzes', async () => {
@@ -55,7 +46,7 @@ describe('useSyncUnansweredQuizIds - initialization', () => {
     ;(useAppUser as jest.Mock).mockReturnValue({ appUserId: 1 })
 
     // Mock empty quiz answers and quizzes
-    mockFrom.mockImplementation((table) => ({
+    ;(supabase.from as jest.Mock).mockImplementation((table) => ({
       select: () => ({
         eq: () => Promise.resolve({ data: [], error: null }),
       }),
@@ -69,7 +60,7 @@ describe('useSyncUnansweredQuizIds - initialization', () => {
     await queryClient.refetchQueries()
 
     // Verify the correct data was fetched
-    expect(mockFrom).toHaveBeenCalledWith('user_quiz_answers')
-    expect(mockFrom).toHaveBeenCalledWith('quizzes')
+    expect(supabase.from).toHaveBeenCalledWith('user_quiz_answers')
+    expect(supabase.from).toHaveBeenCalledWith('quizzes')
   })
 })
