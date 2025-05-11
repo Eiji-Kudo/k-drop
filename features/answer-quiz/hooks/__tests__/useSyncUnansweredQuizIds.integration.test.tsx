@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
 import { useSyncUnansweredQuizIds } from '../useSyncUnansweredQuizIds'
 
-// Mock the useAppUser hook
 jest.mock('@/hooks/useAppUser', () => ({
   useAppUser: jest.fn().mockReturnValue({
     appUserId: 1,
