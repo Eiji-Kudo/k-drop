@@ -2,9 +2,9 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
+import { QuizPhaseProvider, useQuizPhase } from '@/features/answer-quiz/context/QuizPhaseContext'
 import { useQuizAnswer } from '@/features/answer-quiz/hooks/useQuizAnswer'
 import { useQuizNavigation } from '@/features/answer-quiz/hooks/useQuizNavigation'
-import { useQuizPhase } from '@/features/answer-quiz/hooks/useQuizPhase'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { getChoiceVariant } from '@/features/answer-quiz/utils/quizUtils'
 import { StyleSheet, View } from 'react-native'
@@ -19,12 +19,25 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
   const { quiz, testDisplayPhase } = props
   const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
 
-  const { selectedChoiceId, displayPhase, isCorrect } = useQuizPhase(
-    choices,
-    testDisplayPhase,
+  return (
+    <QuizPhaseProvider choices={choices} testDisplayPhase={testDisplayPhase}>
+      <ChoicesSectionContent quiz={quiz} choices={choices} />
+    </QuizPhaseProvider>
   )
+}
+
+const ChoicesSectionContent = ({ 
+  quiz, 
+  choices
+}: { 
+  quiz: Tables<'quizzes'>, 
+  choices: Tables<'quiz_choices'>[] 
+}) => {
+  const { selectedChoiceId, displayPhase, isCorrect } = useQuizPhase()
   const { onSelect } = useQuizAnswer(quiz.quiz_id, choices)
   const { goNext } = useQuizNavigation()
+
+  console.log('[ChoicesSection] displayPhase:', displayPhase)
 
   return (
     <View style={styles.choicesContainer}>
@@ -39,12 +52,11 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
         />
       ))}
 
-      {(displayPhase === 'result' || testDisplayPhase === 'explanation') && (
+      {displayPhase === 'result' && (
         <ResultModal visible={true} isCorrect={isCorrect} />
       )}
 
-      {(displayPhase === 'explanation' ||
-        testDisplayPhase === 'explanation') && (
+      {displayPhase === 'explanation' && (
         <>
           <View testID="explanation-container">
             <ThemedText style={styles.explanationText}>
