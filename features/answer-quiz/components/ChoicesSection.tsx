@@ -40,8 +40,6 @@ const ChoicesSectionContent = ({
   const { onSelect } = useQuizAnswer(quiz.quiz_id, choices)
   const { goNext } = useQuizNavigation()
 
-  console.log('[ChoicesSection] displayPhase:', displayPhase)
-
   return (
     <View style={styles.choicesContainer}>
       {choices.map((choice, index) => (
