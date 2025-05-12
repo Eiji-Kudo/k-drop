@@ -46,6 +46,7 @@ module.exports = {
     'react-native/no-color-literals': 'off',
     'react-native/no-unused-styles': 'error',
     'react/no-unescaped-entities': 'off',
+    'react/prop-types': 'off',
     'react/jsx-curly-brace-presence': [
       'error',
       { props: 'never', children: 'never' },
