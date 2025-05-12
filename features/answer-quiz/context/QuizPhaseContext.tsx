@@ -1,6 +1,6 @@
 import { Tables } from '@/database.types'
 import { isChoiceCorrect } from '@/features/answer-quiz/utils/quizUtils'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 type DisplayPhase = 'question' | 'result' | 'explanation'
 
@@ -50,4 +50,4 @@ export const useQuizPhase = () => {
     throw new Error('useQuizPhase must be used within a QuizPhaseProvider')
   }
   return context
-} 
+}

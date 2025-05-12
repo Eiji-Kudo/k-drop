@@ -2,7 +2,10 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { QuizPhaseProvider, useQuizPhase } from '@/features/answer-quiz/context/QuizPhaseContext'
+import {
+  QuizPhaseProvider,
+  useQuizPhase,
+} from '@/features/answer-quiz/context/QuizPhaseContext'
 import { useQuizAnswer } from '@/features/answer-quiz/hooks/useQuizAnswer'
 import { useQuizNavigation } from '@/features/answer-quiz/hooks/useQuizNavigation'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
@@ -26,12 +29,12 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
   )
 }
 
-const ChoicesSectionContent = ({ 
-  quiz, 
-  choices
-}: { 
-  quiz: Tables<'quizzes'>, 
-  choices: Tables<'quiz_choices'>[] 
+const ChoicesSectionContent = ({
+  quiz,
+  choices,
+}: {
+  quiz: Tables<'quizzes'>
+  choices: Tables<'quiz_choices'>[]
 }) => {
   const { selectedChoiceId, displayPhase, isCorrect } = useQuizPhase()
   const { onSelect } = useQuizAnswer(quiz.quiz_id, choices)
