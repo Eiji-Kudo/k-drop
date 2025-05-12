@@ -1,5 +1,6 @@
 import { Tables } from '@/database.types'
 import { isChoiceCorrect } from '@/features/answer-quiz/utils/quizUtils'
+import PropTypes from 'prop-types'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 type DisplayPhase = 'question' | 'result' | 'explanation'
@@ -50,4 +51,10 @@ export const useQuizPhase = () => {
     throw new Error('useQuizPhase must be used within a QuizPhaseProvider')
   }
   return context
+}
+
+QuizPhaseProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+  choices: PropTypes.array.isRequired,
+  testDisplayPhase: PropTypes.oneOf(['question', 'result', 'explanation']),
 }
