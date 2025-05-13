@@ -1,14 +1,17 @@
 import { Tables } from '@/database.types'
-import { useQuizPhase } from '@/features/answer-quiz/context/QuizPhaseContext'
 import { recordQuizAnswer } from '@/features/answer-quiz/utils/quizUtils'
 import { useAppUser } from '@/hooks/useAppUser'
 
 export const useQuizAnswer = (
   quizId: number,
   choices: Tables<'quiz_choices'>[],
+  quizPhase: {
+    setSelectedChoiceId: (id: number | null) => void
+    setDisplayPhase: (phase: 'question' | 'result' | 'explanation') => void
+  },
 ) => {
   const { appUserId } = useAppUser()
-  const { setSelectedChoiceId, setDisplayPhase } = useQuizPhase()
+  const { setSelectedChoiceId, setDisplayPhase } = quizPhase
 
   const onSelect = async (index: number) => {
     console.log('[useQuizAnswer] onSelect called with index:', index)

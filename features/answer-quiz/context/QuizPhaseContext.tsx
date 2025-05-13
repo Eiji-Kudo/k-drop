@@ -1,10 +1,10 @@
 import { Tables } from '@/database.types'
 import { isChoiceCorrect } from '@/features/answer-quiz/utils/quizUtils'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type DisplayPhase = 'question' | 'result' | 'explanation'
 
-type QuizPhaseContextType = {
+type QuizPhaseState = {
   selectedChoiceId: number | null
   setSelectedChoiceId: (id: number | null) => void
   displayPhase: DisplayPhase
@@ -12,42 +12,20 @@ type QuizPhaseContextType = {
   isCorrect: boolean | null
 }
 
-const QuizPhaseContext = createContext<QuizPhaseContextType | null>(null)
-
-export const QuizPhaseProvider: React.FC<{
-  children: React.ReactNode
-  choices: Tables<'quiz_choices'>[]
-  testDisplayPhase?: DisplayPhase
-}> = ({ children, choices, testDisplayPhase }) => {
+export const useQuizPhase = (
+  choices: Tables<'quiz_choices'>[],
+  initialDisplayPhase: DisplayPhase = 'question',
+): QuizPhaseState => {
   const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
-  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>('question')
+  const [displayPhase, setDisplayPhase] =
+    useState<DisplayPhase>(initialDisplayPhase)
   const isCorrect = isChoiceCorrect(selectedChoiceId, choices)
 
-  useEffect(() => {
-    if (testDisplayPhase) {
-      setDisplayPhase(testDisplayPhase)
-    }
-  }, [testDisplayPhase])
-
-  return (
-    <QuizPhaseContext.Provider
-      value={{
-        selectedChoiceId,
-        setSelectedChoiceId,
-        displayPhase,
-        setDisplayPhase,
-        isCorrect,
-      }}
-    >
-      {children}
-    </QuizPhaseContext.Provider>
-  )
-}
-
-export const useQuizPhase = () => {
-  const context = useContext(QuizPhaseContext)
-  if (!context) {
-    throw new Error('useQuizPhase must be used within a QuizPhaseProvider')
+  return {
+    selectedChoiceId,
+    setSelectedChoiceId,
+    displayPhase,
+    setDisplayPhase,
+    isCorrect,
   }
-  return context
 }
