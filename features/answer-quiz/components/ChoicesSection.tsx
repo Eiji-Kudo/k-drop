@@ -24,8 +24,6 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
 
   const { selectedChoiceId, displayPhase, isCorrect } = quizPhase
 
-  console.log('[ChoicesSection] displayPhase:', displayPhase)
-
   return (
     <View style={styles.choicesContainer}>
       {choices.map((choice, index) => (
