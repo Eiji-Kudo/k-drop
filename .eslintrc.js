@@ -107,12 +107,10 @@ module.exports = {
       },
     },
     {
-      // Expo Router uses file-based routing, so these exports are used implicitly
       files: ['app.config.ts', 'app/**/*.tsx', 'app/**/*.ts'],
       rules: {
         'import/no-unused-modules': 'off',
       },
     },
-    // We've removed useColorScheme.ts and useColorScheme.web.ts, and added a specific disable comment for showToast
   ],
 }
