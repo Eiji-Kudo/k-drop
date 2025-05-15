@@ -1,17 +1,14 @@
-import { Tables } from '@/database.types'
+import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import { recordQuizAnswer } from '@/features/answer-quiz/utils/quizUtils'
 import { useAppUser } from '@/hooks/useAppUser'
-import { useQuizPhase } from './useQuizPhase'
 
-export const useQuizAnswer = (
+export const useQuizOnSelect = (
   quizId: number,
-  choices: Tables<'quiz_choices'>[],
+  setSelectedChoiceId: (id: number | null) => void,
+  setDisplayPhase: (phase: 'question' | 'result' | 'explanation') => void,
 ) => {
   const { appUserId } = useAppUser()
-  const { setSelectedChoiceId, setDisplayPhase } = useQuizPhase(
-    choices,
-    undefined,
-  )
+  const { data: choices = [] } = useQuizChoices(quizId)
 
   const onSelect = async (index: number) => {
     if (setSelectedChoiceId == null) return

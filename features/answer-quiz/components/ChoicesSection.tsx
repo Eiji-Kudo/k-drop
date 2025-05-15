@@ -2,28 +2,39 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { useQuizAnswer } from '@/features/answer-quiz/hooks/useQuizAnswer'
+import { useQuizOnSelect } from '@/features/answer-quiz/hooks/useQuizOnSelect'
 import { useQuizNavigation } from '@/features/answer-quiz/hooks/useQuizNavigation'
-import { useQuizPhase } from '@/features/answer-quiz/hooks/useQuizPhase'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
-import { getChoiceVariant } from '@/features/answer-quiz/utils/quizUtils'
+import {
+  getChoiceVariant,
+  isChoiceCorrect,
+} from '@/features/answer-quiz/utils/quizUtils'
+import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
+type DisplayPhase = 'question' | 'result' | 'explanation'
+
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  testDisplayPhase?: 'question' | 'result' | 'explanation'
+  testDisplayPhase?: DisplayPhase
 }
 
 export const ChoicesSection = (props: ChoicesSectionProps) => {
   const { quiz, testDisplayPhase } = props
   const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
 
-  const { selectedChoiceId, displayPhase, isCorrect } = useQuizPhase(
-    choices,
-    testDisplayPhase,
+  const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
+  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>(
+    testDisplayPhase || 'question',
   )
-  const { onSelect } = useQuizAnswer(quiz.quiz_id, choices)
+  const isCorrect = isChoiceCorrect(selectedChoiceId, choices)
+
+  const { onSelect } = useQuizOnSelect(
+    quiz.quiz_id,
+    setSelectedChoiceId,
+    setDisplayPhase,
+  )
   const { goNext } = useQuizNavigation()
 
   return (
@@ -39,12 +50,11 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
         />
       ))}
 
-      {(displayPhase === 'result' || testDisplayPhase === 'explanation') && (
+      {displayPhase === 'result' && (
         <ResultModal visible={true} isCorrect={isCorrect} />
       )}
 
-      {(displayPhase === 'explanation' ||
-        testDisplayPhase === 'explanation') && (
+      {displayPhase === 'explanation' && (
         <>
           <View testID="explanation-container">
             <ThemedText style={styles.explanationText}>
