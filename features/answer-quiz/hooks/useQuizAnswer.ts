@@ -14,21 +14,13 @@ export const useQuizAnswer = (
   const { setSelectedChoiceId, setDisplayPhase } = quizPhase
 
   const onSelect = async (index: number) => {
-    if (setSelectedChoiceId == null) {
-      return
-    }
-
+    if (setSelectedChoiceId == null) return
     const choice = choices[index]
     setSelectedChoiceId(choice.quiz_choice_id)
     await recordQuizAnswer(appUserId, quizId, index, choice.is_correct)
 
-    setTimeout(() => {
-      setDisplayPhase('result')
-    }, 600)
-
-    setTimeout(() => {
-      setDisplayPhase('explanation')
-    }, 2000)
+    setTimeout(() => setDisplayPhase('result'), 600)
+    setTimeout(() => setDisplayPhase('explanation'), 2000)
   }
 
   return { onSelect }
