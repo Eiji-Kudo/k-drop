@@ -2,27 +2,36 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { useQuizPhase } from '@/features/answer-quiz/hooks/useQuizPhase'
 import { useQuizAnswer } from '@/features/answer-quiz/hooks/useQuizAnswer'
 import { useQuizNavigation } from '@/features/answer-quiz/hooks/useQuizNavigation'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
-import { getChoiceVariant } from '@/features/answer-quiz/utils/quizUtils'
+import { getChoiceVariant, isChoiceCorrect } from '@/features/answer-quiz/utils/quizUtils'
+import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
 
+type DisplayPhase = 'question' | 'result' | 'explanation'
+
 type ChoicesSectionProps = {
   quiz: Tables<'quizzes'>
-  testDisplayPhase?: 'question' | 'result' | 'explanation'
+  testDisplayPhase?: DisplayPhase
 }
 
 export const ChoicesSection = (props: ChoicesSectionProps) => {
   const { quiz, testDisplayPhase } = props
   const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
-  const quizPhase = useQuizPhase(choices, testDisplayPhase)
+  
+  const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
+  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>(testDisplayPhase || 'question')
+  const isCorrect = isChoiceCorrect(selectedChoiceId, choices)
+  
+  const quizPhase = {
+    setSelectedChoiceId,
+    setDisplayPhase,
+  }
+
   const { onSelect } = useQuizAnswer(quiz.quiz_id, choices, quizPhase)
   const { goNext } = useQuizNavigation()
-
-  const { selectedChoiceId, displayPhase, isCorrect } = quizPhase
 
   return (
     <View style={styles.choicesContainer}>
