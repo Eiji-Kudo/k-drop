@@ -32,7 +32,6 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
 
   const { onSelect } = useQuizOnSelect(
     quiz.quiz_id,
-    choices,
     setSelectedChoiceId,
     setDisplayPhase,
   )
