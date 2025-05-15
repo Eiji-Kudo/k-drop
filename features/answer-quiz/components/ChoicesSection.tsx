@@ -2,7 +2,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Tables } from '@/database.types'
 import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
-import { useQuizAnswer } from '@/features/answer-quiz/hooks/useQuizAnswer'
+import { useQuizOnSelect } from '@/features/answer-quiz/hooks/useQuizAnswer'
 import { useQuizNavigation } from '@/features/answer-quiz/hooks/useQuizNavigation'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
 import {
@@ -30,7 +30,7 @@ export const ChoicesSection = (props: ChoicesSectionProps) => {
   )
   const isCorrect = isChoiceCorrect(selectedChoiceId, choices)
 
-  const { onSelect } = useQuizAnswer(
+  const { onSelect } = useQuizOnSelect(
     quiz.quiz_id,
     choices,
     setSelectedChoiceId,

@@ -2,7 +2,7 @@ import { Tables } from '@/database.types'
 import { recordQuizAnswer } from '@/features/answer-quiz/utils/quizUtils'
 import { useAppUser } from '@/hooks/useAppUser'
 
-export const useQuizAnswer = (
+export const useQuizOnSelect = (
   quizId: number,
   choices: Tables<'quiz_choices'>[],
   setSelectedChoiceId: (id: number | null) => void,
