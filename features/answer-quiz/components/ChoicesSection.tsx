@@ -5,7 +5,10 @@ import { QuizChoice } from '@/features/answer-quiz/components/QuizChoice'
 import { useQuizAnswer } from '@/features/answer-quiz/hooks/useQuizAnswer'
 import { useQuizNavigation } from '@/features/answer-quiz/hooks/useQuizNavigation'
 import { useQuizChoices } from '@/features/answer-quiz/hooks/useQuizQuery'
-import { getChoiceVariant, isChoiceCorrect } from '@/features/answer-quiz/utils/quizUtils'
+import {
+  getChoiceVariant,
+  isChoiceCorrect,
+} from '@/features/answer-quiz/utils/quizUtils'
 import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ResultModal } from './result-modal'
@@ -20,17 +23,19 @@ type ChoicesSectionProps = {
 export const ChoicesSection = (props: ChoicesSectionProps) => {
   const { quiz, testDisplayPhase } = props
   const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
-  
+
   const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
-  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>(testDisplayPhase || 'question')
+  const [displayPhase, setDisplayPhase] = useState<DisplayPhase>(
+    testDisplayPhase || 'question',
+  )
   const isCorrect = isChoiceCorrect(selectedChoiceId, choices)
-  
-  const quizPhase = {
+
+  const { onSelect } = useQuizAnswer(
+    quiz.quiz_id,
+    choices,
     setSelectedChoiceId,
     setDisplayPhase,
-  }
-
-  const { onSelect } = useQuizAnswer(quiz.quiz_id, choices, quizPhase)
+  )
   const { goNext } = useQuizNavigation()
 
   return (

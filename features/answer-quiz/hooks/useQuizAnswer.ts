@@ -5,13 +5,10 @@ import { useAppUser } from '@/hooks/useAppUser'
 export const useQuizAnswer = (
   quizId: number,
   choices: Tables<'quiz_choices'>[],
-  quizPhase: {
-    setSelectedChoiceId: (id: number | null) => void
-    setDisplayPhase: (phase: 'question' | 'result' | 'explanation') => void
-  },
+  setSelectedChoiceId: (id: number | null) => void,
+  setDisplayPhase: (phase: 'question' | 'result' | 'explanation') => void,
 ) => {
   const { appUserId } = useAppUser()
-  const { setSelectedChoiceId, setDisplayPhase } = quizPhase
 
   const onSelect = async (index: number) => {
     if (setSelectedChoiceId == null) return
