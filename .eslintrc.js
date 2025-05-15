@@ -37,6 +37,12 @@ module.exports = {
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+    '@typescript-eslint/consistent-type-assertions': [
+      'error',
+      {
+        assertionStyle: 'never',
+      },
+    ],
     '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/no-misused-promises': 'off',
@@ -100,15 +106,14 @@ module.exports = {
         '@typescript-eslint/no-unsafe-return': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/consistent-type-assertions': 'off',
       },
     },
     {
-      // Expo Router uses file-based routing, so these exports are used implicitly
       files: ['app.config.ts', 'app/**/*.tsx', 'app/**/*.ts'],
       rules: {
         'import/no-unused-modules': 'off',
       },
     },
-    // We've removed useColorScheme.ts and useColorScheme.web.ts, and added a specific disable comment for showToast
   ],
 }
