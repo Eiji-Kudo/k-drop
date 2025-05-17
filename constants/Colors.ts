@@ -19,4 +19,7 @@ export const Colors = {
   markCorrect: '#68c1f1',
   markIncorrect: '#f56f6f',
   error: '#d32f2f',
+  success: '#43a047',
+  lightGray: '#f5f5f5',
+  card: '#FFFFFF',
 }
