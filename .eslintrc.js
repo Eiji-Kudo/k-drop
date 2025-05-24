@@ -107,6 +107,7 @@ module.exports = {
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-argument': 'off',
         '@typescript-eslint/consistent-type-assertions': 'off',
+        '@typescript-eslint/unbound-method': 'off',
       },
     },
     {
