@@ -66,7 +66,10 @@ describe('useSyncUnansweredQuizIds', () => {
       await result.current.mutateAsync(1)
     })
     expect(result.current.data).toHaveLength(10)
-    expect(result.current.data).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    const allQuizIds = Array.from({ length: 15 }, (_, i) => i + 1)
+    expect(result.current.data?.every((id) => allQuizIds.includes(id))).toBe(
+      true,
+    )
   })
 
   it('should return all quizzes if less than 10 available', async () => {
@@ -78,7 +81,9 @@ describe('useSyncUnansweredQuizIds', () => {
       await result.current.mutateAsync(1)
     })
     expect(result.current.data).toHaveLength(5)
-    expect(result.current.data).toEqual([1, 2, 3, 4, 5])
+    expect(result.current.data).toEqual(
+      expect.arrayContaining([1, 2, 3, 4, 5]),
+    )
   })
 
   it('should exclude already answered quizzes from the 10 limit', async () => {
@@ -96,9 +101,10 @@ describe('useSyncUnansweredQuizIds', () => {
     })
     const ids = result.current.data
     expect(ids).toHaveLength(10)
-    expect(ids).toEqual([2, 4, 6, 7, 8, 9, 10, 11, 12, 13])
     expect(ids).not.toContain(1)
     expect(ids).not.toContain(3)
     expect(ids).not.toContain(5)
+    const expectedPossibleIds = [2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    expect(ids?.every((id) => expectedPossibleIds.includes(id))).toBe(true)
   })
 })

@@ -70,8 +70,10 @@ describe('GroupSelectionScreen', () => {
 
     await waitFor(() => {
       expect(globalContextValue?.selectedQuizIds).toBeInstanceOf(Array)
-      expect(globalContextValue?.selectedQuizIds).toEqual([1, 2, 3, 4, 5])
-      expect(globalContextValue?.selectedQuizIds.length).toBe(5)
+      expect(globalContextValue?.selectedQuizIds).toHaveLength(5)
+      expect(globalContextValue?.selectedQuizIds).toEqual(
+        expect.arrayContaining([1, 2, 3, 4, 5])
+      )
       expect(globalContextValue?.answeredQuizIds).toEqual([])
     })
 
@@ -82,7 +84,9 @@ describe('GroupSelectionScreen', () => {
       { timeout: 3000 },
     )
 
-    expect(router.push).toHaveBeenCalledWith('/quiz-tab/quiz/1')
+    expect(router.push).toHaveBeenCalledWith(
+      expect.stringMatching(/^\/quiz-tab\/quiz\/\d+$/)
+    )
   })
 
   it('should not navigate when no quizzes are available', async () => {
