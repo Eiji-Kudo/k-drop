@@ -56,4 +56,5 @@ function calculateUnansweredQuizIds(
   return groupQuizzes
     .filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
     .map((quiz) => quiz.quiz_id)
+    .slice(0, 10)
 }
