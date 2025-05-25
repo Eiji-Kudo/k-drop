@@ -1,4 +1,3 @@
-// Mock Supabase
 jest.mock('@/utils/supabase', () => ({
   supabase: {
     auth: {
