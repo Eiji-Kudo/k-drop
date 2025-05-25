@@ -27,9 +27,9 @@ export function useSyncUnansweredQuizIds() {
       if (groupQuizzesResult.error)
         throw new Error(groupQuizzesResult.error.message)
 
-      const userQuizAnswers =
-        userAnswersResult.data as Tables<'user_quiz_answers'>[]
-      const groupQuizzes = groupQuizzesResult.data as Tables<'quizzes'>[]
+      const userQuizAnswers: Tables<'user_quiz_answers'>[] =
+        userAnswersResult.data
+      const groupQuizzes: Tables<'quizzes'>[] = groupQuizzesResult.data
 
       const answeredQuizIds = userQuizAnswers.map((a) => a.quiz_id)
       const unansweredQuizIds = groupQuizzes

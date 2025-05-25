@@ -1,10 +1,8 @@
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
 import { Colors } from '@/constants/Colors'
-import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { GroupButton } from '@/features/answer-quiz/components/GroupButton'
 import { GroupSelectionHeader } from '@/features/answer-quiz/components/GroupSelectionHeader'
-import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { useSyncUnansweredQuizIds } from '@/features/answer-quiz/hooks/useSyncUnansweredQuizIds'
 import { supabase } from '@/utils/supabase'
 import { showErrorToast } from '@/utils/toast'
@@ -15,8 +13,6 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
-  const { selectedQuizIds } = useGlobalContext()
-  const { getNextQuiz } = useNextQuiz()
   const syncUnansweredQuizIds = useSyncUnansweredQuizIds()
 
   const { data: groups } = useQuery({
@@ -49,7 +45,7 @@ export default function GroupSelectionScreen() {
       } else {
         router.push('/quiz-tab/result')
       }
-    } catch (error) {
+    } catch {
       showErrorToast('問題の取得に失敗しました')
     }
   }
