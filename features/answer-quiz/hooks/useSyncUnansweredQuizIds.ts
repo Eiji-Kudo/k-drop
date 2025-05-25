@@ -43,8 +43,8 @@ async function fetchUserAnswersAndGroupQuizzes(
     throw new Error(groupQuizzesResult.error.message)
 
   return {
-    userQuizAnswers: userAnswersResult.data as Tables<'user_quiz_answers'>[],
-    groupQuizzes: groupQuizzesResult.data as Tables<'quizzes'>[],
+    userQuizAnswers: userAnswersResult.data,
+    groupQuizzes: groupQuizzesResult.data,
   }
 }
 
