@@ -3,14 +3,21 @@
 ## 1. Reactのパラダイムとの整合性
 
 ### クラスベースの問題点
+
 ```typescript
 // ❌ クラスベースのアプローチ
 class QuizManager {
   private state = { selectedIds: [], answeredIds: [] }
-  
-  fetchData() { /* ... */ }
-  updateState() { /* ... */ }
-  calculateNext() { /* ... */ }
+
+  fetchData() {
+    /* ... */
+  }
+  updateState() {
+    /* ... */
+  }
+  calculateNext() {
+    /* ... */
+  }
 }
 
 // Reactコンポーネント内で
@@ -19,15 +26,20 @@ const manager = useMemo(() => new QuizManager(), [])
 ```
 
 ### Hooksベースの利点
+
 ```typescript
 // ✅ Hooks + 責務分離
 const useQuiz = () => {
-  const [state, setState] = useState()  // Reactの状態管理に統合
-  const { data } = useQuery()           // Reactのライフサイクルに統合
-  
-  return useMemo(() => ({              // 自動的な最適化
-    next: calculateNext(data, state)
-  }), [data, state])
+  const [state, setState] = useState() // Reactの状態管理に統合
+  const { data } = useQuery() // Reactのライフサイクルに統合
+
+  return useMemo(
+    () => ({
+      // 自動的な最適化
+      next: calculateNext(data, state),
+    }),
+    [data, state],
+  )
 }
 ```
 
@@ -36,17 +48,18 @@ const useQuiz = () => {
 ## 2. テスタビリティの向上
 
 ### クラスベースのテストの難しさ
+
 ```typescript
 // ❌ QuizManagerのテスト
 describe('QuizManager', () => {
   it('should fetch and calculate', async () => {
     // Supabaseのモックが必要
     const mockSupabase = createMockSupabase()
-    
+
     // 内部状態のテストが困難
     const manager = new QuizManager(mockSupabase)
     await manager.fetchData()
-    
+
     // privateメソッドはテストできない
     expect(manager.getNextQuizId()).toBe(1)
   })
@@ -54,14 +67,15 @@ describe('QuizManager', () => {
 ```
 
 ### 純粋関数のテストの簡単さ
+
 ```typescript
 // ✅ 分離されたロジックのテスト
 describe('quizLogic', () => {
   it('should calculate next quiz', () => {
     // 依存なし、モック不要
     const result = calculateNextQuiz(
-      [1, 2, 3],  // all quiz ids
-      [1]         // answered ids
+      [1, 2, 3], // all quiz ids
+      [1], // answered ids
     )
     expect(result).toBe(2)
   })
@@ -82,39 +96,45 @@ describe('quizRepository', () => {
 ## 3. 再利用性と組み合わせの柔軟性
 
 ### クラスベースの制限
+
 ```typescript
 // ❌ 特定の用途に固定される
 class QuizManager {
   // グループ単位でしか使えない
-  fetchQuizzesByGroup(groupId: number) { /* ... */ }
-  
+  fetchQuizzesByGroup(groupId: number) {
+    /* ... */
+  }
+
   // 別の条件でクイズを取得したい場合は？
   // → クラスを拡張するか、新しいメソッドを追加
 }
 ```
 
 ### 関数の組み合わせによる柔軟性
+
 ```typescript
 // ✅ 柔軟な組み合わせ
 // 基本的なデータ取得
-const fetchQuizzes = (filters: QuizFilters) => { /* ... */ }
+const fetchQuizzes = (filters: QuizFilters) => {
+  /* ... */
+}
 
 // 様々な使い方が可能
 const useGroupQuizzes = (groupId: number) => {
   return useQuery({
-    queryFn: () => fetchQuizzes({ groupId })
+    queryFn: () => fetchQuizzes({ groupId }),
   })
 }
 
 const useUserFavoriteQuizzes = (userId: number) => {
   return useQuery({
-    queryFn: () => fetchQuizzes({ userId, onlyFavorites: true })
+    queryFn: () => fetchQuizzes({ userId, onlyFavorites: true }),
   })
 }
 
 const useDailyQuizzes = () => {
   return useQuery({
-    queryFn: () => fetchQuizzes({ date: today() })
+    queryFn: () => fetchQuizzes({ date: today() }),
   })
 }
 ```
@@ -124,6 +144,7 @@ const useDailyQuizzes = () => {
 ## 4. パフォーマンスの最適化
 
 ### クラスベースの最適化の難しさ
+
 ```typescript
 // ❌ 全体が再計算される
 class QuizManager {
@@ -138,22 +159,23 @@ class QuizManager {
 ```
 
 ### Hooksによる細かい最適化
+
 ```typescript
 // ✅ 必要な部分だけ再計算
 const useQuizStats = () => {
   const { quizzes } = useQuizzes()
   const { answeredIds } = useAnswers()
-  
+
   // 各値が独立してメモ化される
   const total = useMemo(() => quizzes.length, [quizzes])
-  
+
   const answered = useMemo(() => answeredIds.length, [answeredIds])
-  
-  const progress = useMemo(() => 
-    calculateProgress(total, answered),
-    [total, answered]
+
+  const progress = useMemo(
+    () => calculateProgress(total, answered),
+    [total, answered],
   )
-  
+
   return { total, answered, progress }
 }
 ```
@@ -163,12 +185,13 @@ const useQuizStats = () => {
 ## 5. エラー処理とローディング状態の統一
 
 ### クラスベースの状態管理の複雑さ
+
 ```typescript
 // ❌ 独自のエラー・ローディング管理
 class QuizManager {
   loading = false
   error = null
-  
+
   async fetchData() {
     this.loading = true
     try {
@@ -183,6 +206,7 @@ class QuizManager {
 ```
 
 ### Reactエコシステムとの統合
+
 ```typescript
 // ✅ 標準的なパターンの利用
 const useQuiz = () => {
@@ -192,10 +216,10 @@ const useQuiz = () => {
     retry: 3,
     staleTime: 5 * 60 * 1000,
   })
-  
+
   // React Error Boundaryと統合
   if (error) throw error
-  
+
   return { data, isLoading }
 }
 ```
@@ -205,6 +229,7 @@ const useQuiz = () => {
 ## 6. チーム開発での利点
 
 ### クラスベースの学習コスト
+
 ```typescript
 // ❌ QuizManagerの全体を理解する必要がある
 // - 600行のクラス
@@ -214,6 +239,7 @@ const useQuiz = () => {
 ```
 
 ### 分離されたモジュールの理解しやすさ
+
 ```typescript
 // ✅ 各部分を独立して理解できる
 // quizUtils.ts - 50行の純粋関数
