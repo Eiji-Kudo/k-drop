@@ -14,31 +14,46 @@ export function useSyncUnansweredQuizIds() {
         throw new Error('User not found')
       }
 
-      const [userAnswersResult, groupQuizzesResult] = await Promise.all([
-        supabase
-          .from('user_quiz_answers')
-          .select('*')
-          .eq('app_user_id', appUserId),
-        supabase.from('quizzes').select('*').eq('idol_group_id', idolGroupId),
-      ])
+      const { userQuizAnswers, groupQuizzes } =
+        await fetchUserAnswersAndGroupQuizzes(appUserId, idolGroupId)
 
-      if (userAnswersResult.error)
-        throw new Error(userAnswersResult.error.message)
-      if (groupQuizzesResult.error)
-        throw new Error(groupQuizzesResult.error.message)
-
-      const userQuizAnswers: Tables<'user_quiz_answers'>[] =
-        userAnswersResult.data
-      const groupQuizzes: Tables<'quizzes'>[] = groupQuizzesResult.data
-
-      const answeredQuizIds = userQuizAnswers.map((a) => a.quiz_id)
-      const unansweredQuizIds = groupQuizzes
-        .filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
-        .map((quiz) => quiz.quiz_id)
+      const unansweredQuizIds = calculateUnansweredQuizIds(
+        userQuizAnswers,
+        groupQuizzes,
+      )
 
       setSelectedQuizIds(unansweredQuizIds)
 
       return unansweredQuizIds
     },
   })
+}
+
+async function fetchUserAnswersAndGroupQuizzes(
+  appUserId: number,
+  idolGroupId: number,
+) {
+  const [userAnswersResult, groupQuizzesResult] = await Promise.all([
+    supabase.from('user_quiz_answers').select('*').eq('app_user_id', appUserId),
+    supabase.from('quizzes').select('*').eq('idol_group_id', idolGroupId),
+  ])
+
+  if (userAnswersResult.error) throw new Error(userAnswersResult.error.message)
+  if (groupQuizzesResult.error)
+    throw new Error(groupQuizzesResult.error.message)
+
+  return {
+    userQuizAnswers: userAnswersResult.data as Tables<'user_quiz_answers'>[],
+    groupQuizzes: groupQuizzesResult.data as Tables<'quizzes'>[],
+  }
+}
+
+function calculateUnansweredQuizIds(
+  userQuizAnswers: Tables<'user_quiz_answers'>[],
+  groupQuizzes: Tables<'quizzes'>[],
+) {
+  const answeredQuizIds = userQuizAnswers.map((a) => a.quiz_id)
+  return groupQuizzes
+    .filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
+    .map((quiz) => quiz.quiz_id)
 }
