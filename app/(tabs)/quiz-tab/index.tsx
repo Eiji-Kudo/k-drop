@@ -38,7 +38,6 @@ export default function GroupSelectionScreen() {
         return
       }
 
-      // Use the first unanswered quiz ID directly
       const nextQuizId = unansweredQuizIds[0]
       if (nextQuizId) {
         router.push(`/quiz-tab/quiz/${nextQuizId.toString()}`)
