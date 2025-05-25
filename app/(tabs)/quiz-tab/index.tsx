@@ -17,8 +17,7 @@ export default function GroupSelectionScreen() {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
   const { selectedQuizIds } = useGlobalContext()
   const { getNextQuiz } = useNextQuiz()
-
-  useSyncUnansweredQuizIds(selectedGroupId)
+  const syncUnansweredQuizIds = useSyncUnansweredQuizIds()
 
   const { data: groups } = useQuery({
     queryKey: ['idol_groups'],
@@ -31,16 +30,27 @@ export default function GroupSelectionScreen() {
 
   const handleGroupSelect = (groupId: number) => setSelectedGroupId(groupId)
 
-  const handleContinue = () => {
-    if (selectedQuizIds.length === 0) {
-      showErrorToast('問題がありません')
-      return
-    }
-    const nextQuizId = getNextQuiz()
-    if (nextQuizId) {
-      router.push(`/quiz-tab/quiz/${nextQuizId.toString()}`)
-    } else {
-      router.push('/quiz-tab/result')
+  const handleContinue = async () => {
+    if (!selectedGroupId) return
+
+    try {
+      const unansweredQuizIds =
+        await syncUnansweredQuizIds.mutateAsync(selectedGroupId)
+
+      if (unansweredQuizIds.length === 0) {
+        showErrorToast('問題がありません')
+        return
+      }
+
+      // Use the first unanswered quiz ID directly
+      const nextQuizId = unansweredQuizIds[0]
+      if (nextQuizId) {
+        router.push(`/quiz-tab/quiz/${nextQuizId.toString()}`)
+      } else {
+        router.push('/quiz-tab/result')
+      }
+    } catch (error) {
+      showErrorToast('問題の取得に失敗しました')
     }
   }
 
@@ -63,8 +73,11 @@ export default function GroupSelectionScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <PrimaryButton onPress={handleContinue} disabled={!selectedGroupId}>
-            問題へ進む
+          <PrimaryButton
+            onPress={handleContinue}
+            disabled={!selectedGroupId || syncUnansweredQuizIds.isPending}
+          >
+            {syncUnansweredQuizIds.isPending ? '読み込み中...' : '問題へ進む'}
           </PrimaryButton>
         </View>
       </SafeAreaView>

@@ -2,64 +2,45 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { Tables } from '@/database.types'
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
-import { useQuery } from '@tanstack/react-query'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMutation } from '@tanstack/react-query'
 
-export function useSyncUnansweredQuizIds(idolGroupId: number | null) {
+export function useSyncUnansweredQuizIds() {
   const { setSelectedQuizIds } = useGlobalContext()
-  const prevUnansweredRef = useRef<number[]>([])
   const { appUserId } = useAppUser()
 
-  const { data: userQuizAnswers = [] } = useQuery({
-    queryKey: ['user_quiz_answers', appUserId],
-    queryFn: async (): Promise<Tables<'user_quiz_answers'>[]> => {
-      if (!appUserId) return []
+  return useMutation({
+    mutationFn: async (idolGroupId: number) => {
+      if (!appUserId) {
+        throw new Error('User not found')
+      }
 
-      const { data, error } = await supabase
-        .from('user_quiz_answers')
-        .select('*')
-        .eq('app_user_id', appUserId)
+      const [userAnswersResult, groupQuizzesResult] = await Promise.all([
+        supabase
+          .from('user_quiz_answers')
+          .select('*')
+          .eq('app_user_id', appUserId),
+        supabase.from('quizzes').select('*').eq('idol_group_id', idolGroupId),
+      ])
 
-      if (error) throw new Error(error.message)
-      return data
-    },
-    enabled: !!appUserId,
-  })
+      if (userAnswersResult.error)
+        throw new Error(userAnswersResult.error.message)
+      if (groupQuizzesResult.error)
+        throw new Error(groupQuizzesResult.error.message)
 
-  const { data: groupQuizzes = [] } = useQuery({
-    queryKey: ['quizzes', idolGroupId],
-    queryFn: async (): Promise<Tables<'quizzes'>[]> => {
-      const { data, error } = await supabase
-        .from('quizzes')
-        .select('*')
-        .eq('idol_group_id', idolGroupId ?? 0)
-      if (error) throw new Error(error.message)
-      return data
-    },
-    enabled: !!idolGroupId,
-  })
+      const userQuizAnswers =
+        userAnswersResult.data as Tables<'user_quiz_answers'>[]
+      const groupQuizzes = groupQuizzesResult.data as Tables<'quizzes'>[]
 
-  const answeredQuizIds = useMemo(
-    () => userQuizAnswers.map((a) => a.quiz_id),
-    [userQuizAnswers],
-  )
-
-  const unansweredQuizIds = useMemo(
-    () =>
-      groupQuizzes
+      const answeredQuizIds = userQuizAnswers.map((a) => a.quiz_id)
+      const unansweredQuizIds = groupQuizzes
         .filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
-        .map((quiz) => quiz.quiz_id),
-    [groupQuizzes, answeredQuizIds],
-  )
+        .map((quiz) => quiz.quiz_id)
 
-  useEffect(() => {
-    if (!setSelectedQuizIds) return
-    const changed =
-      JSON.stringify(prevUnansweredRef.current) !==
-      JSON.stringify(unansweredQuizIds)
-    if (changed) {
-      setSelectedQuizIds(unansweredQuizIds)
-      prevUnansweredRef.current = [...unansweredQuizIds]
-    }
-  }, [unansweredQuizIds, setSelectedQuizIds])
+      if (setSelectedQuizIds) {
+        setSelectedQuizIds(unansweredQuizIds)
+      }
+
+      return unansweredQuizIds
+    },
+  })
 }

@@ -1,7 +1,6 @@
 import { render, fireEvent, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import GroupSelectionScreen from '../index'
-import { supabase } from '@/utils/supabase'
 import { mockSupabaseData, type MockData } from './mocks/groupSelectionMocks'
 import {
   TestWrapper,
@@ -31,15 +30,17 @@ jest.mock('@/utils/supabase', () => ({
   supabase: {
     from: jest.fn((table: keyof MockData) => ({
       select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          data:
-            table === 'quizzes'
-              ? mockSupabaseData[table].filter(
-                  (item) => item.idol_group_id === 1,
-                )
-              : mockSupabaseData[table] || [],
-          error: null,
-        })),
+        eq: jest.fn(() =>
+          Promise.resolve({
+            data:
+              table === 'quizzes'
+                ? mockSupabaseData[table].filter(
+                    (item) => item.idol_group_id === 1,
+                  )
+                : mockSupabaseData[table] || [],
+            error: null,
+          }),
+        ),
         data: mockSupabaseData[table] || [],
         error: null,
       })),
@@ -64,21 +65,23 @@ describe('GroupSelectionScreen', () => {
 
     fireEvent.press(getByText('TWICE'))
 
-    await waitFor(() => {
-      expect(supabase.from).toHaveBeenCalledWith('quizzes')
-    })
-
-    await waitFor(() => {
-      expect(globalContextValue?.selectedQuizIds).toBeDefined()
-      expect(globalContextValue?.selectedQuizIds.length).toBeGreaterThan(0)
-    })
-
     const button = getByText('問題へ進む')
     fireEvent.press(button)
 
-    expect(globalContextValue?.selectedQuizIds).toBeInstanceOf(Array)
-    expect(globalContextValue?.selectedQuizIds).toEqual([1, 2, 3, 4, 5])
-    expect(globalContextValue?.selectedQuizIds.length).toBe(5)
+    await waitFor(() => {
+      expect(globalContextValue?.selectedQuizIds).toBeInstanceOf(Array)
+      expect(globalContextValue?.selectedQuizIds).toEqual([1, 2, 3, 4, 5])
+      expect(globalContextValue?.selectedQuizIds.length).toBe(5)
+      expect(globalContextValue?.answeredQuizIds).toEqual([])
+    })
+
+    await waitFor(
+      () => {
+        expect(router.push).toHaveBeenCalled()
+      },
+      { timeout: 3000 },
+    )
+
     expect(router.push).toHaveBeenCalledWith('/quiz-tab/quiz/1')
   })
 
@@ -95,12 +98,12 @@ describe('GroupSelectionScreen', () => {
 
     fireEvent.press(getByText('TWICE'))
 
+    const button = getByText('問題へ進む')
+    fireEvent.press(button)
+
     await waitFor(() => {
       expect(globalContextValue?.selectedQuizIds).toEqual([])
     })
-
-    const button = getByText('問題へ進む')
-    fireEvent.press(button)
 
     expect(router.push).not.toHaveBeenCalled()
   })
