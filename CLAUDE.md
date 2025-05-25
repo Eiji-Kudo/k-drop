@@ -9,11 +9,13 @@ K-Drop is a React Native/Expo mobile app for KPOP fans featuring quiz functional
 ## Essential Commands
 
 ### Development
+
 - `npm start` - Start Expo dev server
 - `npx supabase start` - Start local Supabase instance (http://localhost:54323)
 - `npx supabase stop --no-backup` - Stop local Supabase
 
 ### Testing & Quality
+
 - `npm test` - Run Jest tests
 - `npm run test:types` or `npx tsc --noEmit` - TypeScript type checking
 - `npm run lint` or `npx eslint . --fix` - ESLint with auto-fix
@@ -21,11 +23,13 @@ K-Drop is a React Native/Expo mobile app for KPOP fans featuring quiz functional
 - `npm run check:all` - Run all checks (tests, types, lint, format)
 
 ### Database
+
 - `npm run gen-types` - Generate TypeScript types from Supabase schema
 
 ## Architecture Principles
 
 ### File Structure
+
 - **File-based routing** with Expo Router (`app/` directory)
 - **Feature-based organization** (`features/answer-quiz/`)
 - **Separation of concerns**: Components in `/components/`, feature-specific in feature folders
@@ -53,6 +57,7 @@ Components → Custom Hooks → Context (UI State) + Utils (Pure Functions) → 
 - **Test pure functions** separately from React components
 
 ### Testing Approach
+
 - Unit tests with Jest and React Testing Library
 - Mock Supabase client for data layer tests
 - Test business logic as pure functions
@@ -61,6 +66,7 @@ Components → Custom Hooks → Context (UI State) + Utils (Pure Functions) → 
 ## Environment Setup
 
 Required environment variables:
+
 - `EXPO_PUBLIC_SUPABASE_URL`
 - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
 

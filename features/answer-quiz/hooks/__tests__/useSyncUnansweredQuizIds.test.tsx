@@ -81,9 +81,7 @@ describe('useSyncUnansweredQuizIds', () => {
       await result.current.mutateAsync(1)
     })
     expect(result.current.data).toHaveLength(5)
-    expect(result.current.data).toEqual(
-      expect.arrayContaining([1, 2, 3, 4, 5]),
-    )
+    expect(result.current.data).toEqual(expect.arrayContaining([1, 2, 3, 4, 5]))
   })
 
   it('should exclude already answered quizzes from the 10 limit', async () => {

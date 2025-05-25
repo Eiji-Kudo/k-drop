@@ -72,7 +72,7 @@ describe('GroupSelectionScreen', () => {
       expect(globalContextValue?.selectedQuizIds).toBeInstanceOf(Array)
       expect(globalContextValue?.selectedQuizIds).toHaveLength(5)
       expect(globalContextValue?.selectedQuizIds).toEqual(
-        expect.arrayContaining([1, 2, 3, 4, 5])
+        expect.arrayContaining([1, 2, 3, 4, 5]),
       )
       expect(globalContextValue?.answeredQuizIds).toEqual([])
     })
@@ -85,7 +85,7 @@ describe('GroupSelectionScreen', () => {
     )
 
     expect(router.push).toHaveBeenCalledWith(
-      expect.stringMatching(/^\/quiz-tab\/quiz\/\d+$/)
+      expect.stringMatching(/^\/quiz-tab\/quiz\/\d+$/),
     )
   })
 
