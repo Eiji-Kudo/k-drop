@@ -63,12 +63,11 @@ describe('useQuizOnSelect', () => {
       data: mockChoices,
     })
     ;(useUpdateOtakuPower as jest.Mock).mockReturnValue({
-      updateOtakuPower: mockUpdateOtakuPower,
+      updateOtakuPowerAsync: mockUpdateOtakuPower,
       isUpdating: false,
     })
 
     mockUpdateOtakuPower.mockResolvedValue({
-      success: true,
       scoreAdded: 150,
     })
   })
@@ -87,13 +86,16 @@ describe('useQuizOnSelect', () => {
     })
 
     expect(mockSetSelectedChoiceId).toHaveBeenCalledWith(102)
-    expect(mockFrom).toHaveBeenCalledWith('user_quiz_answers')
-    expect(mockInsert).toHaveBeenCalledWith({
-      app_user_id: mockAppUserId,
-      quiz_id: mockQuizId,
-      selected_choice: 2, // index + 1
-      is_correct: true,
-      answered_at: expect.any(String),
+    
+    await waitFor(() => {
+      expect(mockUpdateOtakuPower).toHaveBeenCalledWith({
+        userId: mockAppUserId,
+        quizId: mockQuizId,
+        groupId: 2,
+        difficultyId: 2,
+        isCorrect: true,
+        choiceIndex: 1,
+      })
     })
 
     act(() => {
@@ -120,8 +122,7 @@ describe('useQuizOnSelect', () => {
       await result.current.onSelect(1)
     })
 
-    // Should not call Supabase insert when user is not logged in
-    expect(mockFrom).not.toHaveBeenCalled()
-    expect(mockInsert).not.toHaveBeenCalled()
+    // Should not call updateOtakuPower when user is not logged in
+    expect(mockUpdateOtakuPower).not.toHaveBeenCalled()
   })
 })

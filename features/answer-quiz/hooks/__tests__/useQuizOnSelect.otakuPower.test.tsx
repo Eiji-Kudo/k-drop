@@ -63,12 +63,11 @@ describe('useQuizOnSelect - Otaku Power', () => {
       data: mockChoices,
     })
     ;(useUpdateOtakuPower as jest.Mock).mockReturnValue({
-      updateOtakuPower: mockUpdateOtakuPower,
+      updateOtakuPowerAsync: mockUpdateOtakuPower,
       isUpdating: false,
     })
 
     mockUpdateOtakuPower.mockResolvedValue({
-      success: true,
       scoreAdded: 150,
     })
   })
@@ -93,6 +92,7 @@ describe('useQuizOnSelect - Otaku Power', () => {
         groupId: 2,
         difficultyId: 2,
         isCorrect: true,
+        choiceIndex: 1,
       })
     })
   })
