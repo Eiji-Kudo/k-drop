@@ -63,8 +63,8 @@ describe('useQuizOnSelect - Otaku Power', () => {
       data: mockChoices,
     })
     ;(useUpdateOtakuPower as jest.Mock).mockReturnValue({
-      updateOtakuPowerAsync: mockUpdateOtakuPower,
-      isUpdating: false,
+      mutateAsync: mockUpdateOtakuPower,
+      isPending: false,
     })
 
     mockUpdateOtakuPower.mockResolvedValue({

@@ -8,14 +8,6 @@ import type { Database } from '@/database.types'
 jest.mock('@/hooks/useAppUser')
 jest.mock('../useQuizQuery')
 jest.mock('../useUpdateOtakuPower')
-const mockInsert = jest.fn().mockResolvedValue({ data: null, error: null })
-const mockFrom = jest.fn(() => ({ insert: mockInsert }))
-
-jest.mock('@/utils/supabase', () => ({
-  supabase: {
-    from: mockFrom,
-  },
-}))
 
 type Quiz = Database['public']['Tables']['quizzes']['Row']
 type QuizChoice = Database['public']['Tables']['quiz_choices']['Row']
@@ -63,8 +55,8 @@ describe('useQuizOnSelect', () => {
       data: mockChoices,
     })
     ;(useUpdateOtakuPower as jest.Mock).mockReturnValue({
-      updateOtakuPowerAsync: mockUpdateOtakuPower,
-      isUpdating: false,
+      mutateAsync: mockUpdateOtakuPower,
+      isPending: false,
     })
 
     mockUpdateOtakuPower.mockResolvedValue({
@@ -86,7 +78,7 @@ describe('useQuizOnSelect', () => {
     })
 
     expect(mockSetSelectedChoiceId).toHaveBeenCalledWith(102)
-    
+
     await waitFor(() => {
       expect(mockUpdateOtakuPower).toHaveBeenCalledWith({
         userId: mockAppUserId,
