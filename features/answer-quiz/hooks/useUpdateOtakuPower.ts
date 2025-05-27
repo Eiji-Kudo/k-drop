@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { UserScoreRepository } from '@/repositories/userScoreRepository'
 import { BasicScoreCalculator } from '@/utils/scoring/basicScoreCalculator'
 import type { ScoreCalculationResult } from '@/utils/scoring/types'
+import { supabase } from '@/utils/supabase'
 
 type UpdateOtakuPowerParams = {
   userId: number
@@ -9,25 +10,27 @@ type UpdateOtakuPowerParams = {
   groupId: number
   difficultyId: number
   isCorrect: boolean
-}
-
-type UpdateOtakuPowerResult = {
-  success: boolean
-  scoreAdded?: number
-  error?: Error
+  choiceIndex?: number
 }
 
 export const useUpdateOtakuPower = () => {
-  const [isUpdating, setIsUpdating] = useState(false)
   const scoreRepository = new UserScoreRepository()
   const scoreCalculator = new BasicScoreCalculator()
 
-  const updateOtakuPower = async (
-    params: UpdateOtakuPowerParams,
-  ): Promise<UpdateOtakuPowerResult> => {
-    setIsUpdating(true)
+  const mutation = useMutation({
+    mutationFn: async (params: UpdateOtakuPowerParams) => {
+      // 1. Record quiz answer
+      if (params.choiceIndex !== undefined) {
+        await supabase.from('user_quiz_answers').insert({
+          app_user_id: params.userId,
+          quiz_id: params.quizId,
+          selected_choice: params.choiceIndex + 1,
+          is_correct: params.isCorrect,
+          answered_at: new Date().toISOString(),
+        })
+      }
 
-    try {
+      // 2. Calculate and update otaku power
       const calculationResult: ScoreCalculationResult =
         scoreCalculator.calculate({
           isCorrect: params.isCorrect,
@@ -50,22 +53,14 @@ export const useUpdateOtakuPower = () => {
       }
 
       return {
-        success: true,
         scoreAdded: scoreToAdd,
+        breakdown: calculationResult.breakdown,
       }
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('Failed to update otaku power:', error)
-      return {
-        success: false,
-        error: error instanceof Error ? error : new Error('Unknown error'),
-      }
-    } finally {
-      setIsUpdating(false)
-    }
-  }
+    },
+  })
 
-  return {
-    updateOtakuPower,
-    isUpdating,
-  }
+  return mutation
 }
