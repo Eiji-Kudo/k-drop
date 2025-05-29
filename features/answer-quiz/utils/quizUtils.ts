@@ -16,7 +16,6 @@ export function isChoiceCorrect(
   )
 }
 
-
 /**
  * Gets the variant for a quiz choice based on selection
  */
