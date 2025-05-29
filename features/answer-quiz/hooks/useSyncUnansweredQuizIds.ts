@@ -53,9 +53,14 @@ function calculateUnansweredQuizIds(
   groupQuizzes: Tables<'quizzes'>[],
 ) {
   const answeredQuizIds = userQuizAnswers.map((a) => a.quiz_id)
-  return groupQuizzes
-    .filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
-    .map((quiz) => quiz.quiz_id)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 10)
+  
+  const filteredQuizzes = __DEV__ 
+    ? groupQuizzes 
+    : groupQuizzes.filter((quiz) => !answeredQuizIds.includes(quiz.quiz_id))
+  
+  const quizIds = filteredQuizzes.map((quiz) => quiz.quiz_id)
+  
+  const shuffledQuizIds = quizIds.sort(() => Math.random() - 0.5)
+  
+  return shuffledQuizIds.slice(0, 10)
 }
