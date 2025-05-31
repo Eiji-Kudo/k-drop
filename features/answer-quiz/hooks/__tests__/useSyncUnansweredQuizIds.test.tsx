@@ -55,6 +55,7 @@ const createQuizzes = (count: number) =>
 describe('useSyncUnansweredQuizIds', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    ;(global as any).__DEV__ = false
   })
 
   it('should limit quiz selection to maximum 10 questions', async () => {
