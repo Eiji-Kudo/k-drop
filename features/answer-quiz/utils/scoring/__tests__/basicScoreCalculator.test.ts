@@ -1,5 +1,5 @@
+import type { ScoreCalculationParams } from '../../../types'
 import { BasicScoreCalculator } from '../basicScoreCalculator'
-import type { ScoreCalculationParams } from '../types'
 
 describe('BasicScoreCalculator', () => {
   let calculator: BasicScoreCalculator

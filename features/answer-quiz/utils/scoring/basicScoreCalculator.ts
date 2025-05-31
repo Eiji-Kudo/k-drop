@@ -1,9 +1,9 @@
 import type {
-  ScoreCalculator,
+  DifficultyConfig,
   ScoreCalculationParams,
   ScoreCalculationResult,
-  DifficultyConfig,
-} from './types'
+  ScoreCalculator,
+} from '../../types'
 
 export class BasicScoreCalculator implements ScoreCalculator {
   private difficultyConfig: DifficultyConfig = {

@@ -1,8 +1,8 @@
-import { useMutation } from '@tanstack/react-query'
+import type { ScoreCalculationResult } from '@/features/answer-quiz/types'
+import { BasicScoreCalculator } from '@/features/answer-quiz/utils/scoring/basicScoreCalculator'
 import { UserScoreRepository } from '@/repositories/userScoreRepository'
-import { BasicScoreCalculator } from '@/utils/scoring/basicScoreCalculator'
-import type { ScoreCalculationResult } from '@/utils/scoring/types'
 import { supabase } from '@/utils/supabase'
+import { useMutation } from '@tanstack/react-query'
 
 type UpdateOtakuPowerParams = {
   userId: number
