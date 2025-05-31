@@ -3,7 +3,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactNode } from 'react'
 import { useSyncUnansweredQuizIds } from '../useSyncUnansweredQuizIds'
 import { GlobalProvider } from '@/context/GlobalContext'
-import { setupMocks, createQuizzes } from './mocks/useSyncUnansweredQuizIdsMocks'
+import {
+  setupMocks,
+  createQuizzes,
+} from './mocks/useSyncUnansweredQuizIdsMocks'
 
 jest.mock('@/utils/supabase', () => ({
   supabase: {
@@ -27,7 +30,6 @@ const createWrapper = () => {
   Wrapper.displayName = 'TestWrapper'
   return Wrapper
 }
-
 
 describe('useSyncUnansweredQuizIds', () => {
   beforeEach(() => {
@@ -78,6 +80,10 @@ describe('useSyncUnansweredQuizIds', () => {
     expect(ids).not.toContain(1)
     expect(ids).not.toContain(3)
     expect(ids).not.toContain(5)
-    expect(ids?.every((id) => [2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].includes(id))).toBe(true)
+    expect(
+      ids?.every((id) =>
+        [2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].includes(id),
+      ),
+    ).toBe(true)
   })
 })
