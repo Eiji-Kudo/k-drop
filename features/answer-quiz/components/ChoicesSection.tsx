@@ -20,8 +20,10 @@ type ChoicesSectionProps = {
   testDisplayPhase?: DisplayPhase
 }
 
-export const ChoicesSection = (props: ChoicesSectionProps) => {
-  const { quiz, testDisplayPhase } = props
+export const ChoicesSection = ({
+  quiz,
+  testDisplayPhase,
+}: ChoicesSectionProps) => {
   const { data: choices = [] } = useQuizChoices(quiz.quiz_id)
 
   const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null)
