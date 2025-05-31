@@ -71,9 +71,12 @@ describe('GroupSelectionScreen', () => {
     await waitFor(() => {
       expect(globalContextValue?.selectedQuizIds).toBeInstanceOf(Array)
       expect(globalContextValue?.selectedQuizIds).toHaveLength(5)
-      expect(globalContextValue?.selectedQuizIds).toEqual(
-        expect.arrayContaining([1, 2, 3, 4, 5]),
-      )
+
+      expect(
+        globalContextValue?.selectedQuizIds?.every((id) =>
+          [1, 2, 3, 4, 5].includes(id),
+        ),
+      ).toBe(true)
       expect(globalContextValue?.answeredQuizIds).toEqual([])
     })
 

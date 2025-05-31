@@ -8,8 +8,7 @@ import {
 } from './mocks/quizNavigationMocks'
 import { setupMocks } from './mocks/setupMocks'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
-
-// Mock all dependencies
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 ;['@/utils/supabase'].forEach((mod) => jest.mock(mod))
 jest.mock('@/hooks/useAppUser', () => ({ useAppUser: jest.fn() }))
 jest.mock('@/features/answer-quiz/hooks/useNextQuiz', () => ({
@@ -20,6 +19,9 @@ jest.mock('@/features/answer-quiz/hooks/useQuizQuery', () => ({
   useQuiz: jest.fn(),
   useQuizChoices: jest.fn(),
 }))
+jest.mock('@/features/answer-quiz/hooks/useUpdateOtakuPower', () => ({
+  useUpdateOtakuPower: jest.fn(() => ({ mutate: jest.fn() })),
+}))
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
   useNavigation: jest.fn(),
@@ -27,20 +29,29 @@ jest.mock('expo-router', () => ({
 }))
 
 describe('Quiz Navigation', () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  })
+
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
+
   beforeEach(setupMocks)
   afterEach(() => jest.useRealTimers())
 
   it('handles quiz lifecycle events correctly', () => {
-    render(<QuizScreen />)
+    render(<QuizScreen />, { wrapper })
     const parent = mockNavigation.getParent() as NavigationParent
 
-    // Validate lifecycle behavior
     expect(parent.setOptions).toHaveBeenCalledWith({
       tabBarStyle: { display: 'none' },
     })
 
-    // Test unmount behavior
-    const { unmount } = render(<QuizScreen />)
+    const { unmount } = render(<QuizScreen />, { wrapper })
     unmount()
     expect(parent.setOptions).toHaveBeenCalledWith({ tabBarStyle: undefined })
   })

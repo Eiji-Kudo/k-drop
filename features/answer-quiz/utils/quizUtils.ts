@@ -1,6 +1,5 @@
 import { Tables } from '@/database.types'
 import { QuizVariant } from '@/features/answer-quiz/constants/quizVariant'
-import { supabase } from '@/utils/supabase'
 
 /**
  * Determines if the selected choice is correct
@@ -15,33 +14,6 @@ export function isChoiceCorrect(
     choices.find((c) => c.quiz_choice_id === selectedChoiceId)?.is_correct ??
     false
   )
-}
-
-/**
- * Records a quiz answer in the database
- */
-export async function recordQuizAnswer(
-  appUserId: number | null | undefined,
-  quizId: number,
-  choiceIndex: number,
-  isCorrect: boolean,
-): Promise<void> {
-  if (!appUserId) {
-    console.error('Cannot record answer: app_user_id not found')
-    return
-  }
-
-  try {
-    await supabase.from('user_quiz_answers').insert({
-      app_user_id: appUserId,
-      quiz_id: quizId,
-      selected_choice: choiceIndex + 1, // Keep the 1-based index for backward compatibility
-      is_correct: isCorrect,
-      answered_at: new Date().toISOString(),
-    })
-  } catch (error) {
-    console.error('Failed to record quiz answer:', error)
-  }
 }
 
 /**
