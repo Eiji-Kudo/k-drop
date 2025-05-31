@@ -9,7 +9,6 @@ import {
 import { setupMocks } from './mocks/setupMocks'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import React from 'react'
 
 // Mock all dependencies
 ;['@/utils/supabase'].forEach((mod) => jest.mock(mod))

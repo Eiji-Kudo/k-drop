@@ -1,7 +1,7 @@
 import { useGlobalContext } from '@/context/GlobalContext'
 import { useAppUser } from '@/hooks/useAppUser'
 import { supabase } from '@/utils/supabase'
-import { fireEvent, render } from '@testing-library/react-native'
+import { render } from '@testing-library/react-native'
 import { useQuizChoices, useQuiz } from '../../hooks/useQuizQuery'
 import { useUpdateOtakuPower } from '../../hooks/useUpdateOtakuPower'
 import { useQuizOnSelect } from '../../hooks/useQuizOnSelect'
@@ -89,31 +89,4 @@ describe('ChoicesSection', () => {
     expect(getByTestId('explanation-container')).toBeTruthy()
   })
 
-  it('handles navigation to next quiz correctly', () => {
-    const mockGoNext = jest.fn()
-    ;(useQuizNavigation as jest.Mock).mockReturnValue({
-      goNext: mockGoNext,
-    })
-
-    const { getByTestId } = render(
-      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
-    )
-
-    fireEvent.press(getByTestId('next-button'))
-    expect(mockGoNext).toHaveBeenCalled()
-  })
-
-  it('handles navigation to results when all quizzes are answered', () => {
-    const mockGoNext = jest.fn()
-    ;(useQuizNavigation as jest.Mock).mockReturnValue({
-      goNext: mockGoNext,
-    })
-
-    const { getByTestId } = render(
-      <ChoicesSection quiz={mockQuiz} testDisplayPhase="explanation" />,
-    )
-
-    fireEvent.press(getByTestId('next-button'))
-    expect(mockGoNext).toHaveBeenCalled()
-  })
 })

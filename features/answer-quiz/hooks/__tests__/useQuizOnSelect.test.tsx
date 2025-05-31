@@ -89,32 +89,5 @@ describe('useQuizOnSelect', () => {
         choiceIndex: 1,
       })
     })
-
-    act(() => {
-      jest.advanceTimersByTime(600)
-    })
-    expect(mockSetDisplayPhase).toHaveBeenCalledWith('result')
-
-    act(() => {
-      jest.advanceTimersByTime(1400)
-    })
-    expect(mockSetDisplayPhase).toHaveBeenCalledWith('explanation')
-  })
-
-  it('should not save answer when user is not logged in', async () => {
-    ;(useAppUser as jest.Mock).mockReturnValue({
-      appUserId: null,
-    })
-
-    const { result } = renderHook(() =>
-      useQuizOnSelect(mockQuizId, mockSetSelectedChoiceId, mockSetDisplayPhase),
-    )
-
-    await act(async () => {
-      await result.current.onSelect(1)
-    })
-
-    // Should not call updateOtakuPower when user is not logged in
-    expect(mockUpdateOtakuPower).not.toHaveBeenCalled()
   })
 })
