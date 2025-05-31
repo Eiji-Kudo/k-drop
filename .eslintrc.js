@@ -1,4 +1,4 @@
-const noMarginRules = require('./eslint-rules/no-margin-rules');
+const noMarginRules = require('./eslint-rules/no-margin-rules')
 
 module.exports = {
   root: true,
