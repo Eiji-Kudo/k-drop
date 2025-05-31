@@ -88,5 +88,4 @@ describe('ChoicesSection', () => {
     )
     expect(getByTestId('explanation-container')).toBeTruthy()
   })
-
 })
