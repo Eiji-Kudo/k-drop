@@ -10,7 +10,7 @@ import { setupMocks } from './mocks/setupMocks'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-// Mock all dependencies
+
 ;['@/utils/supabase'].forEach((mod) => jest.mock(mod))
 jest.mock('@/hooks/useAppUser', () => ({ useAppUser: jest.fn() }))
 jest.mock('@/features/answer-quiz/hooks/useNextQuiz', () => ({
@@ -49,12 +49,12 @@ describe('Quiz Navigation', () => {
     render(<QuizScreen />, { wrapper })
     const parent = mockNavigation.getParent() as NavigationParent
 
-    // Validate lifecycle behavior
+
     expect(parent.setOptions).toHaveBeenCalledWith({
       tabBarStyle: { display: 'none' },
     })
 
-    // Test unmount behavior
+
     const { unmount } = render(<QuizScreen />, { wrapper })
     unmount()
     expect(parent.setOptions).toHaveBeenCalledWith({ tabBarStyle: undefined })
