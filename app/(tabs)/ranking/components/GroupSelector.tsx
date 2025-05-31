@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
   groupChip: {
     backgroundColor: '#f0f0f0',
     borderRadius: 20,
-    marginRight: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },

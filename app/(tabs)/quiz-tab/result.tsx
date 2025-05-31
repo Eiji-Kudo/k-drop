@@ -70,8 +70,8 @@ export default function ResultScreen() {
 
 const styles = StyleSheet.create({
   actionContainer: {
-    marginBottom: 32,
-    marginTop: 24,
+    paddingBottom: 32,
+    paddingTop: 24,
   },
   container: {
     backgroundColor: Colors.background,
@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     gap: 8,
-    marginBottom: 16,
+    paddingBottom: 16,
   },
   quizListContainer: {
     gap: 16,
-    marginTop: 16,
+    paddingTop: 16,
   },
   safeAreaView: {
     flex: 1,
@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
+    paddingBottom: 8,
   },
 })

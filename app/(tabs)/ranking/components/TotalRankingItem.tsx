@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
   layerName: {
     color: '#666',
     fontSize: 14,
-    marginTop: 2,
   },
   rank: {
     color: Colors.primary,
@@ -57,6 +56,7 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
+    gap: 2,
   },
   userName: {
     color: Colors.text,

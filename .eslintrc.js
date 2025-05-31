@@ -1,3 +1,5 @@
+const noMarginRules = require('./eslint-rules/no-margin-rules');
+
 module.exports = {
   root: true,
   extends: [
@@ -51,6 +53,7 @@ module.exports = {
     'react-native/no-inline-styles': 'off',
     'react-native/no-color-literals': 'off',
     'react-native/no-unused-styles': 'error',
+    'no-restricted-syntax': ['error', ...noMarginRules],
     'react/no-unescaped-entities': 'off',
     'react/jsx-curly-brace-presence': [
       'error',
