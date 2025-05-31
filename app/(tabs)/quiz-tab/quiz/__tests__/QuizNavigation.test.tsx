@@ -9,8 +9,6 @@ import {
 import { setupMocks } from './mocks/setupMocks'
 import { useNextQuiz } from '@/features/answer-quiz/hooks/useNextQuiz'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
-
 ;['@/utils/supabase'].forEach((mod) => jest.mock(mod))
 jest.mock('@/hooks/useAppUser', () => ({ useAppUser: jest.fn() }))
 jest.mock('@/features/answer-quiz/hooks/useNextQuiz', () => ({
@@ -49,11 +47,9 @@ describe('Quiz Navigation', () => {
     render(<QuizScreen />, { wrapper })
     const parent = mockNavigation.getParent() as NavigationParent
 
-
     expect(parent.setOptions).toHaveBeenCalledWith({
       tabBarStyle: { display: 'none' },
     })
-
 
     const { unmount } = render(<QuizScreen />, { wrapper })
     unmount()
