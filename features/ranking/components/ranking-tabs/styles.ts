@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     width: 1,
   },
   tabText: {
-    color: Colors.textSecondary,
+    color: Colors.text.secondary,
     fontSize: 16,
   },
   tabsContainer: {

@@ -1,7 +1,12 @@
 const tintColorLight = '#0a7ea4'
 
 export const Colors = {
-  text: '#11181C',
+  text: {
+    primary: '#11181C',
+    secondary: '#666',
+    tertiary: '#999',
+    disabled: '#888888',
+  },
   background: '#FAF0F4',
   tint: tintColorLight,
   icon: '#687076',
@@ -15,14 +20,11 @@ export const Colors = {
   toastError: '#F44336',
   white: '#FFFFFF',
   disabled: '#CCCCCC',
-  disabledText: '#888888',
   markCorrect: '#68c1f1',
   markIncorrect: '#f56f6f',
   error: '#d32f2f',
   success: '#43a047',
   lightGray: '#f5f5f5',
   card: '#FFFFFF',
-  textSecondary: '#666',
-  textTertiary: '#999',
   shadowDefault: '#000',
 }

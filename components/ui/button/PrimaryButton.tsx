@@ -51,6 +51,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonTextDisabled: {
-    color: Colors.disabledText,
+    color: Colors.text.disabled,
   },
 })

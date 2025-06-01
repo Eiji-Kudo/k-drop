@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
   },
   emptyText: {
-    color: Colors.textSecondary,
+    color: Colors.text.secondary,
     fontSize: 16,
   },
   listContent: {

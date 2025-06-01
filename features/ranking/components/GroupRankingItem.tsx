@@ -32,11 +32,11 @@ export function GroupRankingItem({ item, index }: GroupRankingItemProps) {
 
 const styles = StyleSheet.create({
   groupName: {
-    color: Colors.textTertiary,
+    color: Colors.text.tertiary,
     fontSize: 12,
   },
   layerName: {
-    color: Colors.textSecondary,
+    color: Colors.text.secondary,
     fontSize: 14,
   },
   rank: {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   score: {
-    color: Colors.text,
+    color: Colors.text.primary,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   userName: {
-    color: Colors.text,
+    color: Colors.text.primary,
     fontSize: 16,
     fontWeight: '600',
   },

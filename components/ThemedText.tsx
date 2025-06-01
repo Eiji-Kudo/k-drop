@@ -10,7 +10,7 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  const color = Colors.text
+  const color = Colors.text.primary
 
   return (
     <Text
