@@ -51,7 +51,7 @@ module.exports = {
     'react-native/no-raw-text': 'off',
     'react-native/sort-styles': 'error',
     'react-native/no-inline-styles': 'off',
-    'react-native/no-color-literals': 'off',
+    'react-native/no-color-literals': 'error',
     'react-native/no-unused-styles': 'error',
     'no-restricted-syntax': ['error', ...noMarginRules],
     'react/no-unescaped-entities': 'off',
