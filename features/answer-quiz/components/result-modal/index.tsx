@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     justifyContent: 'center',
     overflow: 'hidden',
-    shadowColor: '#000',
+    shadowColor: Colors.shadowDefault,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 6,

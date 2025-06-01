@@ -22,4 +22,7 @@ export const Colors = {
   success: '#43a047',
   lightGray: '#f5f5f5',
   card: '#FFFFFF',
+  textSecondary: '#666',
+  textTertiary: '#999',
+  shadowDefault: '#000',
 }

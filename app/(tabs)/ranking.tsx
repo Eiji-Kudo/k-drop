@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import { Colors } from '@/constants/Colors'
-import { RankingTabs } from '@/features/ranking/components/RankingTabs'
+import { RankingTabs } from '@/features/ranking/components/ranking-tabs'
 import { RankingList } from '@/features/ranking/components/RankingList'
 import { useQuery } from '@tanstack/react-query'
 import { rankingRepository } from '@/repositories/rankingRepository'

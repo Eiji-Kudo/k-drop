@@ -27,7 +27,7 @@ export function TotalRankingItem({ item, index }: TotalRankingItemProps) {
 
 const styles = StyleSheet.create({
   layerName: {
-    color: '#666',
+    color: Colors.textSecondary,
     fontSize: 14,
   },
   rank: {
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   rankingItem: {
     alignItems: 'center',
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: Colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

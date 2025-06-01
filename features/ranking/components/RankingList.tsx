@@ -2,6 +2,7 @@ import { FlatList, View, StyleSheet } from 'react-native'
 import { TotalRankingItem } from './TotalRankingItem'
 import { GroupRankingItem } from './GroupRankingItem'
 import { ThemedText } from '@/components/ThemedText'
+import { Colors } from '@/constants/Colors'
 import type {
   UserProfileWithLayer,
   UserGroupScoreWithDetails,
@@ -29,7 +30,9 @@ export function RankingList({ type, rankings }: RankingListProps) {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={() => (
           <View style={styles.emptyContainer}>
-            <ThemedText style={styles.emptyText}>No rankings available</ThemedText>
+            <ThemedText style={styles.emptyText}>
+              No rankings available
+            </ThemedText>
           </View>
         )}
       />
@@ -46,7 +49,9 @@ export function RankingList({ type, rankings }: RankingListProps) {
       contentContainerStyle={styles.listContent}
       ListEmptyComponent={() => (
         <View style={styles.emptyContainer}>
-          <ThemedText style={styles.emptyText}>No rankings available</ThemedText>
+          <ThemedText style={styles.emptyText}>
+            No rankings available
+          </ThemedText>
         </View>
       )}
     />
@@ -54,10 +59,6 @@ export function RankingList({ type, rankings }: RankingListProps) {
 }
 
 const styles = StyleSheet.create({
-  listContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
@@ -65,7 +66,11 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
   },
   emptyText: {
-    color: '#666',
+    color: Colors.textSecondary,
     fontSize: 16,
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
 })
