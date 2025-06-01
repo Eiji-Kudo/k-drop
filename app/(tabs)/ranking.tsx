@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import { Colors } from '@/constants/Colors'
 import { RankingTabs } from '@/features/ranking/components/RankingTabs'
-import { GroupSelector } from '@/features/ranking/components/GroupSelector'
 import { RankingList } from '@/features/ranking/components/RankingList'
 import { useQuery } from '@tanstack/react-query'
 import { rankingRepository } from '@/repositories/rankingRepository'
@@ -48,14 +47,13 @@ export default function RankingScreen() {
 
   return (
     <View style={styles.container}>
-      <RankingTabs activeTab={activeTab} onTabChange={handleTabChange} />
-      {activeTab === 'group' && (
-        <GroupSelector
-          idolGroups={idolGroups}
-          selectedGroupId={selectedGroupId}
-          onSelectGroup={setSelectedGroupId}
-        />
-      )}
+      <RankingTabs
+        activeTab={activeTab}
+        selectedGroupId={selectedGroupId}
+        groups={idolGroups}
+        onTabChange={handleTabChange}
+        onGroupSelect={setSelectedGroupId}
+      />
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.primary} />

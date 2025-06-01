@@ -16,7 +16,7 @@ export function TotalRankingItem({ item, index }: TotalRankingItemProps) {
         <View style={styles.userInfo}>
           <ThemedText style={styles.userName}>{item.user_name}</ThemedText>
           <ThemedText style={styles.layerName}>
-            {item.total_otaku_layers?.layer_name || 'Unknown'}
+            {item.total_otaku_layers?.layer_name}
           </ThemedText>
         </View>
       </View>

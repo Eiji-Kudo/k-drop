@@ -1,8 +1,7 @@
-import { FlatList, View } from 'react-native'
+import { FlatList, View, StyleSheet } from 'react-native'
 import { TotalRankingItem } from './TotalRankingItem'
 import { GroupRankingItem } from './GroupRankingItem'
 import { ThemedText } from '@/components/ThemedText'
-import { styles } from '../styles'
 import type {
   UserProfileWithLayer,
   UserGroupScoreWithDetails,
@@ -53,3 +52,20 @@ export function RankingList({ type, rankings }: RankingListProps) {
     />
   )
 }
+
+const styles = StyleSheet.create({
+  listContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingVertical: 50,
+  },
+  emptyText: {
+    color: '#666',
+    fontSize: 16,
+  },
+})
