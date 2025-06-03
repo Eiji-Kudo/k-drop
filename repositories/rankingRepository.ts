@@ -2,15 +2,15 @@ import { Tables } from '@/database.types'
 import { supabase } from '@/utils/supabase'
 
 export type UserProfileWithLayer = Tables<'user_profiles'> & {
-  total_otaku_layers: Tables<'total_otaku_layers'> | null
+  total_otaku_layers: Tables<'total_otaku_layers'>
 }
 
 export type UserGroupScoreWithDetails = Tables<'user_idol_group_scores'> & {
-  idol_groups: Tables<'idol_groups'> | null
-  group_otaku_layers: Tables<'group_otaku_layers'> | null
+  idol_groups: Tables<'idol_groups'>
+  group_otaku_layers: Tables<'group_otaku_layers'>
   app_users: {
     user_profiles: Tables<'user_profiles'>[]
-  } | null
+  }
 }
 
 export const rankingRepository = {
@@ -25,7 +25,7 @@ export const rankingRepository = {
       throw error
     }
 
-    return data || []
+    return data
   },
 
   fetchGroupRankings: async (
@@ -50,7 +50,7 @@ export const rankingRepository = {
       throw error
     }
 
-    return data || []
+    return data
   },
 
   fetchIdolGroups: async (): Promise<Tables<'idol_groups'>[]> => {
@@ -64,6 +64,6 @@ export const rankingRepository = {
       throw error
     }
 
-    return data || []
+    return data
   },
 }
