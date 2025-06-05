@@ -1,12 +1,7 @@
 import { useState, useCallback, useRef } from 'react'
-import {
-  View,
-  ActivityIndicator,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-} from 'react-native'
+import { View, StyleSheet, ScrollView, Dimensions } from 'react-native'
 import { Colors } from '@/constants/Colors'
+import { LoadingIndicator } from '@/components/ui/LoadingIndicator'
 import { RankingTabs } from '@/features/ranking/components/ranking-tabs'
 import { RankingList } from '@/features/ranking/components/RankingList'
 import { useQuery } from '@tanstack/react-query'
@@ -55,12 +50,8 @@ export default function RankingScreen() {
     setCurrentIndex(index)
   }
 
-  if (loading && totalRankings.length === 0) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={Colors.tint} />
-      </View>
-    )
+  if (loading) {
+    return <LoadingIndicator />
   }
 
   return (
@@ -80,27 +71,11 @@ export default function RankingScreen() {
         style={styles.scrollView}
       >
         <View style={styles.page}>
-          {isLoadingTotal ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={Colors.primary} />
-            </View>
-          ) : (
-            <RankingList type="total" rankings={totalRankings} />
-          )}
+          <RankingList type="total" rankings={totalRankings} />
         </View>
         {idolGroups.map((group) => (
           <View key={group.idol_group_id} style={styles.page}>
-            {isLoadingGroup && selectedGroupId === group.idol_group_id ? (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={Colors.primary} />
-              </View>
-            ) : selectedGroupId === group.idol_group_id ? (
-              <RankingList type="group" rankings={groupRankings} />
-            ) : (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={Colors.primary} />
-              </View>
-            )}
+            <RankingList type="group" rankings={groupRankings} />
           </View>
         ))}
       </ScrollView>
