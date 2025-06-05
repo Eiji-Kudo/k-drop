@@ -9,14 +9,13 @@ import { rankingRepository } from '@/repositories/rankingRepository'
 const { width: screenWidth } = Dimensions.get('window')
 
 export default function RankingScreen() {
-  const [activeTab, setActiveTab] = useState<'total' | 'group'>('total')
-  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
   const scrollViewRef = useRef<ScrollView>(null)
 
   const { data: totalRankings = [], isLoading: isLoadingTotal } = useQuery({
     queryKey: ['totalRankings'],
     queryFn: rankingRepository.fetchTotalRankings,
-    enabled: activeTab === 'total',
+    enabled: currentIndex === 0,
   })
 
   const { data: idolGroups = [] } = useQuery({
@@ -24,54 +23,27 @@ export default function RankingScreen() {
     queryFn: rankingRepository.fetchIdolGroups,
   })
 
+  const selectedGroupId = currentIndex > 0 && idolGroups.length > 0
+    ? idolGroups[currentIndex - 1]?.idol_group_id
+    : null
+
   const { data: groupRankings = [], isLoading: isLoadingGroup } = useQuery({
     queryKey: ['groupRankings', selectedGroupId],
     queryFn: () =>
       rankingRepository.fetchGroupRankings(selectedGroupId || undefined),
-    enabled: activeTab === 'group' && selectedGroupId !== null,
+    enabled: currentIndex > 0 && selectedGroupId !== null,
   })
 
-  const loading = activeTab === 'total' ? isLoadingTotal : isLoadingGroup
+  const loading = currentIndex === 0 ? isLoadingTotal : isLoadingGroup
 
-  const handleTabChange = (tab: 'total' | 'group') => {
-    if (tab === 'total') {
-      scrollViewRef.current?.scrollTo({ x: 0, animated: true })
-    } else if (tab === 'group') {
-      if (selectedGroupId === null && idolGroups.length > 0) {
-        setSelectedGroupId(idolGroups[0].idol_group_id)
-        scrollViewRef.current?.scrollTo({ x: screenWidth, animated: true })
-      } else {
-        const index = getCurrentTabIndex()
-        scrollViewRef.current?.scrollTo({ x: index * screenWidth, animated: true })
-      }
-    }
-  }
-
-  const handleGroupSelect = (groupId: number) => {
-    setSelectedGroupId(groupId)
-    const index = idolGroups.findIndex(g => g.idol_group_id === groupId) + 1
+  const handleTabPress = useCallback((index: number) => {
     scrollViewRef.current?.scrollTo({ x: index * screenWidth, animated: true })
-  }
-
-  const getCurrentTabIndex = useCallback(() => {
-    if (activeTab === 'total') return 0
-    const groupIndex = idolGroups.findIndex(
-      (group) => group.idol_group_id === selectedGroupId
-    )
-    return groupIndex >= 0 ? groupIndex + 1 : 1
-  }, [activeTab, selectedGroupId, idolGroups])
+  }, [])
 
   const handleScroll = (event: any) => {
     const offsetX = event.nativeEvent.contentOffset.x
     const index = Math.round(offsetX / screenWidth)
-    
-    if (index === 0) {
-      setActiveTab('total')
-      setSelectedGroupId(null)
-    } else if (index > 0 && index <= idolGroups.length) {
-      setActiveTab('group')
-      setSelectedGroupId(idolGroups[index - 1].idol_group_id)
-    }
+    setCurrentIndex(index)
   }
 
 
@@ -86,11 +58,9 @@ export default function RankingScreen() {
   return (
     <View style={styles.container}>
       <RankingTabs
-        activeTab={activeTab}
-        selectedGroupId={selectedGroupId}
+        currentIndex={currentIndex}
         groups={idolGroups}
-        onTabChange={handleTabChange}
-        onGroupSelect={handleGroupSelect}
+        onTabPress={handleTabPress}
       />
       <ScrollView
         ref={scrollViewRef}
