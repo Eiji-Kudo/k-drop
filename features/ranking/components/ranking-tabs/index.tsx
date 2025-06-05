@@ -13,7 +13,6 @@ export function RankingTabs({
   groups,
   onTabPress,
 }: RankingTabsProps) {
-
   return (
     <View style={styles.tabsContainer}>
       <ScrollView
@@ -26,10 +25,7 @@ export function RankingTabs({
           onPress={() => onTabPress(0)}
         >
           <Text
-            style={[
-              styles.tabText,
-              currentIndex === 0 && styles.activeTabText,
-            ]}
+            style={[styles.tabText, currentIndex === 0 && styles.activeTabText]}
           >
             Total
           </Text>
@@ -40,10 +36,7 @@ export function RankingTabs({
         {groups.map((group, index) => (
           <TouchableOpacity
             key={group.idol_group_id}
-            style={[
-              styles.tab,
-              currentIndex === index + 1 && styles.activeTab,
-            ]}
+            style={[styles.tab, currentIndex === index + 1 && styles.activeTab]}
             onPress={() => onTabPress(index + 1)}
           >
             <Text

@@ -1,5 +1,11 @@
 import { useState, useCallback, useRef } from 'react'
-import { View, ActivityIndicator, StyleSheet, ScrollView, Dimensions } from 'react-native'
+import {
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from 'react-native'
 import { Colors } from '@/constants/Colors'
 import { RankingTabs } from '@/features/ranking/components/ranking-tabs'
 import { RankingList } from '@/features/ranking/components/RankingList'
@@ -23,9 +29,10 @@ export default function RankingScreen() {
     queryFn: rankingRepository.fetchIdolGroups,
   })
 
-  const selectedGroupId = currentIndex > 0 && idolGroups.length > 0
-    ? idolGroups[currentIndex - 1]?.idol_group_id
-    : null
+  const selectedGroupId =
+    currentIndex > 0 && idolGroups.length > 0
+      ? idolGroups[currentIndex - 1]?.idol_group_id
+      : null
 
   const { data: groupRankings = [], isLoading: isLoadingGroup } = useQuery({
     queryKey: ['groupRankings', selectedGroupId],
@@ -40,12 +47,13 @@ export default function RankingScreen() {
     scrollViewRef.current?.scrollTo({ x: index * screenWidth, animated: true })
   }, [])
 
-  const handleScroll = (event: any) => {
+  const handleScroll = (event: {
+    nativeEvent: { contentOffset: { x: number } }
+  }) => {
     const offsetX = event.nativeEvent.contentOffset.x
     const index = Math.round(offsetX / screenWidth)
     setCurrentIndex(index)
   }
-
 
   if (loading && totalRankings.length === 0) {
     return (
@@ -105,16 +113,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     flex: 1,
   },
-  scrollView: {
-    flex: 1,
-  },
-  page: {
-    width: screenWidth,
-    flex: 1,
-  },
   loadingContainer: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  page: {
+    flex: 1,
+    width: screenWidth,
+  },
+  scrollView: {
+    flex: 1,
   },
 })

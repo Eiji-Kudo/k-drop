@@ -2,7 +2,7 @@ import React from 'react'
 import { ActivityIndicator, View, StyleSheet } from 'react-native'
 import { Colors } from '@/constants/Colors'
 
-interface LoadingIndicatorProps {
+type LoadingIndicatorProps = {
   color?: string
   size?: 'small' | 'large'
 }
@@ -20,8 +20,8 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
 
 const styles = StyleSheet.create({
   loadingContainer: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
 })
