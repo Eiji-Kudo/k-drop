@@ -1,18 +1,13 @@
 import { ThemedText } from '@/components/ThemedText'
 import { PrimaryButton } from '@/components/ui/button/PrimaryButton'
+import { LoadingIndicator } from '@/components/ui/LoadingIndicator'
 import { Colors } from '@/constants/Colors'
 import { useGlobalContext } from '@/context/GlobalContext'
 import { QuizResultItem } from '@/features/answer-quiz/components/QuizResultItem'
 import { ResultSummary } from '@/features/answer-quiz/components/ResultSummary'
 import { useQuizResults } from '@/features/answer-quiz/hooks/useQuizResults'
 import { router } from 'expo-router'
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function ResultScreen() {
   const { answeredQuizIds } = useGlobalContext()
@@ -34,7 +29,7 @@ export default function ResultScreen() {
         </View>
 
         {isLoading ? (
-          <ActivityIndicator size="large" color={Colors.primary} />
+          <LoadingIndicator />
         ) : quizResults.length > 0 ? (
           <>
             <ResultSummary
