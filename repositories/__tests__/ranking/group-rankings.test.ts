@@ -8,12 +8,12 @@ import {
 setupSupabaseMock()
 
 describe('rankingRepository.fetchGroupRankings', () => {
-  beforeEach(async () => {
-    await setupTestData()
+  beforeEach(() => {
+    setupTestData()
   })
 
-  afterEach(async () => {
-    await cleanupTestData()
+  afterEach(() => {
+    cleanupTestData()
   })
 
   it('should fetch group rankings for specified group ordered by otaku_score descending', async () => {

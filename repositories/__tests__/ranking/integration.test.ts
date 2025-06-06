@@ -1,20 +1,20 @@
 import { rankingRepository } from '@/repositories/rankingRepository'
 import {
-  testSupabase,
   setupTestData,
   cleanupTestData,
   setupSupabaseMock,
 } from '@/repositories/__tests__/ranking/setup'
+import { supabase } from '@/utils/supabase'
 
 setupSupabaseMock()
 
 describe('rankingRepository integration tests', () => {
-  beforeEach(async () => {
-    await setupTestData()
+  beforeEach(() => {
+    setupTestData()
   })
 
-  afterEach(async () => {
-    await cleanupTestData()
+  afterEach(() => {
+    cleanupTestData()
   })
 
   describe('concurrent operations', () => {
@@ -43,14 +43,15 @@ describe('rankingRepository integration tests', () => {
       const totalRankings = await rankingRepository.fetchTotalRankings()
 
       for (const user of totalRankings) {
-        const userGroupScores = await testSupabase
+        const userGroupScores = await supabase
           .from('user_idol_group_scores')
           .select('otaku_score')
           .eq('app_user_id', user.app_user_id)
 
         const sumOfGroupScores =
           userGroupScores.data?.reduce(
-            (sum, score) => sum + score.otaku_score,
+            (sum: number, score: { otaku_score: number }) =>
+              sum + score.otaku_score,
             0,
           ) || 0
 

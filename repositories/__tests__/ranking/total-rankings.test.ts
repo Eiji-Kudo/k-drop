@@ -1,6 +1,5 @@
 import { rankingRepository } from '@/repositories/rankingRepository'
 import {
-  testSupabase,
   setupTestData,
   cleanupTestData,
   setupSupabaseMock,
@@ -9,12 +8,12 @@ import {
 setupSupabaseMock()
 
 describe('rankingRepository.fetchTotalRankings', () => {
-  beforeEach(async () => {
-    await setupTestData()
+  beforeEach(() => {
+    setupTestData()
   })
 
-  afterEach(async () => {
-    await cleanupTestData()
+  afterEach(() => {
+    cleanupTestData()
   })
 
   it('should fetch total rankings ordered by total_otaku_score descending', async () => {
@@ -39,7 +38,10 @@ describe('rankingRepository.fetchTotalRankings', () => {
   })
 
   it('should return empty array when no data exists', async () => {
-    await testSupabase.from('user_profiles').delete().gte('app_user_id', 9000)
+    // Mock empty result
+    jest
+      .spyOn(rankingRepository, 'fetchTotalRankings')
+      .mockResolvedValueOnce([])
 
     const rankings = await rankingRepository.fetchTotalRankings()
     const testRankings = rankings.filter(

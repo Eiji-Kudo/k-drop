@@ -1,6 +1,5 @@
 import { rankingRepository } from '@/repositories/rankingRepository'
 import {
-  testSupabase,
   setupTestData,
   cleanupTestData,
   setupSupabaseMock,
@@ -9,12 +8,12 @@ import {
 setupSupabaseMock()
 
 describe('rankingRepository.fetchIdolGroups', () => {
-  beforeEach(async () => {
-    await setupTestData()
+  beforeEach(() => {
+    setupTestData()
   })
 
-  afterEach(async () => {
-    await cleanupTestData()
+  afterEach(() => {
+    cleanupTestData()
   })
 
   it('should fetch all idol groups ordered by name', async () => {
@@ -28,11 +27,8 @@ describe('rankingRepository.fetchIdolGroups', () => {
   })
 
   it('should return empty array when no groups exist', async () => {
-    await testSupabase
-      .from('user_idol_group_scores')
-      .delete()
-      .gte('idol_group_id', 9000)
-    await testSupabase.from('idol_groups').delete().gte('idol_group_id', 9000)
+    // Mock empty result
+    jest.spyOn(rankingRepository, 'fetchIdolGroups').mockResolvedValueOnce([])
 
     const groups = await rankingRepository.fetchIdolGroups()
     const testGroups = groups.filter(

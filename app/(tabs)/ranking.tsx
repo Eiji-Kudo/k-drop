@@ -88,11 +88,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     flex: 1,
   },
-  loadingContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
   page: {
     flex: 1,
     width: screenWidth,
