@@ -42,17 +42,15 @@ export function QuizResultItem({ quizResult }: { quizResult: QuizResult }) {
 
 const styles = StyleSheet.create({
   answerContainer: {
-    marginBottom: 8,
-    marginTop: 8,
+    gap: 4,
+    paddingVertical: 8,
   },
   answerText: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 4,
   },
   choiceText: {
     fontSize: 14,
-    marginBottom: 4,
   },
   correctText: {
     color: Colors.success,
@@ -60,7 +58,6 @@ const styles = StyleSheet.create({
   explanationContainer: {
     backgroundColor: Colors.lightGray,
     borderRadius: 8,
-    marginTop: 8,
     padding: 8,
   },
   explanationText: {
@@ -78,9 +75,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.card,
     borderRadius: 8,
     elevation: 1,
-    marginBottom: 12,
+    gap: 8,
     padding: 16,
-    shadowColor: '#000',
+    shadowColor: Colors.shadowDefault,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,

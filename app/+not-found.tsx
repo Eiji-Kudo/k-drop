@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flex: 1,
+    gap: 15,
     justifyContent: 'center',
     padding: 20,
   },
   link: {
-    marginTop: 15,
     paddingVertical: 15,
   },
 })

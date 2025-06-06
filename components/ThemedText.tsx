@@ -10,7 +10,7 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  const color = Colors.text
+  const color = Colors.text.primary
 
   return (
     <Text
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   link: {
-    color: '#0a7ea4',
+    color: Colors.tint,
     fontSize: 16,
     lineHeight: 30,
   },

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    color: Colors.text,
+    color: Colors.text.primary,
     fontSize: 20,
     textAlign: 'center',
   },

@@ -75,7 +75,7 @@ export const ChoicesSection = ({
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: { marginTop: 16 },
+  buttonContainer: { paddingTop: 16 },
   choicesContainer: { gap: 16 },
   explanationText: { fontSize: 14, lineHeight: 20 },
 })
