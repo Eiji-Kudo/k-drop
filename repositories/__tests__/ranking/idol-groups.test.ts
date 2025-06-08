@@ -2,10 +2,7 @@ import { rankingRepository } from '@/repositories/rankingRepository'
 import {
   setupTestData,
   cleanupTestData,
-  setupSupabaseMock,
 } from '@/repositories/__tests__/ranking/setup'
-
-setupSupabaseMock()
 
 describe('rankingRepository.fetchIdolGroups', () => {
   beforeEach(() => {

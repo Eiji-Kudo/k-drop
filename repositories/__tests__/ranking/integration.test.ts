@@ -2,11 +2,8 @@ import { rankingRepository } from '@/repositories/rankingRepository'
 import {
   setupTestData,
   cleanupTestData,
-  setupSupabaseMock,
 } from '@/repositories/__tests__/ranking/setup'
 import { supabase } from '@/utils/supabase'
-
-setupSupabaseMock()
 
 describe('rankingRepository integration tests', () => {
   beforeEach(() => {
