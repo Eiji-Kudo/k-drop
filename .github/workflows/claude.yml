@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 1
 
       - name: Run Claude Code with direct prompt
-        uses: grll/claude-code-base-action@beta
+        uses: grll/claude-code-base-action@main
         with:
           prompt: "hello eiji"
           allowed_tools: "Bash(git:*),View,GlobTool,GrepTool,BatchTool"
