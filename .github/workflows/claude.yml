@@ -29,17 +29,6 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Run Claude Code with direct prompt
-        uses: grll/claude-code-base-action@main
-        with:
-          prompt: "hello eiji"
-          allowed_tools: "Bash(git:*),View,GlobTool,GrepTool,BatchTool"
-          use_oauth: "true"
-          claude_access_token: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
-          claude_refresh_token: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
-          claude_expires_at: ${{ secrets.CLAUDE_EXPIRES_AT }}
-
-
       - name: Run Claude Code
         id: claude
         uses: Eiji-Kudo/claude-code-action@main
