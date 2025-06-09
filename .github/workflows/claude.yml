@@ -33,8 +33,8 @@ jobs:
         id: claude
         uses: grll/claude-code-action@v0.0.10
         with:
-              use_oauth: 'true'
-              claude_access_token: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
-              claude_refresh_token: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
-              claude_expires_at: ${{ secrets.CLAUDE_EXPIRES_AT }}
+          use_oauth: 'true'
+          claude_access_token: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
+          claude_refresh_token: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
+          claude_expires_at: ${{ secrets.CLAUDE_EXPIRES_AT }}
 
