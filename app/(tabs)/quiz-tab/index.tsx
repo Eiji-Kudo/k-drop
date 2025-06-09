@@ -81,7 +81,7 @@ export default function GroupSelectionScreen() {
 }
 
 const styles = StyleSheet.create({
-  actionContainer: { marginTop: 16 },
+  actionContainer: { paddingTop: 16 },
   container: {
     backgroundColor: Colors.background,
     flex: 1,

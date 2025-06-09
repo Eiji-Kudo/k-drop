@@ -34,7 +34,7 @@ exports[`QuizChoice applies correct styling when answer is correct 1`] = `
   style={
     [
       {
-        "borderColor": "#F0C2D9",
+        "borderColor": "#e0e0e0",
         "borderRadius": 8,
         "borderWidth": 1,
         "paddingHorizontal": 16,
@@ -110,7 +110,7 @@ exports[`QuizChoice applies incorrect styling when answer is incorrect 1`] = `
   style={
     [
       {
-        "borderColor": "#F0C2D9",
+        "borderColor": "#e0e0e0",
         "borderRadius": 8,
         "borderWidth": 1,
         "paddingHorizontal": 16,
@@ -186,7 +186,7 @@ exports[`QuizChoice renders correctly with the right label 1`] = `
   style={
     [
       {
-        "borderColor": "#F0C2D9",
+        "borderColor": "#e0e0e0",
         "borderRadius": 8,
         "borderWidth": 1,
         "paddingHorizontal": 16,

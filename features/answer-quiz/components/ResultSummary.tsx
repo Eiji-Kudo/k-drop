@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.card,
     borderRadius: 8,
     gap: 8,
-    marginTop: 16,
     padding: 16,
   },
   resultSummary: {
