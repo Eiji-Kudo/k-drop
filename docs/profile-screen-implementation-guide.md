@@ -14,17 +14,20 @@
 ### 必要なテーブル
 
 1. **app_users** - ユーザー基本情報
+
    - `app_user_id`: ユーザーID
    - `supabase_uuid`: 認証UUID
    - `line_account_id`: LINE連携ID
 
 2. **user_profiles** - プロフィール情報
+
    - `user_name`: ユーザー名
    - `total_otaku_score`: 総合オタクパワー
    - `remaining_drop`: 所持ドロップ数
    - `total_otaku_layer_id`: 総合レイヤーID
 
 3. **user_idol_group_scores** - グループ別スコア
+
    - `app_user_id`: ユーザーID
    - `idol_group_id`: グループID
    - `otaku_score`: グループ別スコア
@@ -37,7 +40,9 @@
 ## 必要な新規テーブル・カラム
 
 ### 1. user_profilesテーブルの拡張
+
 既存のuser_profilesテーブルに以下のカラムを追加：
+
 - `avatar_url` (text, nullable) - プロフィール画像URL
 - `nickname` (text, nullable) - ニックネーム（user_nameとは別の表示名）
 - `description` (text, nullable) - 自己紹介文（プロフィールの説明）
@@ -48,6 +53,7 @@
 ### 2. お気に入りグループ管理
 
 **user_favorite_groups**
+
 - `user_favorite_group_id` (int, PK) - お気に入りグループID
 - `app_user_id` (int, FK) - ユーザーID
 - `idol_group_id` (int, FK) - グループID
@@ -57,6 +63,7 @@
 ### 3. オタクパワー日次履歴
 
 **daily_score_histories**
+
 - `daily_score_history_id` (int, PK) - 日次履歴ID
 - `app_user_id` (int, FK) - ユーザーID
 - `date` (date) - 記録日
