@@ -9,9 +9,9 @@ import { ProfileProgress } from '@/features/profile/components/profile-progress'
 import { useProfileData } from '@/features/profile/hooks/useProfileData'
 import { useUserGroups } from '@/features/profile/hooks/useUserGroups'
 import { useDailyScores } from '@/features/profile/hooks/useDailyScores'
-import { LoadingIndicator } from '@/components/ui/LoadingIndicator'
 import { ThemedText } from '@/components/ThemedText'
 import { styles } from './profile.styles'
+import { ProfileLoadingStates } from './ProfileLoadingStates'
 
 export default function ProfileScreen() {
   const {
@@ -30,44 +30,26 @@ export default function ProfileScreen() {
     isLoading: scoresLoading,
     refetch: refetchScores,
   } = useDailyScores()
-
   const [refreshing, setRefreshing] = useState(false)
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
     await Promise.all([refetchProfile(), refetchGroups(), refetchScores()])
     setRefreshing(false)
   }, [refetchProfile, refetchGroups, refetchScores])
 
-  if (profileLoading || groupsLoading || scoresLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <LoadingIndicator />
-      </View>
-    )
-  }
+  const loadingState = ProfileLoadingStates({
+    isLoading: profileLoading || groupsLoading || scoresLoading,
+    hasError: !!profileError,
+    hasData: !!(profileData && userGroups && scoreData),
+  })
+  if (loadingState) return loadingState
 
-  if (profileError) {
-    return (
-      <View style={styles.errorContainer}>
-        <ThemedText type="subtitle">Failed to load profile</ThemedText>
-      </View>
-    )
-  }
-
-  if (!profileData || !userGroups || !scoreData) {
-    return (
-      <View style={styles.errorContainer}>
-        <ThemedText type="subtitle">No profile data available</ThemedText>
-      </View>
-    )
-  }
+  if (!profileData || !userGroups || !scoreData) return null
 
   const groupLayerIds = userGroups.map((g) => ({
     groupId: g.groupId,
     layerId: g.layerId || 1,
   }))
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
@@ -83,7 +65,6 @@ export default function ProfileScreen() {
           avatarUrl={profileData.avatarUrl}
           onSettingsPress={() => console.log('Settings pressed')}
         />
-
         <ProfileStats
           totalOtakuPower={profileData.totalOtakuScore}
           fanSince={profileData.fanSince}

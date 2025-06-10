@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   emptyText: {
-    color: '#666',
+    color: Colors.text.secondary,
     fontSize: 14,
   },
   groupImage: {
@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   },
   groupImagePlaceholder: {
     alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: Colors.secondary,
     borderRadius: 30,
     height: 60,
     justifyContent: 'center',
@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   placeholderText: {
-    color: '#999',
+    color: Colors.text.tertiary,
     fontSize: 24,
   },
   row: {
