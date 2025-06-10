@@ -52,6 +52,38 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_score_histories: {
+        Row: {
+          app_user_id: number
+          created_at: string | null
+          daily_score_history_id: number
+          date: string
+          total_score: number
+        }
+        Insert: {
+          app_user_id: number
+          created_at?: string | null
+          daily_score_history_id?: number
+          date: string
+          total_score?: number
+        }
+        Update: {
+          app_user_id?: number
+          created_at?: string | null
+          daily_score_history_id?: number
+          date?: string
+          total_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'daily_score_histories_app_user_id_fkey'
+            columns: ['app_user_id']
+            isOneToOne: false
+            referencedRelation: 'app_users'
+            referencedColumns: ['app_user_id']
+          },
+        ]
+      }
       event_group_participations: {
         Row: {
           event_group_participation_id: number
@@ -440,26 +472,71 @@ export type Database = {
         }
         Relationships: []
       }
+      user_favorite_groups: {
+        Row: {
+          app_user_id: number
+          created_at: string | null
+          fan_since: string | null
+          idol_group_id: number
+          user_favorite_group_id: number
+        }
+        Insert: {
+          app_user_id: number
+          created_at?: string | null
+          fan_since?: string | null
+          idol_group_id: number
+          user_favorite_group_id?: number
+        }
+        Update: {
+          app_user_id?: number
+          created_at?: string | null
+          fan_since?: string | null
+          idol_group_id?: number
+          user_favorite_group_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'user_favorite_groups_app_user_id_fkey'
+            columns: ['app_user_id']
+            isOneToOne: false
+            referencedRelation: 'app_users'
+            referencedColumns: ['app_user_id']
+          },
+          {
+            foreignKeyName: 'user_favorite_groups_idol_group_id_fkey'
+            columns: ['idol_group_id']
+            isOneToOne: false
+            referencedRelation: 'idol_groups'
+            referencedColumns: ['idol_group_id']
+          },
+        ]
+      }
       user_idol_group_scores: {
         Row: {
           app_user_id: number
+          created_at: string
           group_otaku_layer_id: number
           idol_group_id: number
           otaku_score: number
+          updated_at: string
           user_idol_group_score_id: number
         }
         Insert: {
           app_user_id: number
+          created_at?: string
           group_otaku_layer_id: number
           idol_group_id: number
           otaku_score: number
+          updated_at?: string
           user_idol_group_score_id?: number
         }
         Update: {
           app_user_id?: number
+          created_at?: string
           group_otaku_layer_id?: number
           idol_group_id?: number
           otaku_score?: number
+          updated_at?: string
           user_idol_group_score_id?: number
         }
         Relationships: [
@@ -489,25 +566,43 @@ export type Database = {
       user_profiles: {
         Row: {
           app_user_id: number
+          avatar_url: string | null
+          created_at: string
+          description: string | null
+          fan_since: string | null
+          nickname: string | null
           remaining_drop: number
           total_otaku_layer_id: number
           total_otaku_score: number
+          updated_at: string
           user_name: string
           user_profile_id: number
         }
         Insert: {
           app_user_id: number
+          avatar_url?: string | null
+          created_at?: string
+          description?: string | null
+          fan_since?: string | null
+          nickname?: string | null
           remaining_drop: number
           total_otaku_layer_id: number
           total_otaku_score: number
+          updated_at?: string
           user_name: string
           user_profile_id?: number
         }
         Update: {
           app_user_id?: number
+          avatar_url?: string | null
+          created_at?: string
+          description?: string | null
+          fan_since?: string | null
+          nickname?: string | null
           remaining_drop?: number
           total_otaku_layer_id?: number
           total_otaku_score?: number
+          updated_at?: string
           user_name?: string
           user_profile_id?: number
         }
