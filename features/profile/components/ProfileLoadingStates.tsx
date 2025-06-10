@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import { LoadingIndicator } from '@/components/ui/LoadingIndicator'
 import { ThemedText } from '@/components/ThemedText'
-import { styles } from './profile.styles'
+import { styles } from '@/app/(tabs)/profile.styles'
 
 type ProfileLoadingStatesProps = {
   isLoading: boolean

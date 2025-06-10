@@ -11,7 +11,7 @@ import { useUserGroups } from '@/features/profile/hooks/useUserGroups'
 import { useDailyScores } from '@/features/profile/hooks/useDailyScores'
 import { ThemedText } from '@/components/ThemedText'
 import { styles } from './profile.styles'
-import { ProfileLoadingStates } from './ProfileLoadingStates'
+import { ProfileLoadingStates } from '@/features/profile/components/ProfileLoadingStates'
 
 export default function ProfileScreen() {
   const {
