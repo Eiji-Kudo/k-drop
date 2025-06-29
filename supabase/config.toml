@@ -60,7 +60,8 @@ sql_paths = [
   "./seed/quiz_data.sql",
   "./seed/user_base.sql",
   "./seed/user_activity.sql",
-  "./seed/events_and_history.sql"
+  "./seed/events_and_history.sql",
+  "./seed/profile_features.sql"
 ]
 
 [realtime]
