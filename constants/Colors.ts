@@ -7,6 +7,11 @@ export const Colors = {
     tertiary: '#999',
     disabled: '#888888',
   },
+  badge: {
+    gold: '#FFD700',
+    silver: '#C0C0C0',
+    bronze: '#CD7F32',
+  },
   background: '#FAF0F4',
   tint: tintColorLight,
   icon: '#687076',

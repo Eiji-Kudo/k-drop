@@ -54,6 +54,14 @@ module.exports = {
     'react-native/no-color-literals': 'error',
     'react-native/no-unused-styles': 'error',
     'no-restricted-syntax': ['error', ...noMarginRules],
+    'padded-blocks': ['error', 'never'],
+    'object-curly-newline': [
+      'error',
+      {
+        ObjectExpression: { multiline: true, consistent: true },
+        ObjectPattern: { multiline: true, consistent: true },
+      },
+    ],
     'react/no-unescaped-entities': 'off',
     'react/jsx-curly-brace-presence': [
       'error',
