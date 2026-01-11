@@ -8,7 +8,7 @@ import {
   text,
   timestamp,
   uuid,
-} from 'npm:drizzle-orm/pg-core'
+} from 'drizzle-orm/pg-core'
 
 export const groupCategories = pgTable('group_categories', {
   groupCategoryId: serial('group_category_id').primaryKey().notNull(),

@@ -1,9 +1,14 @@
-import { cors } from 'npm:hono@4.7.8/cors'
-import { createRoute, OpenAPIHono, z } from 'npm:@hono/zod-openapi@0.18.4'
-import { db } from '../_shared/db.ts'
+import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
+import { cors } from 'jsr:@hono/hono/cors'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 import { idolGroups } from '../_shared/schema.ts'
 
-const app = new OpenAPIHono()
+const connectionString = Deno.env.get('DATABASE_URL')!
+const client = postgres(connectionString, { prepare: false })
+const db = drizzle(client)
+
+const app = new OpenAPIHono().basePath('/api')
 
 app.use('/*', cors())
 
@@ -17,9 +22,7 @@ const healthRoute = createRoute({
         'application/json': {
           schema: z.object({
             status: z.string().openapi({ example: 'ok' }),
-            timestamp: z
-              .string()
-              .openapi({ example: '2026-01-11T14:00:00.000Z' }),
+            timestamp: z.string().openapi({ example: '2026-01-11T14:00:00.000Z' }),
           }),
         },
       },

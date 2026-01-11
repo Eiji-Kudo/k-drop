@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "drizzle-orm": "npm:drizzle-orm@0.38.3",
+    "drizzle-orm/": "npm:/drizzle-orm@0.38.3/",
+    "postgres": "npm:postgres@3.4.5",
+    "@hono/zod-openapi": "npm:@hono/zod-openapi@0.18.4"
+  }
+}
