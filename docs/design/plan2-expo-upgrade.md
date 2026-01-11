@@ -2,11 +2,11 @@
 
 ## 現在のバージョン
 
-| パッケージ | 現在 | 最新安定版 |
-|-----------|------|-----------|
-| expo | ~52.0.41 | ~54.0.31 |
-| react-native | 0.76.7 | 0.81.x |
-| react | 18.3.1 | 19.1.x |
+| パッケージ   | 現在     | 最新安定版 |
+| ------------ | -------- | ---------- |
+| expo         | ~52.0.41 | ~54.0.31   |
+| react-native | 0.76.7   | 0.81.x     |
+| react        | 18.3.1   | 19.1.x     |
 
 ## アップグレードパス
 
@@ -21,13 +21,16 @@ SDK 52 (現在) → SDK 53 → SDK 54 (目標)
 ### 主な変更点
 
 1. **React Native 0.79.0 + React 19.0.0**
+
    - React 19への移行（Concurrent Featuresの安定化）
 
 2. **New Architecture がデフォルト有効**
+
    - 現在オプトインだったNew Architectureがデフォルトに
    - 対応していないライブラリがある場合はオプトアウト可能
 
 3. **非推奨パッケージ**
+
    - `expo-av` → `expo-video` / `expo-audio` に置き換え
    - `expo-background-fetch` → `expo-background-task` に置き換え
    - `jsEngine` 設定が非推奨（JavaScriptCoreサポート終了予定）
@@ -39,6 +42,7 @@ SDK 52 (現在) → SDK 53 → SDK 54 (目標)
 ### K-Dropへの影響
 
 現在使用中のライブラリで確認が必要:
+
 - `react-native-reanimated@~3.16.1` → `~3.16.7` への更新必須
 - `moti@^0.30.0` - New Architecture対応確認
 - `react-native-chart-kit@^6.12.0` - New Architecture対応確認
@@ -48,20 +52,25 @@ SDK 52 (現在) → SDK 53 → SDK 54 (目標)
 ### 主な変更点
 
 1. **React Native 0.81 + React 19.1**
+
    - React 19.1の安定版
 
 2. **Edge-to-Edge がデフォルト**
+
    - Android/iOSでフルスクリーン表示がデフォルト
    - SafeAreaの扱いに注意
 
 3. **expo-file-system/next が安定版に**
+
    - インポートパスが `expo-file-system/next` → `expo-file-system` に変更
    - 旧APIは `expo-file-system/legacy` へ移動
 
 4. **Native Tabs ベータ**
+
    - iOS/Android でネイティブタブ実装（Liquid Glass対応）
 
 5. **厳格なスキーマ検証**
+
    - app.configの検証が厳格化
    - 依存関係チェックが強化
 
@@ -124,15 +133,15 @@ npm run check:all
 
 現在使用中の主要ライブラリのNew Architecture / SDK 54対応状況:
 
-| ライブラリ | SDK 53 | SDK 54 | 備考 |
-|-----------|--------|--------|------|
-| react-native-reanimated | ✅ ~3.16.7+ | ✅ | 更新必須 |
-| react-native-gesture-handler | ✅ | ✅ | |
-| moti | 要確認 | 要確認 | Reanimated依存 |
-| react-native-chart-kit | 要確認 | 要確認 | SVG依存 |
-| react-native-svg | ✅ | ✅ | |
-| @tanstack/react-query | ✅ | ✅ | JS only |
-| @supabase/supabase-js | ✅ | ✅ | JS only |
+| ライブラリ                   | SDK 53      | SDK 54 | 備考           |
+| ---------------------------- | ----------- | ------ | -------------- |
+| react-native-reanimated      | ✅ ~3.16.7+ | ✅     | 更新必須       |
+| react-native-gesture-handler | ✅          | ✅     |                |
+| moti                         | 要確認      | 要確認 | Reanimated依存 |
+| react-native-chart-kit       | 要確認      | 要確認 | SVG依存        |
+| react-native-svg             | ✅          | ✅     |                |
+| @tanstack/react-query        | ✅          | ✅     | JS only        |
+| @supabase/supabase-js        | ✅          | ✅     | JS only        |
 
 ### 実行コマンド
 
@@ -144,12 +153,15 @@ npx expo-doctor@latest
 ## リスクと対策
 
 ### リスク1: New Architectureとの互換性問題
+
 **対策**: `npx expo-doctor` で事前に互換性を確認。問題がある場合は一時的にオプトアウト。
 
 ### リスク2: React 19の破壊的変更
+
 **対策**: 段階的に更新し、各段階でテストを実行。
 
 ### リスク3: Edge-to-Edgeによるレイアウト崩れ
+
 **対策**: SafeAreaの使用箇所を事前に確認し、必要に応じて調整。
 
 ## 推奨スケジュール
@@ -171,6 +183,7 @@ npx expo-doctor@latest
 Expo SDK 53へのアップグレードに向けて、依存ライブラリの互換性を調査し、問題点を洗い出す。
 
 **タスク**:
+
 - [ ] `npx expo-doctor@latest` 実行、結果を記録
 - [ ] react-native-reanimated の更新確認
 - [ ] moti の New Architecture 対応確認
@@ -179,6 +192,7 @@ Expo SDK 53へのアップグレードに向けて、依存ライブラリの互
 - [ ] 問題のあるライブラリのissue/PR確認
 
 **受け入れ条件**:
+
 - 全ライブラリのSDK 53対応状況が明確になる
 - 非対応ライブラリの代替案または対応予定が確認できる
 
@@ -192,6 +206,7 @@ Expo SDK 53へのアップグレードに向けて、依存ライブラリの互
 Expo SDK 52 から SDK 53 へアップグレードする。
 
 **タスク**:
+
 - [ ] `expo@^53.0.0` への更新
 - [ ] `npx expo install --fix` で依存関係更新
 - [ ] `react-native-reanimated@~3.16.7` への更新
@@ -200,6 +215,7 @@ Expo SDK 52 から SDK 53 へアップグレードする。
 - [ ] 動作確認（全画面遷移、クイズ機能、プロフィール）
 
 **受け入れ条件**:
+
 - 全テストがパス
 - 型エラーなし
 - lint エラーなし
@@ -215,6 +231,7 @@ Expo SDK 52 から SDK 53 へアップグレードする。
 SDK 53で安定運用後、SDK 54へのアップグレード準備を行う。
 
 **タスク**:
+
 - [ ] SDK 54のbreaking changes確認
 - [ ] Edge-to-Edge対応が必要な画面の洗い出し
 - [ ] expo-file-system使用箇所の確認（使用していれば）
@@ -222,6 +239,7 @@ SDK 53で安定運用後、SDK 54へのアップグレード準備を行う。
 - [ ] `npx expo-doctor@latest` 再実行
 
 **受け入れ条件**:
+
 - SDK 54移行に必要な変更箇所が明確になる
 
 ---
@@ -234,6 +252,7 @@ SDK 53で安定運用後、SDK 54へのアップグレード準備を行う。
 Expo SDK 53 から SDK 54 へアップグレードする。
 
 **タスク**:
+
 - [ ] `expo@^54.0.0` への更新
 - [ ] `npx expo install --fix` で依存関係更新
 - [ ] Edge-to-Edge対応のレイアウト調整
@@ -242,6 +261,7 @@ Expo SDK 53 から SDK 54 へアップグレードする。
 - [ ] 全画面の動作確認
 
 **受け入れ条件**:
+
 - 全テストがパス
 - 型エラーなし
 - lint エラーなし

@@ -26,6 +26,7 @@ Deno.serve(app.fetch)
 ```
 
 **参考リンク**:
+
 - [Supabase Edge Functions - Hono](https://hono.dev/docs/getting-started/supabase-functions)
 - [Supabase Routing Documentation](https://supabase.com/docs/guides/functions/routing)
 
@@ -100,18 +101,18 @@ app.doc("/doc", {
 ```typescript
 // orval.config.ts
 export default {
-  "k-drop-api": {
+  'k-drop-api': {
     input: {
-      target: "https://your-project.supabase.co/functions/v1/api/doc",
+      target: 'https://your-project.supabase.co/functions/v1/api/doc',
     },
     output: {
-      target: "./src/generated/api.ts",
-      client: "react-query",
-      mode: "tags-split",
+      target: './src/generated/api.ts',
+      client: 'react-query',
+      mode: 'tags-split',
       override: {
         mutator: {
-          path: "./src/utils/apiClient.ts",
-          name: "customFetch",
+          path: './src/utils/apiClient.ts',
+          name: 'customFetch',
         },
       },
     },
@@ -191,15 +192,15 @@ k-drop/
 
 現在フロントエンドで実装されているロジックをAPI化:
 
-| API Endpoint | Method | 説明 | 現在の実装箇所 |
-|--------------|--------|------|----------------|
-| `/quiz/{groupId}/next` | GET | 次のクイズ取得 | `useNextQuiz.ts` |
-| `/quiz/{quizId}` | GET | クイズ詳細取得 | `useQuizQuery.ts` |
-| `/quiz/{quizId}/answer` | POST | クイズ回答・スコア更新 | `useUpdateOtakuPower.ts`, `userScoreRepository.ts` |
-| `/quiz/{quizId}/choices` | GET | 選択肢取得 | `useQuizQuery.ts` |
-| `/user/{userId}/scores` | GET | ユーザースコア取得 | `useProfileData.ts` |
-| `/ranking/total` | GET | 総合ランキング | `rankingRepository.ts` |
-| `/ranking/group/{groupId}` | GET | グループランキング | `rankingRepository.ts` |
+| API Endpoint               | Method | 説明                   | 現在の実装箇所                                     |
+| -------------------------- | ------ | ---------------------- | -------------------------------------------------- |
+| `/quiz/{groupId}/next`     | GET    | 次のクイズ取得         | `useNextQuiz.ts`                                   |
+| `/quiz/{quizId}`           | GET    | クイズ詳細取得         | `useQuizQuery.ts`                                  |
+| `/quiz/{quizId}/answer`    | POST   | クイズ回答・スコア更新 | `useUpdateOtakuPower.ts`, `userScoreRepository.ts` |
+| `/quiz/{quizId}/choices`   | GET    | 選択肢取得             | `useQuizQuery.ts`                                  |
+| `/user/{userId}/scores`    | GET    | ユーザースコア取得     | `useProfileData.ts`                                |
+| `/ranking/total`           | GET    | 総合ランキング         | `rankingRepository.ts`                             |
+| `/ranking/group/{groupId}` | GET    | グループランキング     | `rankingRepository.ts`                             |
 
 ## メリット
 
@@ -219,16 +220,19 @@ k-drop/
 ## 実装ステップ
 
 ### Phase 1: 基盤構築
+
 1. Hono + Zod OpenAPI のセットアップ
 2. 基本的なルーティング実装
 3. Orval設定とクライアント生成パイプライン
 
 ### Phase 2: クイズ機能移行
+
 1. クイズ取得API実装
 2. 回答・スコア更新API実装
 3. フロントエンド統合
 
 ### Phase 3: その他機能移行
+
 1. ランキングAPI実装
 2. プロフィールAPI実装
 
@@ -244,6 +248,7 @@ k-drop/
 Supabase Edge FunctionsにHonoフレームワークとZod OpenAPIを導入し、型安全なAPI基盤を構築する。
 
 **タスク**:
+
 - [ ] `supabase/functions/api/` ディレクトリ作成
 - [ ] Hono + @hono/zod-openapi セットアップ
 - [ ] 基本的なヘルスチェックエンドポイント実装
@@ -251,6 +256,7 @@ Supabase Edge FunctionsにHonoフレームワークとZod OpenAPIを導入し、
 - [ ] ローカル開発環境テスト
 
 **受け入れ条件**:
+
 - `supabase functions serve`でローカル起動可能
 - `/api/health`エンドポイントが200を返す
 - `/api/doc`でOpenAPI JSONが取得可能
@@ -265,6 +271,7 @@ Supabase Edge FunctionsにHonoフレームワークとZod OpenAPIを導入し、
 OrvalをセットアップしてOpenAPI仕様からReact Query対応の型安全なAPIクライアントを自動生成する。
 
 **タスク**:
+
 - [ ] Orvalインストール (`npm install orval -D`)
 - [ ] `orval.config.ts` 作成
 - [ ] カスタムフェッチャー実装 (`src/utils/apiClient.ts`)
@@ -272,6 +279,7 @@ OrvalをセットアップしてOpenAPI仕様からReact Query対応の型安全
 - [ ] 生成コードの動作確認
 
 **受け入れ条件**:
+
 - `npm run gen-api`でクライアントコード生成成功
 - 生成されたhooksがTypeScript型付きで使用可能
 
@@ -285,6 +293,7 @@ OrvalをセットアップしてOpenAPI仕様からReact Query対応の型安全
 クイズ回答時のスコア計算・更新ロジックをEdge Functionsに移行する。
 
 **タスク**:
+
 - [ ] `POST /api/quiz/{quizId}/answer` エンドポイント実装
 - [ ] リクエスト/レスポンスのZodスキーマ定義
 - [ ] スコア計算ロジック移行 (`basicScoreCalculator.ts` → サーバーサイド)
@@ -292,6 +301,7 @@ OrvalをセットアップしてOpenAPI仕様からReact Query対応の型安全
 - [ ] フロントエンドの`useUpdateOtakuPower`を生成クライアントに置き換え
 
 **受け入れ条件**:
+
 - APIでクイズ回答が処理される
 - スコアがDBに正しく更新される
 - フロントエンドから型安全に呼び出し可能
@@ -306,12 +316,14 @@ OrvalをセットアップしてOpenAPI仕様からReact Query対応の型安全
 次のクイズ取得と詳細取得のAPIを実装する。
 
 **タスク**:
+
 - [ ] `GET /api/quiz/{groupId}/next` エンドポイント実装
 - [ ] `GET /api/quiz/{quizId}` エンドポイント実装
 - [ ] `GET /api/quiz/{quizId}/choices` エンドポイント実装
 - [ ] フロントエンドの関連hooksを生成クライアントに置き換え
 
 **受け入れ条件**:
+
 - 各エンドポイントが正しいデータを返す
 - 未回答クイズのフィルタリングが機能する
 
@@ -325,6 +337,7 @@ OrvalをセットアップしてOpenAPI仕様からReact Query対応の型安全
 ランキングとプロフィール関連のAPIを実装する。
 
 **タスク**:
+
 - [ ] `GET /api/ranking/total` エンドポイント実装
 - [ ] `GET /api/ranking/group/{groupId}` エンドポイント実装
 - [ ] `GET /api/user/{userId}/profile` エンドポイント実装
@@ -332,6 +345,7 @@ OrvalをセットアップしてOpenAPI仕様からReact Query対応の型安全
 - [ ] フロントエンドの関連repositoryを生成クライアントに置き換え
 
 **受け入れ条件**:
+
 - 各エンドポイントが正しいデータを返す
 - フロントエンドのランキング・プロフィール画面が正常動作
 

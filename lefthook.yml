@@ -1,0 +1,11 @@
+pre-push:
+  parallel: true
+  commands:
+    lint:
+      run: npm run lint
+    types:
+      run: npm run test:types
+    format:
+      run: npm run format:check
+    test:
+      run: npm run test
