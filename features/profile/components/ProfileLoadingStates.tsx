@@ -9,7 +9,7 @@ type ProfileLoadingStatesProps = {
   hasData: boolean
 }
 
-export function ProfileLoadingStates({
+export function getProfileLoadingState({
   isLoading,
   hasError,
   hasData,

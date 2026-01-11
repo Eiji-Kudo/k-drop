@@ -8,6 +8,13 @@ export type DailyScore = {
 export const prepareChartData = (dailyScores: DailyScore[]) => {
   const last7Days = dailyScores.slice(-7)
 
+  if (last7Days.length === 0) {
+    return {
+      labels: [''],
+      datasets: [{ data: [0] }],
+    }
+  }
+
   const labels = last7Days.map((item) => {
     const date = new Date(item.date)
     return `Day ${date.getDate()}`
@@ -17,11 +24,7 @@ export const prepareChartData = (dailyScores: DailyScore[]) => {
 
   return {
     labels,
-    datasets: [
-      {
-        data: data.length > 0 ? data : [0],
-      },
-    ],
+    datasets: [{ data }],
   }
 }
 

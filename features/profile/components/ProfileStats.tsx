@@ -1,6 +1,7 @@
 import { View, StyleSheet } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { Colors } from '@/constants/Colors'
+import { formatFanDuration } from '../utils/dateUtils'
 
 type ProfileStatsProps = {
   totalOtakuPower: number
@@ -13,22 +14,6 @@ export function ProfileStats({
   fanSince,
   layerName,
 }: ProfileStatsProps) {
-  const formatFanDuration = (date?: Date) => {
-    if (!date) return 'New Fan'
-
-    const now = new Date()
-    const years = now.getFullYear() - date.getFullYear()
-    const months = now.getMonth() - date.getMonth()
-
-    if (years > 0) {
-      return `${years} Year${years > 1 ? 's' : ''} Fan`
-    } else if (months > 0) {
-      return `${months} Month${months > 1 ? 's' : ''} Fan`
-    } else {
-      return 'New Fan'
-    }
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.statCard}>

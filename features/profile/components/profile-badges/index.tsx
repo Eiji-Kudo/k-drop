@@ -26,6 +26,7 @@ export function ProfileBadges({
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.badgeList}
+          contentContainerStyle={styles.badgeListContent}
         >
           {badges.map((badge, index) => (
             <View key={index} style={styles.badgeItem}>

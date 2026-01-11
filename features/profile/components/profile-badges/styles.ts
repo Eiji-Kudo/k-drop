@@ -13,7 +13,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  badgeList: {
+  badgeList: {},
+  badgeListContent: {
     flexDirection: 'row',
     gap: 20,
   },

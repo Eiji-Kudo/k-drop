@@ -16,5 +16,11 @@ export function BadgeIcon({ type, size = 24 }: BadgeIconProps) {
       return <MaterialCommunityIcons name="cards" size={size} />
     case 'dance_cover_star':
       return <MaterialCommunityIcons name="dance-ballroom" size={size} />
+    default:
+      return assertNever(type)
   }
+}
+
+function assertNever(_value: never): null {
+  return null
 }

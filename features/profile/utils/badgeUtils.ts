@@ -1,4 +1,5 @@
 import { Badge } from '../types/badge'
+import { Colors } from '@/constants/Colors'
 
 export const getBadgesFromLayers = (
   totalLayerId?: number,
@@ -48,10 +49,10 @@ export const getBadgesFromLayers = (
 export const getBadgeColor = (level: number): string => {
   switch (level) {
     case 3:
-      return '#FFD700' // Gold
+      return Colors.badge.gold
     case 2:
-      return '#C0C0C0' // Silver
+      return Colors.badge.silver
     default:
-      return '#CD7F32' // Bronze
+      return Colors.badge.bronze
   }
 }

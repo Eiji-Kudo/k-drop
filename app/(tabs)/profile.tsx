@@ -11,7 +11,7 @@ import { useUserGroups } from '@/features/profile/hooks/useUserGroups'
 import { useDailyScores } from '@/features/profile/hooks/useDailyScores'
 import { ThemedText } from '@/components/ThemedText'
 import { styles } from './profile.styles'
-import { ProfileLoadingStates } from '@/features/profile/components/ProfileLoadingStates'
+import { getProfileLoadingState } from '@/features/profile/components/ProfileLoadingStates'
 
 export default function ProfileScreen() {
   const {
@@ -33,11 +33,14 @@ export default function ProfileScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
-    await Promise.all([refetchProfile(), refetchGroups(), refetchScores()])
-    setRefreshing(false)
+    try {
+      await Promise.all([refetchProfile(), refetchGroups(), refetchScores()])
+    } finally {
+      setRefreshing(false)
+    }
   }, [refetchProfile, refetchGroups, refetchScores])
 
-  const loadingState = ProfileLoadingStates({
+  const loadingState = getProfileLoadingState({
     isLoading: profileLoading || groupsLoading || scoresLoading,
     hasError: !!profileError,
     hasData: !!(profileData && userGroups && scoreData),
@@ -63,7 +66,7 @@ export default function ProfileScreen() {
           userName={profileData.userName}
           nickname={profileData.nickname}
           avatarUrl={profileData.avatarUrl}
-          onSettingsPress={() => console.log('Settings pressed')}
+          onSettingsPress={() => {}}
         />
         <ProfileStats
           totalOtakuPower={profileData.totalOtakuScore}
