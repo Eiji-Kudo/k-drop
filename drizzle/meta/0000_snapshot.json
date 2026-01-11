@@ -1,0 +1,1015 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.group_categories": {
+      "name": "group_categories",
+      "schema": "",
+      "columns": {
+        "group_category_id": {
+          "name": "group_category_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "category_name": {
+          "name": "category_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.idol_groups": {
+      "name": "idol_groups",
+      "schema": "",
+      "columns": {
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "group_category_id": {
+          "name": "group_category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idol_group_name": {
+          "name": "idol_group_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thumbnail_image": {
+          "name": "thumbnail_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_group_category": {
+          "name": "fk_group_category",
+          "tableFrom": "idol_groups",
+          "tableTo": "group_categories",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "group_category_id"
+          ],
+          "columnsTo": [
+            "group_category_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.app_users": {
+      "name": "app_users",
+      "schema": "",
+      "columns": {
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "supabase_uuid": {
+          "name": "supabase_uuid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "line_account_id": {
+          "name": "line_account_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.group_otaku_layers": {
+      "name": "group_otaku_layers",
+      "schema": "",
+      "columns": {
+        "group_otaku_layer_id": {
+          "name": "group_otaku_layer_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "layer_name": {
+          "name": "layer_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "min_score": {
+          "name": "min_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_score": {
+          "name": "max_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.quizzes": {
+      "name": "quizzes",
+      "schema": "",
+      "columns": {
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quiz_difficulty_id": {
+          "name": "quiz_difficulty_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prompt": {
+          "name": "prompt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "explanation": {
+          "name": "explanation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_quiz_question_idol_group": {
+          "name": "fk_quiz_question_idol_group",
+          "tableFrom": "quizzes",
+          "tableTo": "idol_groups",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_quiz_question_quiz_difficulty": {
+          "name": "fk_quiz_question_quiz_difficulty",
+          "tableFrom": "quizzes",
+          "tableTo": "quiz_difficulties",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "quiz_difficulty_id"
+          ],
+          "columnsTo": [
+            "quiz_difficulty_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_difficulties": {
+      "name": "quiz_difficulties",
+      "schema": "",
+      "columns": {
+        "quiz_difficulty_id": {
+          "name": "quiz_difficulty_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "difficulty_name": {
+          "name": "difficulty_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.total_otaku_layers": {
+      "name": "total_otaku_layers",
+      "schema": "",
+      "columns": {
+        "total_otaku_layer_id": {
+          "name": "total_otaku_layer_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "layer_name": {
+          "name": "layer_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "min_score": {
+          "name": "min_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_score": {
+          "name": "max_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.monthly_score_histories": {
+      "name": "monthly_score_histories",
+      "schema": "",
+      "columns": {
+        "monthly_score_history_id": {
+          "name": "monthly_score_history_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "month": {
+          "name": "month",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "score_snapshot": {
+          "name": "score_snapshot",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_monthly_score_app_user": {
+          "name": "fk_monthly_score_app_user",
+          "tableFrom": "monthly_score_histories",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "app_user_id"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.events": {
+      "name": "events",
+      "schema": "",
+      "columns": {
+        "event_id": {
+          "name": "event_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_name": {
+          "name": "event_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_description": {
+          "name": "event_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_date": {
+          "name": "event_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_event_created_by": {
+          "name": "fk_event_created_by",
+          "tableFrom": "events",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.event_group_participations": {
+      "name": "event_group_participations",
+      "schema": "",
+      "columns": {
+        "event_group_participation_id": {
+          "name": "event_group_participation_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registered_at": {
+          "name": "registered_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_event_group_event": {
+          "name": "fk_event_group_event",
+          "tableFrom": "event_group_participations",
+          "tableTo": "events",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "event_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_event_group_idol_group": {
+          "name": "fk_event_group_idol_group",
+          "tableFrom": "event_group_participations",
+          "tableTo": "idol_groups",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.event_participations": {
+      "name": "event_participations",
+      "schema": "",
+      "columns": {
+        "event_participation_id": {
+          "name": "event_participation_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "joined_at": {
+          "name": "joined_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_event_participation_event": {
+          "name": "fk_event_participation_event",
+          "tableFrom": "event_participations",
+          "tableTo": "events",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "event_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_event_participation_app_user": {
+          "name": "fk_event_participation_app_user",
+          "tableFrom": "event_participations",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "app_user_id"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.ranking_groups": {
+      "name": "ranking_groups",
+      "schema": "",
+      "columns": {
+        "ranking_group_id": {
+          "name": "ranking_group_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_rank": {
+          "name": "display_rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_score": {
+          "name": "display_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_ranking_group_app_user": {
+          "name": "fk_ranking_group_app_user",
+          "tableFrom": "ranking_groups",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "app_user_id"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_ranking_group_idol_group": {
+          "name": "fk_ranking_group_idol_group",
+          "tableFrom": "ranking_groups",
+          "tableTo": "idol_groups",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.ranking_totals": {
+      "name": "ranking_totals",
+      "schema": "",
+      "columns": {
+        "ranking_total_id": {
+          "name": "ranking_total_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_rank": {
+          "name": "display_rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_score": {
+          "name": "display_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_ranking_total_app_user": {
+          "name": "fk_ranking_total_app_user",
+          "tableFrom": "ranking_totals",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "app_user_id"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.user_idol_group_scores": {
+      "name": "user_idol_group_scores",
+      "schema": "",
+      "columns": {
+        "user_idol_group_score_id": {
+          "name": "user_idol_group_score_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "otaku_score": {
+          "name": "otaku_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "group_otaku_layer_id": {
+          "name": "group_otaku_layer_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_user_idol_app_user": {
+          "name": "fk_user_idol_app_user",
+          "tableFrom": "user_idol_group_scores",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "app_user_id"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_user_idol_idol_group": {
+          "name": "fk_user_idol_idol_group",
+          "tableFrom": "user_idol_group_scores",
+          "tableTo": "idol_groups",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_user_idol_group_otaku_layer": {
+          "name": "fk_user_idol_group_otaku_layer",
+          "tableFrom": "user_idol_group_scores",
+          "tableTo": "group_otaku_layers",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "group_otaku_layer_id"
+          ],
+          "columnsTo": [
+            "group_otaku_layer_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.user_profiles": {
+      "name": "user_profiles",
+      "schema": "",
+      "columns": {
+        "user_profile_id": {
+          "name": "user_profile_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_name": {
+          "name": "user_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_otaku_score": {
+          "name": "total_otaku_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "remaining_drop": {
+          "name": "remaining_drop",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_otaku_layer_id": {
+          "name": "total_otaku_layer_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_app_user": {
+          "name": "fk_app_user",
+          "tableFrom": "user_profiles",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "app_user_id"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_total_otaku_layer": {
+          "name": "fk_total_otaku_layer",
+          "tableFrom": "user_profiles",
+          "tableTo": "total_otaku_layers",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "total_otaku_layer_id"
+          ],
+          "columnsTo": [
+            "total_otaku_layer_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.user_quiz_answers": {
+      "name": "user_quiz_answers",
+      "schema": "",
+      "columns": {
+        "user_quiz_answer_id": {
+          "name": "user_quiz_answer_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "app_user_id": {
+          "name": "app_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selected_choice": {
+          "name": "selected_choice",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_correct": {
+          "name": "is_correct",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answered_at": {
+          "name": "answered_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "fk_user_quiz_app_user": {
+          "name": "fk_user_quiz_app_user",
+          "tableFrom": "user_quiz_answers",
+          "tableTo": "app_users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "app_user_id"
+          ],
+          "columnsTo": [
+            "app_user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_user_quiz": {
+          "name": "fk_user_quiz",
+          "tableFrom": "user_quiz_answers",
+          "tableTo": "quizzes",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "quiz_id"
+          ],
+          "columnsTo": [
+            "quiz_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.quiz_choices": {
+      "name": "quiz_choices",
+      "schema": "",
+      "columns": {
+        "quiz_choice_id": {
+          "name": "quiz_choice_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "choice_text": {
+          "name": "choice_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_correct": {
+          "name": "is_correct",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {
+        "idx_quiz_choices_quiz_id": {
+          "name": "idx_quiz_choices_quiz_id",
+          "columns": [
+            {
+              "expression": "quiz_id",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quiz_choices_quiz_id_fkey": {
+          "name": "quiz_choices_quiz_id_fkey",
+          "tableFrom": "quiz_choices",
+          "tableTo": "quizzes",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "quiz_id"
+          ],
+          "columnsTo": [
+            "quiz_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {}
+  }
+}

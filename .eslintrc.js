@@ -2,6 +2,7 @@ const noMarginRules = require('./eslint-rules/no-margin-rules')
 
 module.exports = {
   root: true,
+  ignorePatterns: ['supabase/', 'drizzle/', 'drizzle.config.ts'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
