@@ -79,7 +79,7 @@ CREATE POLICY "daily_score_histories_select_policy" ON daily_score_histories
     FOR SELECT TO authenticated, anon
     USING (true);
 
--- Only system can insert/update daily score histories
+-- Users can insert/update their own daily score histories
 CREATE POLICY "daily_score_histories_insert_policy" ON daily_score_histories
     FOR INSERT TO authenticated
     WITH CHECK (app_user_id IN (

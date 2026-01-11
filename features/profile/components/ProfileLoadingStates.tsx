@@ -24,14 +24,16 @@ export function getProfileLoadingState({
   if (hasError) {
     return (
       <View style={styles.errorContainer}>
-        <ThemedText type="subtitle">Failed to load profile</ThemedText>
+        <ThemedText type="subtitle">
+          プロフィールの読み込みに失敗しました
+        </ThemedText>
       </View>
     )
   }
   if (!hasData) {
     return (
       <View style={styles.errorContainer}>
-        <ThemedText type="subtitle">No profile data available</ThemedText>
+        <ThemedText type="subtitle">プロフィールデータがありません</ThemedText>
       </View>
     )
   }

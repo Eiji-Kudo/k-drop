@@ -23,11 +23,13 @@ export default function ProfileScreen() {
   const {
     data: userGroups,
     isLoading: groupsLoading,
+    error: groupsError,
     refetch: refetchGroups,
   } = useUserGroups()
   const {
     data: scoreData,
     isLoading: scoresLoading,
+    error: scoresError,
     refetch: refetchScores,
   } = useDailyScores()
   const [refreshing, setRefreshing] = useState(false)
@@ -42,7 +44,7 @@ export default function ProfileScreen() {
 
   const loadingState = getProfileLoadingState({
     isLoading: profileLoading || groupsLoading || scoresLoading,
-    hasError: !!profileError,
+    hasError: !!(profileError || groupsError || scoresError),
     hasData: !!(profileData && userGroups && scoreData),
   })
   if (loadingState) return loadingState
