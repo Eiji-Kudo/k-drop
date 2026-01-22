@@ -65,12 +65,8 @@
           "tableFrom": "idol_groups",
           "tableTo": "group_categories",
           "schemaTo": "public",
-          "columnsFrom": [
-            "group_category_id"
-          ],
-          "columnsTo": [
-            "group_category_id"
-          ],
+          "columnsFrom": ["group_category_id"],
+          "columnsTo": ["group_category_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -191,12 +187,8 @@
           "tableFrom": "quizzes",
           "tableTo": "idol_groups",
           "schemaTo": "public",
-          "columnsFrom": [
-            "idol_group_id"
-          ],
-          "columnsTo": [
-            "idol_group_id"
-          ],
+          "columnsFrom": ["idol_group_id"],
+          "columnsTo": ["idol_group_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -205,12 +197,8 @@
           "tableFrom": "quizzes",
           "tableTo": "quiz_difficulties",
           "schemaTo": "public",
-          "columnsFrom": [
-            "quiz_difficulty_id"
-          ],
-          "columnsTo": [
-            "quiz_difficulty_id"
-          ],
+          "columnsFrom": ["quiz_difficulty_id"],
+          "columnsTo": ["quiz_difficulty_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -325,12 +313,8 @@
           "tableFrom": "monthly_score_histories",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "app_user_id"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["app_user_id"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -401,12 +385,8 @@
           "tableFrom": "events",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -453,12 +433,8 @@
           "tableFrom": "event_group_participations",
           "tableTo": "events",
           "schemaTo": "public",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "event_id"
-          ],
+          "columnsFrom": ["event_id"],
+          "columnsTo": ["event_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -467,12 +443,8 @@
           "tableFrom": "event_group_participations",
           "tableTo": "idol_groups",
           "schemaTo": "public",
-          "columnsFrom": [
-            "idol_group_id"
-          ],
-          "columnsTo": [
-            "idol_group_id"
-          ],
+          "columnsFrom": ["idol_group_id"],
+          "columnsTo": ["idol_group_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -519,12 +491,8 @@
           "tableFrom": "event_participations",
           "tableTo": "events",
           "schemaTo": "public",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "event_id"
-          ],
+          "columnsFrom": ["event_id"],
+          "columnsTo": ["event_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -533,12 +501,8 @@
           "tableFrom": "event_participations",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "app_user_id"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["app_user_id"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -597,12 +561,8 @@
           "tableFrom": "ranking_groups",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "app_user_id"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["app_user_id"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -611,12 +571,8 @@
           "tableFrom": "ranking_groups",
           "tableTo": "idol_groups",
           "schemaTo": "public",
-          "columnsFrom": [
-            "idol_group_id"
-          ],
-          "columnsTo": [
-            "idol_group_id"
-          ],
+          "columnsFrom": ["idol_group_id"],
+          "columnsTo": ["idol_group_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -669,12 +625,8 @@
           "tableFrom": "ranking_totals",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "app_user_id"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["app_user_id"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -727,12 +679,8 @@
           "tableFrom": "user_idol_group_scores",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "app_user_id"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["app_user_id"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -741,12 +689,8 @@
           "tableFrom": "user_idol_group_scores",
           "tableTo": "idol_groups",
           "schemaTo": "public",
-          "columnsFrom": [
-            "idol_group_id"
-          ],
-          "columnsTo": [
-            "idol_group_id"
-          ],
+          "columnsFrom": ["idol_group_id"],
+          "columnsTo": ["idol_group_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -755,12 +699,8 @@
           "tableFrom": "user_idol_group_scores",
           "tableTo": "group_otaku_layers",
           "schemaTo": "public",
-          "columnsFrom": [
-            "group_otaku_layer_id"
-          ],
-          "columnsTo": [
-            "group_otaku_layer_id"
-          ],
+          "columnsFrom": ["group_otaku_layer_id"],
+          "columnsTo": ["group_otaku_layer_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -819,12 +759,8 @@
           "tableFrom": "user_profiles",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "app_user_id"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["app_user_id"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -833,12 +769,8 @@
           "tableFrom": "user_profiles",
           "tableTo": "total_otaku_layers",
           "schemaTo": "public",
-          "columnsFrom": [
-            "total_otaku_layer_id"
-          ],
-          "columnsTo": [
-            "total_otaku_layer_id"
-          ],
+          "columnsFrom": ["total_otaku_layer_id"],
+          "columnsTo": ["total_otaku_layer_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -897,12 +829,8 @@
           "tableFrom": "user_quiz_answers",
           "tableTo": "app_users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "app_user_id"
-          ],
-          "columnsTo": [
-            "app_user_id"
-          ],
+          "columnsFrom": ["app_user_id"],
+          "columnsTo": ["app_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -911,12 +839,8 @@
           "tableFrom": "user_quiz_answers",
           "tableTo": "quizzes",
           "schemaTo": "public",
-          "columnsFrom": [
-            "quiz_id"
-          ],
-          "columnsTo": [
-            "quiz_id"
-          ],
+          "columnsFrom": ["quiz_id"],
+          "columnsTo": ["quiz_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -981,12 +905,8 @@
           "tableFrom": "quiz_choices",
           "tableTo": "quizzes",
           "schemaTo": "public",
-          "columnsFrom": [
-            "quiz_id"
-          ],
-          "columnsTo": [
-            "quiz_id"
-          ],
+          "columnsFrom": ["quiz_id"],
+          "columnsTo": ["quiz_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

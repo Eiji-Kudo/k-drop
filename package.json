@@ -10,12 +10,14 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest",
+    "test:integration": "jest --config jest.integration.config.js",
     "test:types": "tsc --noEmit",
+    "test:types:functions": "cd supabase/functions && deno check api/index.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "lint-fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "ci": "npm run lint && npm run test:types && npm run format:check && npm run test",
+    "ci": "npm run lint && npm run test:types && npm run test:types:functions && npm run format:check && npm run test",
     "check:all": "npx jest && npm run test:types && npm run lint && npm run format:check",
     "gen-types": "npx supabase gen types typescript --local > database.types.ts && npm run lint-fix"
   },
@@ -24,6 +26,10 @@
     "testEnvironment": "jsdom",
     "testMatch": [
       "**/?(*.)+(test).[jt]s?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "\\.integration\\.test\\."
     ],
     "setupFilesAfterEnv": [
       "./jest-setup.js"
@@ -67,6 +73,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@testcontainers/postgresql": "^11.11.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -91,6 +98,8 @@
     "prettier": "^3.5.3",
     "react-test-renderer": "18.3.1",
     "supabase": "^2.22.4",
+    "testcontainers": "^11.11.0",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.3.3"
   },
   "private": true

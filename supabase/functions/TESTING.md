@@ -17,6 +17,7 @@ npx supabase start
 ```
 
 Expected output:
+
 - All services should start successfully (postgres, kong, gotrue, realtime, etc.)
 - You should see a list of URLs for accessing various services
 - Studio URL: http://localhost:54323
@@ -33,6 +34,7 @@ npx supabase functions serve api --no-verify-jwt
 ```
 
 Expected output:
+
 - Function should compile successfully
 - Server should start on port 54321
 - You should see: "Serving function api"
@@ -44,11 +46,13 @@ Expected output:
 **Endpoint:** `GET http://localhost:54321/functions/v1/api/health`
 
 **Test command:**
+
 ```bash
 curl http://localhost:54321/functions/v1/api/health
 ```
 
 **Expected response:**
+
 ```json
 {
   "status": "ok",
@@ -57,6 +61,7 @@ curl http://localhost:54321/functions/v1/api/health
 ```
 
 **Acceptance criteria:**
+
 - ✅ HTTP status code is 200
 - ✅ Response contains `"status": "ok"`
 - ✅ Response contains a valid ISO 8601 timestamp
@@ -67,11 +72,13 @@ curl http://localhost:54321/functions/v1/api/health
 **Endpoint:** `GET http://localhost:54321/functions/v1/api/doc`
 
 **Test command:**
+
 ```bash
 curl http://localhost:54321/functions/v1/api/doc | jq
 ```
 
 **Expected response structure:**
+
 ```json
 {
   "openapi": "3.0.0",
@@ -96,6 +103,7 @@ curl http://localhost:54321/functions/v1/api/doc | jq
 ```
 
 **Acceptance criteria:**
+
 - ✅ HTTP status code is 200
 - ✅ Response contains `"openapi": "3.0.0"`
 - ✅ Response contains API info (title, version, description)
@@ -105,11 +113,13 @@ curl http://localhost:54321/functions/v1/api/doc | jq
 ### Test 3: CORS Headers
 
 **Test command:**
+
 ```bash
 curl -I http://localhost:54321/functions/v1/api/health
 ```
 
 **Acceptance criteria:**
+
 - ✅ Response includes CORS headers
 - ✅ `Access-Control-Allow-Origin` header is present
 
@@ -123,6 +133,7 @@ cd supabase/functions
 ```
 
 **Acceptance criteria:**
+
 - ✅ Health check test passes
 - ✅ OpenAPI doc test passes
 - ✅ No connection errors
@@ -146,7 +157,8 @@ cd supabase/functions
 
 ### Issue: Docker connection errors
 
-**Solution:** 
+**Solution:**
+
 1. Ensure Docker Desktop is running
 2. Check Docker has sufficient resources (4GB+ RAM recommended)
 3. Run `docker ps` to verify Docker is accessible
@@ -154,6 +166,7 @@ cd supabase/functions
 ### Issue: Port already in use
 
 **Solution:**
+
 1. Check if another Supabase instance is running: `npx supabase status`
 2. Stop existing instance: `npx supabase stop`
 3. Start fresh: `npx supabase start`
@@ -161,6 +174,7 @@ cd supabase/functions
 ### Issue: Function compilation errors
 
 **Solution:**
+
 1. Verify Deno imports are correct in `index.ts`
 2. Check `deno.json` configuration
 3. Review function logs for specific error messages

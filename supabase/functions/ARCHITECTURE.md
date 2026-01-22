@@ -73,6 +73,7 @@
 ## Data Flow
 
 ### Health Check Request Flow
+
 ```
 1. Client → GET /health
 2. Hono Router → healthRoute handler
@@ -82,6 +83,7 @@
 ```
 
 ### OpenAPI Documentation Flow
+
 ```
 1. Client → GET /doc
 2. Hono Router → app.doc() handler

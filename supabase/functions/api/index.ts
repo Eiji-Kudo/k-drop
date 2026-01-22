@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
-import { cors } from 'jsr:@hono/hono/cors'
+import { cors } from 'hono/cors'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import { idolGroups } from '../_shared/schema.ts'
@@ -22,7 +22,9 @@ const healthRoute = createRoute({
         'application/json': {
           schema: z.object({
             status: z.string().openapi({ example: 'ok' }),
-            timestamp: z.string().openapi({ example: '2026-01-11T14:00:00.000Z' }),
+            timestamp: z
+              .string()
+              .openapi({ example: '2026-01-11T14:00:00.000Z' }),
           }),
         },
       },
