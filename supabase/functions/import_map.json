@@ -1,8 +1,11 @@
 {
   "imports": {
+    "hono": "npm:hono@4.7.8",
+    "hono/cors": "npm:hono@4.7.8/cors",
+    "@hono/zod-openapi": "npm:@hono/zod-openapi@0.18.4",
     "drizzle-orm": "npm:drizzle-orm@0.38.3",
-    "drizzle-orm/": "npm:/drizzle-orm@0.38.3/",
-    "postgres": "npm:postgres@3.4.5",
-    "@hono/zod-openapi": "npm:@hono/zod-openapi@0.18.4"
+    "drizzle-orm/postgres-js": "npm:drizzle-orm@0.38.3/postgres-js",
+    "drizzle-orm/pg-core": "npm:drizzle-orm@0.38.3/pg-core",
+    "postgres": "npm:postgres@3.4.5"
   }
 }
