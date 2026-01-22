@@ -4,7 +4,10 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import { idolGroups } from '../_shared/schema.ts'
 
-const connectionString = Deno.env.get('DATABASE_URL')!
+const connectionString = Deno.env.get('DATABASE_URL')
+if (!connectionString) {
+  throw new Error('DATABASE_URL environment variable is required')
+}
 const client = postgres(connectionString, { prepare: false })
 const db = drizzle(client)
 
