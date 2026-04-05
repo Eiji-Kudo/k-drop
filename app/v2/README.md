@@ -9,25 +9,25 @@ Vite + React + TypeScript project for `app/v2`.
 1. Switch to the recommended Node.js runtime.
    - `nvm install 24.14.1`
    - `nvm use`
-2. Use the pinned pnpm version through Corepack if your global `pnpm` is not already aligned.
+2. Provision the pinned pnpm toolchain from the active Node.js 24 shell.
    - `corepack enable`
-3. Install dependencies with `corepack pnpm install`.
-4. If you are switching from another Node.js major with an existing `node_modules`, run `corepack pnpm run rebuild:native` once before running tests or CI.
+3. Install dependencies with `pnpm install`.
+4. If you are switching from another Node.js major with an existing `node_modules`, run `pnpm run rebuild:native` once before running tests or CI.
 
-`pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. Run app/v2 commands through `corepack pnpm ...` when your global `pnpm` is managed by another toolchain.
+`pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. After `nvm use` and `corepack enable`, make sure `pnpm exec node -v` reports `v24.14.1` before continuing.
 
 ## Scripts
 
-- `corepack pnpm run dev` — start the Vite dev server
-- `corepack pnpm run build` — type-check and create a production build
-- `corepack pnpm run test` — run Vitest once
-- `corepack pnpm run test:watch` — run Vitest in watch mode
-- `corepack pnpm run rebuild:native` — rebuild native test dependencies after switching Node.js majors
-- `corepack pnpm run test:types` — run TypeScript project type-checking
-- `corepack pnpm run lint` — run ESLint
-- `corepack pnpm run format` — format files with Biome
-- `corepack pnpm run format:check` — check Biome formatting
-- `corepack pnpm run check:all` — run test, typecheck, lint, format checks, and build
+- `pnpm run dev` — start the Vite dev server
+- `pnpm run build` — type-check and create a production build
+- `pnpm run test` — run Vitest once
+- `pnpm run test:watch` — run Vitest in watch mode
+- `pnpm run rebuild:native` — rebuild native test dependencies after switching Node.js majors
+- `pnpm run test:types` — run TypeScript project type-checking
+- `pnpm run lint` — run ESLint
+- `pnpm run format` — format files with Biome
+- `pnpm run format:check` — check Biome formatting
+- `pnpm run check:all` — run test, typecheck, lint, format checks, and build
 
 ## Tooling
 

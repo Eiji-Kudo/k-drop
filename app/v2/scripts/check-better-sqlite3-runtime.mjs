@@ -5,12 +5,12 @@ try {
 
 	if (message.includes("NODE_MODULE_VERSION")) {
 		console.error("better-sqlite3 was built for a different Node.js version.");
-		console.error("After switching Node.js majors, run `corepack pnpm run rebuild:native` in app/v2 and rerun the tests.");
+		console.error("After switching Node.js majors, run `pnpm run rebuild:native` in app/v2 and rerun the tests.");
 		process.exit(1);
 	}
 
 	if (message.includes("Cannot find package")) {
-		console.error("Dependencies are not installed. Run `corepack pnpm install` in app/v2 before running tests.");
+		console.error("Dependencies are not installed. Run `pnpm install` in app/v2 before running tests.");
 		process.exit(1);
 	}
 

@@ -26,7 +26,7 @@
 		"db:execute:local": "wrangler d1 execute DB --local",
 		"predb:studio": "node ./scripts/check-node-version.mjs",
 		"db:studio": "drizzle-kit studio",
-		"rebuild:native": "corepack pnpm rebuild better-sqlite3",
+		"rebuild:native": "node ./scripts/check-node-version.mjs && pnpm rebuild better-sqlite3",
 		"pretest": "node ./scripts/check-node-version.mjs && node ./scripts/check-better-sqlite3-runtime.mjs",
 		"test": "vitest run",
 		"pretest:watch": "node ./scripts/check-node-version.mjs && node ./scripts/check-better-sqlite3-runtime.mjs",
@@ -39,12 +39,12 @@
 		"format": "biome check --write .",
 		"preformat:check": "node ./scripts/check-node-version.mjs",
 		"format:check": "biome check .",
-		"check:all": "corepack pnpm run ci",
-		"ci": "corepack pnpm run test && corepack pnpm run test:types && corepack pnpm run lint && corepack pnpm run format:check && corepack pnpm run build",
+		"check:all": "pnpm run ci",
+		"ci": "pnpm run test && pnpm run test:types && pnpm run lint && pnpm run format:check && pnpm run build",
 		"prepreview": "node ./scripts/check-node-version.mjs",
 		"preview": "vite preview",
 		"predev:full": "node ./scripts/check-node-version.mjs",
-		"dev:full": "wrangler pages dev --compatibility-date=2026-04-05 -- corepack pnpm run dev"
+		"dev:full": "wrangler pages dev --compatibility-date=2026-04-05 -- pnpm run dev"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.2",
