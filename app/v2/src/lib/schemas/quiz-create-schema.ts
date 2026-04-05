@@ -10,10 +10,13 @@ export const quizCreateSchema = z.object({
 	}),
 	prompt: z.string().min(1, "問題文を入力してください").max(PROMPT_MAX_LENGTH, `問題文は${PROMPT_MAX_LENGTH}文字以内で入力してください`),
 	choices: z.tuple([choiceSchema, choiceSchema, choiceSchema, choiceSchema]),
-	correctChoiceIndex: z.coerce
-		.number()
-		.min(0, "正解を選択してください")
-		.max(CHOICE_COUNT - 1, "正解を選択してください"),
+	correctChoiceIndex: z.coerce.number().pipe(
+		z
+			.number()
+			.int()
+			.min(0, "正解を選択してください")
+			.max(CHOICE_COUNT - 1, "正解を選択してください"),
+	),
 	explanation: z.string().min(1, "解説を入力してください").max(EXPLANATION_MAX_LENGTH, `解説は${EXPLANATION_MAX_LENGTH}文字以内で入力してください`),
 });
 
