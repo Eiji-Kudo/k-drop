@@ -1,4 +1,5 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { BottomTabBar } from "@/components/bottom-tab-bar";
 
 function NotFoundPage() {
 	return (
@@ -21,10 +22,11 @@ function NotFoundPage() {
 
 function RootComponent() {
 	return (
-		<div className="flex min-h-screen bg-base-100">
-			<div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-6 sm:px-6">
+		<div className="flex min-h-[100dvh] flex-col bg-base-100">
+			<div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-0 pt-6 sm:px-6">
 				<Outlet />
 			</div>
+			<BottomTabBar />
 		</div>
 	);
 }
