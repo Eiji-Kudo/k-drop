@@ -30,6 +30,7 @@ resource "github_repository_ruleset" "protect_main" {
     actor_type  = "RepositoryRole"
     bypass_mode = "always"
   }
+
 }
 
 resource "github_repository_ruleset" "block_branch_creation" {
