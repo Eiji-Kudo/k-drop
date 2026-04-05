@@ -12,6 +12,12 @@ dist
 dist-ssr
 coverage
 *.local
+package-lock.json
+yarn.lock
+
+# environment variables
+.env
+.env.*
 
 # Editor directories and files
 .vscode/*

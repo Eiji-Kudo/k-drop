@@ -39,21 +39,15 @@ export default defineConfig([
 			"unused-imports": unusedImports,
 		},
 		rules: {
+			"@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
 			"@typescript-eslint/consistent-type-definitions": ["error", "type"],
 			"@typescript-eslint/no-explicit-any": "error",
 			"@typescript-eslint/no-floating-promises": "off",
 			"@typescript-eslint/no-misused-promises": "off",
 			"@typescript-eslint/no-require-imports": "off",
 			"@typescript-eslint/no-unsafe-assignment": "off",
-			"@typescript-eslint/no-unused-vars": "off",
-			"max-len": [
-				"error",
-				{
-					code: 150,
-					ignoreTemplateLiterals: true,
-					ignoreUrls: true,
-				},
-			],
+			"@typescript-eslint/no-unused-vars": "error",
+			"max-lines": ["error", { max: 100, skipBlankLines: true, skipComments: true }],
 			"import/no-unresolved": "off",
 			"no-restricted-imports": [
 				"error",
@@ -82,6 +76,7 @@ export default defineConfig([
 			},
 		},
 		rules: {
+			"@typescript-eslint/consistent-type-assertions": "off",
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/unbound-method": "off",
 		},
