@@ -45,7 +45,7 @@ export default defineConfig([
 			"@typescript-eslint/no-floating-promises": "off",
 			"@typescript-eslint/no-misused-promises": "off",
 			"@typescript-eslint/no-require-imports": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-assignment": "error",
 			"@typescript-eslint/no-unused-vars": "error",
 			"max-lines": ["error", { max: 150, skipBlankLines: true, skipComments: true }],
 			"import/no-unresolved": "off",
