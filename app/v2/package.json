@@ -19,6 +19,7 @@
 		"dev:full": "wrangler pages dev --compatibility-date=2026-04-05 -- pnpm run dev"
 	},
 	"dependencies": {
+		"@tanstack/react-router": "1.168.10",
 		"hono": "4.12.10",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4"
@@ -27,6 +28,7 @@
 		"@biomejs/biome": "^2.4.10",
 		"@cloudflare/workers-types": "4.20260405.1",
 		"@eslint/js": "^9.39.4",
+		"@tanstack/router-plugin": "1.167.12",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
 		"@types/node": "^22.15.0",

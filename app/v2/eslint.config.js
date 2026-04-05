@@ -9,7 +9,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-	globalIgnores(["coverage", "dist"]),
+	globalIgnores(["coverage", "dist", "src/routeTree.gen.ts"]),
 	{
 		files: ["**/*.{ts,tsx}"],
 		extends: [
@@ -73,6 +73,18 @@ export default defineConfig([
 				...globals.worker,
 			},
 		},
+		rules: {
+			"react-refresh/only-export-components": "off",
+		},
+	},
+	{
+		files: ["src/router.ts"],
+		rules: {
+			"@typescript-eslint/consistent-type-definitions": "off",
+		},
+	},
+	{
+		files: ["src/routes/**/*.{ts,tsx}"],
 		rules: {
 			"react-refresh/only-export-components": "off",
 		},
