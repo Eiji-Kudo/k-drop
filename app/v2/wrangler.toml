@@ -1,3 +1,12 @@
 name = "k-drop-v2"
 compatibility_date = "2026-04-05"
 pages_build_output_dir = "./dist"
+
+# Replace this placeholder after running:
+# `corepack pnpm run db:create`
+# Wrangler updates this field automatically when the create command succeeds.
+[[d1_databases]]
+binding = "DB"
+database_name = "k-drop-v2"
+database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"
+migrations_dir = "functions/db/migrations"
