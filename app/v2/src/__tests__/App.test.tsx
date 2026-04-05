@@ -1,10 +1,29 @@
+import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "@/App";
+import { createAppRouter } from "@/router";
 
-describe("App", () => {
-	it("renders the starter content", () => {
-		render(<App />);
-		expect(screen.getByText("K-Drop v2")).toBeInTheDocument();
+async function renderRoute(path: string) {
+	const router = createAppRouter(
+		createMemoryHistory({
+			initialEntries: [path],
+		}),
+	);
+
+	render(<RouterProvider router={router} />);
+	await router.load();
+}
+
+describe("App routes", () => {
+	it("renders the starter content on the top page", async () => {
+		await renderRoute("/");
+		expect(await screen.findByText("K-Drop v2")).toBeInTheDocument();
+		expect(screen.getByRole("heading", { name: "Initial setup" })).toBeInTheDocument();
+	});
+
+	it("renders the 404 page for an unknown path", async () => {
+		await renderRoute("/missing");
+		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
+		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
 	});
 });
