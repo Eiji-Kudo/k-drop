@@ -1,0 +1,12 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.10/schema.json",
+	"files": {
+		"includes": ["**", "!coverage", "!coverage/**", "!dist", "!dist/**", "!node_modules", "!node_modules/**"]
+	},
+	"formatter": {
+		"lineWidth": 150
+	},
+	"linter": {
+		"enabled": false
+	}
+}
