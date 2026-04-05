@@ -1,11 +1,10 @@
+import type { D1Database, D1PreparedStatement } from "@cloudflare/workers-types/latest";
 import type { Context } from "hono";
 
-type DatabaseStatement = {
-	first: <Result>(columnName?: string) => Promise<Result | null>;
-};
+type DatabaseStatement = Pick<D1PreparedStatement, "first">;
 
 export type DatabaseBinding = {
-	prepare: (query: string) => DatabaseStatement;
+	prepare: (...args: Parameters<D1Database["prepare"]>) => DatabaseStatement;
 };
 
 export type AppBindings = {
