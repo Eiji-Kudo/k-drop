@@ -10,6 +10,7 @@
 今回の計画では、画面単位の見た目調整ではなく、先に共通デザイン基盤と UX ルールを作ってからホーム・クイズを中心に全体へ展開する。
 
 モチベーション設計と報酬ループの詳細は [gamification-plan.md](/Users/eiji/program/k-drop/app/v2/docs/gamification-plan.md) を参照する。
+ホームとクイズ結果に先に入れる最小構成の具体仕様は [motivation-ui-mvp-spec.md](/Users/eiji/program/k-drop/app/v2/docs/motivation-ui-mvp-spec.md) を参照する。
 
 ## ゴール
 

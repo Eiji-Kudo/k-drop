@@ -3,7 +3,7 @@
 ## Scope
 
 このドキュメントは `app/v2` 全体の境界と責務分割を定義する。  
-フロントエンドの詳細な構造方針は `docs/frontend-architecture.md` に分離する。
+フロントエンドの詳細な構造方針は `src/architecture.md` に分離する。
 
 ## Technology Stack
 
@@ -55,7 +55,7 @@ app/v2/
 ### `src/`
 
 フロントエンド本体。  
-route-centered package-by-feature の詳細は `docs/frontend-architecture.md` を参照する。
+route-centered package-by-feature の詳細は `src/architecture.md` を参照する。
 
 ### `functions/`
 
@@ -89,7 +89,7 @@ functions/
 ### 1. Frontend は feature 単位で組織化する
 
 route-local な UI や helper は、共有ディレクトリではなく feature に閉じる。  
-具体的な配置ルールは `docs/frontend-architecture.md` で定義する。
+具体的な配置ルールは `src/architecture.md` で定義する。
 
 ### 2. Frontend と backend の境界は API で固定する
 
@@ -102,7 +102,7 @@ route-local な UI や helper は、共有ディレクトリではなく feature
 ## Document Map
 
 - `docs/architecture.md` -> 全体像と境界
-- `docs/frontend-architecture.md` -> フロントエンド構造と route 配下のルール
+- `src/architecture.md` -> フロントエンド構造と route 配下のルール
 - `docs/project-structure.md` -> モジュール配置の判断フロー
 - `docs/component-placement-guide.md` -> サーバー側レイヤー配置
 - `docs/aggregate-boundary-guide.md` -> 集約境界の設計指針
