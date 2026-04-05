@@ -15,7 +15,7 @@ K-Drop is a KPOP fan app. This repository contains two independent apps:
 k-drop/
 ├── app/
 │   ├── v1/    # Expo project (self-contained)
-│   └── v2/    # PWA (TBD)
+│   └── v2/    # PWA (Vite + React + TypeScript)
 ├── .github/   # CI/CD workflows
 ├── CLAUDE.md
 └── README.md
