@@ -1,18 +1,11 @@
-import type { D1Database, D1PreparedStatement } from "@cloudflare/workers-types/latest";
+import type { DrizzleD1Database } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/d1";
 import type { Context } from "hono";
+import * as schema from "../../db/schema/index.ts";
+import type { AppBindings } from "../bindings";
 
-type DatabaseStatement = Pick<D1PreparedStatement, "first">;
+export type AppDatabase = DrizzleD1Database<typeof schema>;
 
-export type DatabaseBinding = {
-	prepare: (...args: Parameters<D1Database["prepare"]>) => DatabaseStatement;
-};
-
-export type AppBindings = {
-	Bindings: {
-		DB: DatabaseBinding;
-	};
-};
-
-export const getDatabase = (context: Context<AppBindings>) => {
-	return context.env.DB;
+export const getDatabase = (context: Context<AppBindings>): AppDatabase => {
+	return drizzle(context.env.DB, { schema });
 };

@@ -1,6 +1,8 @@
+import { sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { secureHeaders } from "hono/secure-headers";
-import { type AppBindings, getDatabase } from "../../../functions/core/db/bindings";
+import type { AppBindings } from "../../../functions/core/bindings";
+import { getDatabase } from "../../../functions/core/db/bindings";
 
 const app = new Hono<AppBindings>()
 	.basePath("/api")
@@ -11,20 +13,20 @@ const app = new Hono<AppBindings>()
 		});
 	})
 	.get("/health/database", async (context) => {
-		const result = await getDatabase(context).prepare("SELECT 1 AS ok").first<{ ok: number }>();
+		try {
+			const db = getDatabase(context);
+			const result = await db.get<{ ok: number }>(sql`SELECT 1 AS ok`);
 
-		if (result == null) {
-			return context.json({ status: "error", database: "d1", reason: "query returned no rows" }, 503);
+			if (result == null || result.ok !== 1) {
+				console.error("D1 health check failed", { result });
+				return context.json({ status: "error" }, 503);
+			}
+
+			return context.json({ status: "ok" });
+		} catch (error) {
+			console.error("D1 health check exception", error);
+			return context.json({ status: "error" }, 503);
 		}
-
-		if (result.ok !== 1) {
-			return context.json({ status: "error", database: "d1", reason: "unexpected query result" }, 503);
-		}
-
-		return context.json({
-			status: "ok",
-			database: "d1",
-		});
 	});
 
 app.notFound((context) => {
