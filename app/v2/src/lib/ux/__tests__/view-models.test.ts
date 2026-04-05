@@ -49,6 +49,12 @@ describe("motivation view models", () => {
 		expect(viewModel.fullList.some((entry) => entry.isSelf)).toBe(true);
 	});
 
+	it("uses group id rather than display label to derive current user ranking score", () => {
+		const viewModel = createRankingMotivationViewModel("aespa", "3");
+
+		expect(viewModel.aroundYou?.myScore).toBe(920);
+	});
+
 	it("builds profile growth data with next goal and badge hints", () => {
 		const viewModel = createProfileGrowthViewModel();
 

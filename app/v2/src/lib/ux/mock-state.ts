@@ -25,9 +25,9 @@ export const CURRENT_USER: CurrentUserProfile = {
 		{ type: "dance_cover_star", level: "silver", name: "Dance Cover Star" },
 	],
 	topGroups: [
-		{ groupName: "aespa", score: 920 },
-		{ groupName: "BLACKPINK", score: 860 },
-		{ groupName: "LE SSERAFIM", score: 640 },
-		{ groupName: "IVE", score: 520 },
+		{ groupId: "3", groupName: "aespa", score: 920 },
+		{ groupId: "2", groupName: "BLACKPINK", score: 860 },
+		{ groupId: "5", groupName: "LE SSERAFIM", score: 640 },
+		{ groupId: "4", groupName: "IVE", score: 520 },
 	],
 };

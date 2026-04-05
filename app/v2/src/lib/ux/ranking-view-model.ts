@@ -33,7 +33,7 @@ function injectCurrentUser(entries: ReadonlyArray<RankingEntry>, currentScore: n
 
 export function createRankingMotivationViewModel(scopeLabel: string, groupId?: string): RankingMotivationViewModel {
 	const sourceEntries = groupId ? getGroupRankings(groupId) : TOTAL_RANKINGS;
-	const currentScore = groupId ? (CURRENT_USER.topGroups.find((group) => group.groupName === scopeLabel)?.score ?? 520) : CURRENT_USER.currentScore;
+	const currentScore = groupId ? (CURRENT_USER.topGroups.find((group) => group.groupId === groupId)?.score ?? 520) : CURRENT_USER.currentScore;
 	const entries = injectCurrentUser(sourceEntries, currentScore);
 	const selfIndex = entries.findIndex((entry) => entry.userName === CURRENT_USER.rankingName);
 	const fullList = entries.map((entry) => createRankingEntry(entry, entry.userName === CURRENT_USER.rankingName));

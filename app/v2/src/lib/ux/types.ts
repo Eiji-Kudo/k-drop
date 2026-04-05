@@ -101,6 +101,7 @@ export type CurrentUserProfile = {
 		type: "quiz_master" | "concert_goer" | "photocard_collector" | "dance_cover_star";
 	}>;
 	topGroups: Array<{
+		groupId: string;
 		groupName: string;
 		score: number;
 	}>;
