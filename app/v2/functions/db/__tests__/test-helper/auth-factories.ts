@@ -1,4 +1,4 @@
-import { defineFactory } from "@praha/drizzle-factory";
+import { type DefineFactoryResolver, defineFactory } from "@praha/drizzle-factory";
 import * as schema from "../../schema/index.ts";
 import { NOW } from "./constants";
 
@@ -6,6 +6,9 @@ export const usersFactory = defineFactory({
 	schema,
 	table: "users",
 	resolver: ({ sequence }) => ({ userId: `user-${sequence}`, status: "active", createdAt: NOW, updatedAt: NOW }),
+	traits: {
+		base: (() => ({ userId: "user-1", status: "active", createdAt: NOW, updatedAt: NOW })) satisfies DefineFactoryResolver<typeof schema, "users">,
+	},
 });
 
 export const authIdentitiesFactory = defineFactory({
@@ -22,6 +25,16 @@ export const authIdentitiesFactory = defineFactory({
 		createdAt: NOW,
 		updatedAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			authIdentityId: "auth-1",
+			userId: "user-1",
+			provider: "google",
+			providerSubjectId: "subject-1",
+			createdAt: NOW,
+			updatedAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "authIdentities">,
+	},
 });
 
 export const userProfilesFactory = defineFactory({
@@ -40,4 +53,16 @@ export const userProfilesFactory = defineFactory({
 		createdAt: NOW,
 		updatedAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			userId: "user-1",
+			handle: "handle-1",
+			displayName: "User 1",
+			avatarUrl: null,
+			bio: null,
+			fanSince: null,
+			createdAt: NOW,
+			updatedAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "userProfiles">,
+	},
 });

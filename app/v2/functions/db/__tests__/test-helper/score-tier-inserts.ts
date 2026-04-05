@@ -1,4 +1,4 @@
-import type { InferInsertModel } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import * as schema from "../../schema/index.ts";
 import { getTestFactories, type TestDb } from "./db";
 import { isScope } from "./types";
@@ -29,9 +29,9 @@ export async function insertScoreTier(sqliteDb: TestDb, values: ScoreTierInsert 
 	const sortOrder = values.sortOrder ?? 1;
 	if (!isScope(tierScope)) return insertScoreTierWithRawScope(sqliteDb, scoreTierId, tierScope, tierName, minScore, maxScore, sortOrder);
 	const factories = getTestFactories(sqliteDb).scoreTiers;
-	const tier =
+	const tier: InferSelectModel<typeof schema.scoreTiers> =
 		tierScope === "group"
-			? await factories.traits.group.create({ scoreTierId, tierName, minScore, maxScore, sortOrder })
-			: await factories.create({ scoreTierId, tierScope, tierName, minScore, maxScore, sortOrder });
+			? await factories.traits.groupBase.create({ ...values, scoreTierId, tierScope, tierName, minScore, maxScore, sortOrder })
+			: await factories.traits.base.create({ ...values, scoreTierId, tierScope, tierName, minScore, maxScore, sortOrder });
 	return tier.scoreTierId;
 }

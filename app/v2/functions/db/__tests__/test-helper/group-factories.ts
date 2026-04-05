@@ -1,4 +1,4 @@
-import { defineFactory } from "@praha/drizzle-factory";
+import { type DefineFactoryResolver, defineFactory } from "@praha/drizzle-factory";
 import * as schema from "../../schema/index.ts";
 import { usersFactory } from "./auth-factories";
 import { NOW } from "./constants";
@@ -12,6 +12,14 @@ export const groupCategoriesFactory = defineFactory({
 		categoryName: `Category ${sequence}`,
 		sortOrder: sequence,
 	}),
+	traits: {
+		base: (() => ({
+			groupCategoryId: "cat-1",
+			slug: "kpop",
+			categoryName: "K-POP",
+			sortOrder: 1,
+		})) satisfies DefineFactoryResolver<typeof schema, "groupCategories">,
+	},
 });
 
 export const idolGroupsFactory = defineFactory({
@@ -30,6 +38,18 @@ export const idolGroupsFactory = defineFactory({
 		createdAt: NOW,
 		updatedAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			idolGroupId: "group-1",
+			groupCategoryId: "cat-1",
+			slug: "twice",
+			groupName: "TWICE",
+			thumbnailUrl: null,
+			status: "active",
+			createdAt: NOW,
+			updatedAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "idolGroups">,
+	},
 });
 
 export const userFavoriteGroupsFactory = defineFactory({
@@ -48,4 +68,13 @@ export const userFavoriteGroupsFactory = defineFactory({
 		startedSupportingOn: null,
 		createdAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			userFavoriteGroupId: "fav-1",
+			userId: "user-1",
+			idolGroupId: "group-1",
+			startedSupportingOn: null,
+			createdAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "userFavoriteGroups">,
+	},
 });

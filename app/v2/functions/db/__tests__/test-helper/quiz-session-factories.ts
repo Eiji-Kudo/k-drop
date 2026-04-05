@@ -1,4 +1,4 @@
-import { defineFactory } from "@praha/drizzle-factory";
+import { type DefineFactoryResolver, defineFactory } from "@praha/drizzle-factory";
 import * as schema from "../../schema/index.ts";
 import { usersFactory } from "./auth-factories";
 import { NOW } from "./constants";
@@ -28,6 +28,22 @@ export const quizSessionsFactory = defineFactory({
 		lastAnsweredAt: null,
 		completedAt: null,
 	}),
+	traits: {
+		base: (() => ({
+			quizSessionId: "session-1",
+			userId: "user-1",
+			idolGroupId: "group-1",
+			status: "in_progress",
+			totalQuestionCount: 5,
+			answeredQuestionCount: 0,
+			correctAnswerCount: 0,
+			incorrectAnswerCount: 0,
+			currentQuestionOrder: 1,
+			startedAt: NOW,
+			lastAnsweredAt: null,
+			completedAt: null,
+		})) satisfies DefineFactoryResolver<typeof schema, "quizSessions">,
+	},
 });
 
 export const quizSessionQuestionsFactory = defineFactory({
@@ -46,6 +62,15 @@ export const quizSessionQuestionsFactory = defineFactory({
 		questionOrder: sequence,
 		createdAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			quizSessionQuestionId: "sq-1",
+			quizSessionId: "session-1",
+			quizId: "quiz-1",
+			questionOrder: 1,
+			createdAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "quizSessionQuestions">,
+	},
 });
 
 export const quizAnswersFactory = defineFactory({
@@ -64,4 +89,13 @@ export const quizAnswersFactory = defineFactory({
 		awardedScore: 0,
 		answeredAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			quizAnswerId: "answer-1",
+			quizSessionQuestionId: "sq-1",
+			quizChoiceId: "choice-1",
+			awardedScore: 0,
+			answeredAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "quizAnswers">,
+	},
 });

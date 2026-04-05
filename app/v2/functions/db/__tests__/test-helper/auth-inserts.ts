@@ -1,5 +1,6 @@
-import type { InferInsertModel } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import * as schema from "../../schema/index.ts";
+import { ensureBaseUser } from "./base-fixtures";
 import { NOW } from "./constants";
 import { getTestFactories, type TestDb } from "./db";
 import { isUserStatus } from "./types";
@@ -19,30 +20,22 @@ export async function insertUser(sqliteDb: TestDb, values: UserInsert = {}) {
 	const createdAt = values.createdAt ?? NOW;
 	const updatedAt = values.updatedAt ?? NOW;
 	if (!isUserStatus(status)) return insertUserWithRawStatus(sqliteDb, userId, status, createdAt, updatedAt);
-	const user = await getTestFactories(sqliteDb).users.create({ userId, status, createdAt, updatedAt });
+	const user: InferSelectModel<typeof schema.users> = await getTestFactories(sqliteDb).users.traits.base.create({
+		...values,
+		userId,
+		status,
+		createdAt,
+		updatedAt,
+	});
 	return user.userId;
 }
 
 export async function insertAuthIdentity(sqliteDb: TestDb, values: AuthIdentityInsert = {}) {
-	return getTestFactories(sqliteDb).authIdentities.create({
-		authIdentityId: values.authIdentityId ?? "auth-1",
-		userId: values.userId ?? "user-1",
-		provider: values.provider ?? "google",
-		providerSubjectId: values.providerSubjectId ?? "subject-1",
-		createdAt: values.createdAt ?? NOW,
-		updatedAt: values.updatedAt ?? NOW,
-	});
+	if (!("userId" in values)) await ensureBaseUser(sqliteDb);
+	return getTestFactories(sqliteDb).authIdentities.traits.base.create(values);
 }
 
 export async function insertUserProfile(sqliteDb: TestDb, values: UserProfileInsert = {}) {
-	return getTestFactories(sqliteDb).userProfiles.create({
-		userId: values.userId ?? "user-1",
-		handle: values.handle ?? "handle-1",
-		displayName: values.displayName ?? "User 1",
-		avatarUrl: values.avatarUrl ?? null,
-		bio: values.bio ?? null,
-		fanSince: values.fanSince ?? null,
-		createdAt: values.createdAt ?? NOW,
-		updatedAt: values.updatedAt ?? NOW,
-	});
+	if (!("userId" in values)) await ensureBaseUser(sqliteDb);
+	return getTestFactories(sqliteDb).userProfiles.traits.base.create(values);
 }

@@ -1,5 +1,6 @@
 import type { InferInsertModel } from "drizzle-orm";
 import * as schema from "../../schema/index.ts";
+import { ensureBaseEvent, ensureBaseIdolGroup, ensureBaseUser } from "./base-fixtures";
 import { DEFAULT_EVENT_ENDS_AT, DEFAULT_EVENT_STARTS_AT, NOW } from "./constants";
 import { getTestFactories, type TestDb } from "./db";
 import { isEventVisibility, isParticipationStatus } from "./types";
@@ -44,6 +45,7 @@ export async function insertEvent(sqliteDb: TestDb, values: EventInsert = {}) {
 	const endsAt = values.endsAt ?? DEFAULT_EVENT_ENDS_AT;
 	const createdAt = values.createdAt ?? NOW;
 	const updatedAt = values.updatedAt ?? NOW;
+	if (!("createdByUserId" in values)) await ensureBaseUser(sqliteDb);
 	if (!isEventVisibility(visibility))
 		return insertEventWithRawVisibility(sqliteDb, {
 			eventId,
@@ -58,14 +60,12 @@ export async function insertEvent(sqliteDb: TestDb, values: EventInsert = {}) {
 			venueName: values.venueName,
 			capacity: values.capacity,
 		});
-	return getTestFactories(sqliteDb).events.create({
+	return getTestFactories(sqliteDb).events.traits.base.create({
+		...values,
 		eventId,
 		createdByUserId,
 		title,
-		description: values.description ?? null,
-		venueName: values.venueName ?? null,
 		visibility,
-		capacity: values.capacity ?? null,
 		startsAt,
 		endsAt,
 		createdAt,
@@ -74,12 +74,9 @@ export async function insertEvent(sqliteDb: TestDb, values: EventInsert = {}) {
 }
 
 export async function insertEventGroup(sqliteDb: TestDb, values: EventGroupInsert = {}) {
-	return getTestFactories(sqliteDb).eventGroups.create({
-		eventGroupId: values.eventGroupId ?? "event-group-1",
-		eventId: values.eventId ?? "event-1",
-		idolGroupId: values.idolGroupId ?? "group-1",
-		createdAt: values.createdAt ?? NOW,
-	});
+	if (!("eventId" in values)) await ensureBaseEvent(sqliteDb);
+	if (!("idolGroupId" in values)) await ensureBaseIdolGroup(sqliteDb);
+	return getTestFactories(sqliteDb).eventGroups.traits.base.create(values);
 }
 
 export async function insertEventParticipant(sqliteDb: TestDb, values: EventParticipantInsert = {}) {
@@ -89,6 +86,8 @@ export async function insertEventParticipant(sqliteDb: TestDb, values: EventPart
 	const participationStatus = values.participationStatus ?? "joined";
 	const joinedAt = values.joinedAt ?? NOW;
 	const updatedAt = values.updatedAt ?? NOW;
+	if (!("eventId" in values)) await ensureBaseEvent(sqliteDb);
+	if (!("userId" in values)) await ensureBaseUser(sqliteDb);
 	if (!isParticipationStatus(participationStatus)) {
 		sqliteDb
 			.prepare(
@@ -97,5 +96,13 @@ export async function insertEventParticipant(sqliteDb: TestDb, values: EventPart
 			.run(eventParticipantId, eventId, userId, participationStatus, joinedAt, updatedAt);
 		return eventParticipantId;
 	}
-	return getTestFactories(sqliteDb).eventParticipants.create({ eventParticipantId, eventId, userId, participationStatus, joinedAt, updatedAt });
+	return getTestFactories(sqliteDb).eventParticipants.traits.base.create({
+		...values,
+		eventParticipantId,
+		eventId,
+		userId,
+		participationStatus,
+		joinedAt,
+		updatedAt,
+	});
 }

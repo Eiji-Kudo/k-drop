@@ -1,4 +1,4 @@
-import { defineFactory } from "@praha/drizzle-factory";
+import { type DefineFactoryResolver, defineFactory } from "@praha/drizzle-factory";
 import * as schema from "../../schema/index.ts";
 import { usersFactory } from "./auth-factories";
 import { NOW } from "./constants";
@@ -15,6 +15,13 @@ export const leaderboardSnapshotsFactory = defineFactory({
 		createdAt: NOW,
 	}),
 	traits: {
+		base: (() => ({
+			leaderboardSnapshotId: "leaderboard-1",
+			leaderboardScope: "overall",
+			idolGroupId: null,
+			snapshotAt: NOW,
+			createdAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "leaderboardSnapshots">,
 		group: ({ sequence, use: related }) => ({
 			leaderboardSnapshotId: `leaderboard-group-${sequence}`,
 			leaderboardScope: "group",
@@ -25,6 +32,13 @@ export const leaderboardSnapshotsFactory = defineFactory({
 			snapshotAt: NOW,
 			createdAt: NOW,
 		}),
+		groupBase: (() => ({
+			leaderboardSnapshotId: "leaderboard-group-1",
+			leaderboardScope: "group",
+			idolGroupId: "group-1",
+			snapshotAt: NOW,
+			createdAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "leaderboardSnapshots">,
 	},
 });
 
@@ -44,4 +58,13 @@ export const leaderboardEntriesFactory = defineFactory({
 		displayRank: sequence,
 		displayScore: 0,
 	}),
+	traits: {
+		base: (() => ({
+			leaderboardEntryId: "leaderboard-entry-1",
+			leaderboardSnapshotId: "leaderboard-1",
+			userId: "user-1",
+			displayRank: 1,
+			displayScore: 0,
+		})) satisfies DefineFactoryResolver<typeof schema, "leaderboardEntries">,
+	},
 });

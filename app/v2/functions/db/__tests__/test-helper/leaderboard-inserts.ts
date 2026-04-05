@@ -1,5 +1,6 @@
 import type { InferInsertModel } from "drizzle-orm";
 import * as schema from "../../schema/index.ts";
+import { ensureBaseIdolGroup, ensureBaseLeaderboardSnapshot, ensureBaseUser } from "./base-fixtures";
 import { NOW } from "./constants";
 import { getTestFactories, type TestDb } from "./db";
 import { isScope } from "./types";
@@ -14,7 +15,6 @@ export async function insertLeaderboardSnapshot(sqliteDb: TestDb, values: Leader
 	const leaderboardSnapshotId = values.leaderboardSnapshotId ?? (leaderboardScope === "group" ? "leaderboard-group-1" : "leaderboard-1");
 	const snapshotAt = values.snapshotAt ?? NOW;
 	const createdAt = values.createdAt ?? NOW;
-	const groupId = "idolGroupId" in values ? values.idolGroupId : "group-1";
 	if (!isScope(leaderboardScope)) {
 		sqliteDb
 			.prepare(
@@ -24,17 +24,26 @@ export async function insertLeaderboardSnapshot(sqliteDb: TestDb, values: Leader
 		return leaderboardSnapshotId;
 	}
 	const factories = getTestFactories(sqliteDb).leaderboardSnapshots;
+	if (leaderboardScope === "group" && !("idolGroupId" in values)) await ensureBaseIdolGroup(sqliteDb);
 	return leaderboardScope === "group"
-		? factories.traits.group.create({ leaderboardSnapshotId, idolGroupId: groupId, snapshotAt, createdAt })
-		: factories.create({ leaderboardSnapshotId, leaderboardScope, idolGroupId: values.idolGroupId ?? null, snapshotAt, createdAt });
+		? factories.traits.groupBase.create({
+				...values,
+				leaderboardSnapshotId,
+				leaderboardScope,
+				snapshotAt,
+				createdAt,
+			})
+		: factories.traits.base.create({
+				...values,
+				leaderboardSnapshotId,
+				leaderboardScope,
+				snapshotAt,
+				createdAt,
+			});
 }
 
 export async function insertLeaderboardEntry(sqliteDb: TestDb, values: LeaderboardEntryInsert = {}) {
-	return getTestFactories(sqliteDb).leaderboardEntries.create({
-		leaderboardEntryId: values.leaderboardEntryId ?? "leaderboard-entry-1",
-		leaderboardSnapshotId: values.leaderboardSnapshotId ?? "leaderboard-1",
-		userId: values.userId ?? "user-1",
-		displayRank: values.displayRank ?? 1,
-		displayScore: values.displayScore ?? 0,
-	});
+	if (!("leaderboardSnapshotId" in values)) await ensureBaseLeaderboardSnapshot(sqliteDb);
+	if (!("userId" in values)) await ensureBaseUser(sqliteDb);
+	return getTestFactories(sqliteDb).leaderboardEntries.traits.base.create(values);
 }

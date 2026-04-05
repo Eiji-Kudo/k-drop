@@ -1,5 +1,6 @@
 import type { InferInsertModel } from "drizzle-orm";
 import * as schema from "../../schema/index.ts";
+import { ensureBaseIdolGroup, ensureBaseQuiz } from "./base-fixtures";
 import { NOW } from "./constants";
 import { getTestFactories, type TestDb } from "./db";
 import { isQuizDifficulty, isQuizStatus } from "./types";
@@ -38,6 +39,7 @@ export async function insertQuiz(sqliteDb: TestDb, values: QuizInsert = {}) {
 	const prompt = values.prompt ?? "What is ...?";
 	const createdAt = values.createdAt ?? NOW;
 	const updatedAt = values.updatedAt ?? NOW;
+	if (!("idolGroupId" in values)) await ensureBaseIdolGroup(sqliteDb);
 	if (!isQuizDifficulty(difficulty) || !isQuizStatus(status)) {
 		return insertQuizWithRawEnums(sqliteDb, {
 			quizId,
@@ -51,27 +53,22 @@ export async function insertQuiz(sqliteDb: TestDb, values: QuizInsert = {}) {
 			updatedAt,
 		});
 	}
-	const quiz = await getTestFactories(sqliteDb).quizzes.create({
+	const quiz = await getTestFactories(sqliteDb).quizzes.traits.base.create({
+		...values,
 		quizId,
 		idolGroupId,
 		difficulty,
 		status,
 		prompt,
-		explanation: values.explanation ?? null,
-		publishedAt: values.publishedAt ?? null,
 		createdAt,
 		updatedAt,
 	});
-	return quiz.quizId;
+	const createdQuizId: string = quiz.quizId;
+	return createdQuizId;
 }
 
 export async function insertQuizChoice(sqliteDb: TestDb, values: QuizChoiceInsert = {}) {
-	const choice = await getTestFactories(sqliteDb).quizChoices.create({
-		quizChoiceId: values.quizChoiceId ?? "choice-1",
-		quizId: values.quizId ?? "quiz-1",
-		choiceOrder: values.choiceOrder ?? 1,
-		choiceText: values.choiceText ?? "Choice text",
-		isCorrect: values.isCorrect ?? 0,
-	});
+	if (!("quizId" in values)) await ensureBaseQuiz(sqliteDb);
+	const choice = await getTestFactories(sqliteDb).quizChoices.traits.base.create(values);
 	return choice.quizChoiceId;
 }

@@ -1,4 +1,4 @@
-import { defineFactory } from "@praha/drizzle-factory";
+import { type DefineFactoryResolver, defineFactory } from "@praha/drizzle-factory";
 import * as schema from "../../schema/index.ts";
 import { usersFactory } from "./auth-factories";
 import { DEFAULT_EVENT_ENDS_AT, DEFAULT_EVENT_STARTS_AT, NOW } from "./constants";
@@ -23,6 +23,21 @@ export const eventsFactory = defineFactory({
 		createdAt: NOW,
 		updatedAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			eventId: "event-1",
+			createdByUserId: "user-1",
+			title: "Event",
+			description: null,
+			venueName: null,
+			visibility: "public",
+			capacity: null,
+			startsAt: DEFAULT_EVENT_STARTS_AT,
+			endsAt: DEFAULT_EVENT_ENDS_AT,
+			createdAt: NOW,
+			updatedAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "events">,
+	},
 });
 
 export const eventGroupsFactory = defineFactory({
@@ -40,6 +55,14 @@ export const eventGroupsFactory = defineFactory({
 				.then((group) => group.idolGroupId),
 		createdAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			eventGroupId: "event-group-1",
+			eventId: "event-1",
+			idolGroupId: "group-1",
+			createdAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "eventGroups">,
+	},
 });
 
 export const eventParticipantsFactory = defineFactory({
@@ -59,4 +82,14 @@ export const eventParticipantsFactory = defineFactory({
 		joinedAt: NOW,
 		updatedAt: NOW,
 	}),
+	traits: {
+		base: (() => ({
+			eventParticipantId: "event-participant-1",
+			eventId: "event-1",
+			userId: "user-1",
+			participationStatus: "joined",
+			joinedAt: NOW,
+			updatedAt: NOW,
+		})) satisfies DefineFactoryResolver<typeof schema, "eventParticipants">,
+	},
 });
