@@ -1,4 +1,4 @@
-import type { BadgeLevel } from "./mock-data";
+import type { BadgeLevel } from "./types";
 
 const BADGE_COLORS: Record<BadgeLevel, string> = {
 	gold: "bg-yellow-400",

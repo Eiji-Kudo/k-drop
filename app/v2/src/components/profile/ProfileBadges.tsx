@@ -1,6 +1,6 @@
 import { BadgeIcon } from "./BadgeIcon";
 import { getBadgeColorClass } from "./badge-colors";
-import type { Badge } from "./mock-data";
+import type { Badge } from "./types";
 
 type ProfileBadgesProps = {
 	badges: Badge[];

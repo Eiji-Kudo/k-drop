@@ -5,6 +5,7 @@ type ProfileProgressProps = {
 
 export function ProfileProgress({ currentScore, percentageIncrease }: ProfileProgressProps) {
 	const changeLabel = percentageIncrease !== undefined ? `Last 7 Days: ${percentageIncrease >= 0 ? "+" : ""}${percentageIncrease}%` : undefined;
+	const changeColorClass = percentageIncrease !== undefined && percentageIncrease < 0 ? "text-error" : "text-success";
 
 	return (
 		<section className="px-4 py-3">
@@ -12,7 +13,7 @@ export function ProfileProgress({ currentScore, percentageIncrease }: ProfilePro
 				<h2 className="text-base font-semibold">Power Progress</h2>
 				<div className="text-right">
 					<span className="text-xl font-bold">{currentScore}</span>
-					{changeLabel && <p className="text-xs text-success">{changeLabel}</p>}
+					{changeLabel && <p className={`text-xs ${changeColorClass}`}>{changeLabel}</p>}
 				</div>
 			</div>
 

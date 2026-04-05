@@ -1,4 +1,4 @@
-import type { BadgeType } from "./mock-data";
+import type { BadgeType } from "./types";
 
 const BADGE_ICONS: Record<BadgeType, string> = {
 	quiz_master: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",

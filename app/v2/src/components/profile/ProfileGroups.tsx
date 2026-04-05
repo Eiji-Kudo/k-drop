@@ -1,4 +1,4 @@
-import type { MockGroup } from "./mock-data";
+import type { MockGroup } from "./types";
 
 type ProfileGroupsProps = {
 	groups: MockGroup[];
@@ -15,7 +15,7 @@ export function ProfileGroups({ groups }: ProfileGroupsProps) {
 						<div key={group.id} className="flex items-center gap-3 rounded-box bg-base-200 p-3">
 							<div className="size-[60px] shrink-0 overflow-hidden rounded-full">
 								{group.imageUrl ? (
-									<img src={group.imageUrl} alt={group.name} className="size-full object-cover" />
+									<img src={group.imageUrl} alt={group.name} loading="lazy" className="size-full object-cover" />
 								) : (
 									<div className="flex size-full items-center justify-center bg-secondary text-sm font-semibold text-secondary-content">
 										{group.name.substring(0, 2)}
