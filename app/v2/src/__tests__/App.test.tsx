@@ -1,7 +1,8 @@
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { AppProviders, createAppQueryClient } from "@/lib/query-client";
+import { AppProviders } from "@/lib/app-providers";
+import { createAppQueryClient } from "@/lib/query-client";
 import { createAppRouter } from "@/router";
 
 const fetchMock = vi.fn<(input: RequestInfo | URL) => Promise<Response>>();
@@ -35,19 +36,21 @@ async function renderRoute(path: string) {
 
 describe("App routes", () => {
 	beforeEach(() => {
-		fetchMock.mockImplementation(async (input) => {
+		fetchMock.mockImplementation((input) => {
 			const url = getRequestUrl(input);
 
 			if (url.endsWith("/api/health")) {
-				return new Response(JSON.stringify({ status: "ok" }), {
-					status: 200,
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
+				return Promise.resolve(
+					new Response(JSON.stringify({ status: "ok" }), {
+						status: 200,
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}),
+				);
 			}
 
-			return new Response("Not Found", { status: 404 });
+			return Promise.resolve(new Response("Not Found", { status: 404 }));
 		});
 		vi.stubGlobal("fetch", fetchMock);
 	});
