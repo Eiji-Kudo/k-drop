@@ -1,24 +1,32 @@
-import { BarChart3, PencilLine, Sparkles, UserRound } from "lucide-react";
+import { BarChart3, PencilLine, UserRound } from "lucide-react";
 import { BentoCard } from "@/components/home/BentoCard";
+import { HomeMomentumChips } from "@/components/home/HomeMomentumChips";
+import { HomeNextGoalCard } from "@/components/home/HomeNextGoalCard";
+import { HomePrimaryActionCard } from "@/components/home/HomePrimaryActionCard";
+import type { HomeMotivationViewModel } from "@/lib/ux/types";
 
-export function BentoGrid() {
+type BentoGridProps = {
+	viewModel: HomeMotivationViewModel;
+};
+
+export function BentoGrid({ viewModel }: BentoGridProps) {
 	return (
-		<div className="flex flex-col gap-3">
-			<div className="grid grid-cols-[1.15fr,0.85fr] gap-3">
-				<div className="flex-[1.2]">
-					<BentoCard to="/quiz" title="問題を解く" subtitle="今日の推し知識を増やす" icon={Sparkles} variant="gradient" />
+		<div className="flex flex-col gap-4">
+			<HomePrimaryActionCard viewModel={viewModel} />
+
+			<div className="grid gap-4 lg:grid-cols-[1.1fr,0.9fr]">
+				<div className="min-w-0">
+					<HomeNextGoalCard viewModel={viewModel} />
 				</div>
-				<div className="flex-[0.8]">
-					<BentoCard to="/quiz/create" title="問題を作成" subtitle="新しいお題を投稿" icon={PencilLine} />
+				<div className="min-w-0">
+					<HomeMomentumChips viewModel={viewModel} />
 				</div>
 			</div>
-			<div className="grid grid-cols-2 gap-3">
-				<div className="flex-1">
-					<BentoCard to="/ranking" title="ランキング" subtitle="ライバルをチェック" icon={BarChart3} />
-				</div>
-				<div className="flex-1">
-					<BentoCard to="/profile" title="プロフィール" subtitle="成長を見返す" icon={UserRound} />
-				</div>
+
+			<div className="grid gap-3 sm:grid-cols-2">
+				<BentoCard to="/quiz/create" title="問題を作成" subtitle="好きな問題を追加する" icon={PencilLine} />
+				<BentoCard to="/ranking" title="ランキング" subtitle="近いライバルをチェック" icon={BarChart3} />
+				<BentoCard to="/profile" title="プロフィール" subtitle="伸びた推し力を見返す" icon={UserRound} className="sm:col-span-2" />
 			</div>
 		</div>
 	);

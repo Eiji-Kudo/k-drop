@@ -2,17 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BentoGrid } from "@/components/home/BentoGrid";
 import { WelcomeHeader } from "@/components/home/WelcomeHeader";
 import { PageShell } from "@/components/ui/PageShell";
-
-const MOCK_USER = {
-	levelName: "軽いオタク",
-	levelStars: 2,
-};
+import { createHomeMotivationViewModel } from "@/lib/ux";
 
 function HomePage() {
+	const viewModel = createHomeMotivationViewModel();
+
 	return (
 		<PageShell className="gap-4">
-			<WelcomeHeader levelName={MOCK_USER.levelName} levelStars={MOCK_USER.levelStars} />
-			<BentoGrid />
+			<WelcomeHeader viewModel={viewModel} />
+			<BentoGrid viewModel={viewModel} />
 		</PageShell>
 	);
 }

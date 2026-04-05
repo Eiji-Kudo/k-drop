@@ -9,8 +9,13 @@ export type HomeMotivationViewModel = {
 	fastestGrowingGroupLabel: string | null;
 	primaryCtaLabel: string;
 	primaryCtaHint: string;
+	primaryCtaSupportLabel: string;
+	heroEyebrow: string;
 	heroTitle: string;
 	heroDescription: string;
+	heroStatusLabel: string;
+	nextGoalLabel: string;
+	nextGoalDescription: string;
 	nextTierHint: string;
 };
 
