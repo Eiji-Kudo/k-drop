@@ -1,9 +1,24 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { QuizCreateForm } from "@/components/quiz/quiz-create-form";
+import type { QuizCreateFormValues } from "@/lib/schemas/quiz-create-schema";
 
 function QuizCreatePage() {
+	const navigate = useNavigate();
+
+	const handleSubmitSuccess = (data: QuizCreateFormValues) => {
+		console.log("Quiz created:", data);
+		alert("クイズを作成しました！");
+		navigate({ to: "/" });
+	};
+
 	return (
-		<main className="flex flex-1 flex-col gap-4">
-			<h1 className="text-2xl font-bold">問題作成</h1>
+		<main className="grid flex-1 content-start gap-4">
+			<section className="card border border-base-300 bg-base-100 shadow-lg">
+				<div className="card-body gap-6">
+					<h1 className="card-title text-2xl">クイズ作成</h1>
+					<QuizCreateForm onSubmitSuccess={handleSubmitSuccess} />
+				</div>
+			</section>
 		</main>
 	);
 }
