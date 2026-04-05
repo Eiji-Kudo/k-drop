@@ -1,4 +1,5 @@
 export type QuizResultEntry = {
+	questionId: string;
 	prompt: string;
 	isCorrect: boolean;
 	userAnswer: string;
