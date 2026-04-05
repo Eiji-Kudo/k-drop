@@ -362,5 +362,5 @@ type QuizResultMotivationViewModel = {
 
 ## この後の接続先
 
-- UI/UX 全体計画: [ui-design-brushup-plan.md](/Users/eiji/program/k-drop/app/v2/docs/ui-design-brushup-plan.md)
-- ゲーミフィケーション全体計画: [gamification-plan.md](/Users/eiji/program/k-drop/app/v2/docs/gamification-plan.md)
+- UI/UX 全体計画: [ui-design-brushup-plan.md](/Users/eiji/program/k-drop/app/v2/docs/ux/ui-design-brushup-plan.md)
+- ゲーミフィケーション全体計画: [gamification-plan.md](/Users/eiji/program/k-drop/app/v2/docs/ux/gamification-plan.md)

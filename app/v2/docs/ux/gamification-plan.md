@@ -494,7 +494,7 @@
 
 1. UI/UX ブラッシュアップ計画と整合させる
 2. ホームと結果画面に入れる最小モチベ要素を決める
-   - 具体仕様は [motivation-ui-mvp-spec.md](/Users/eiji/program/k-drop/app/v2/docs/motivation-ui-mvp-spec.md) を参照
+   - 具体仕様は [motivation-ui-mvp-spec.md](/Users/eiji/program/k-drop/app/v2/docs/ux/motivation-ui-mvp-spec.md) を参照
 3. 既存スキーマだけで出せる指標と、追加テーブルが必要な要素を切り分ける
 4. ランキングとプロフィールの競争 / 蓄積 UI を整理する
-   - 具体仕様は [social-growth-ui-spec.md](/Users/eiji/program/k-drop/app/v2/docs/social-growth-ui-spec.md) を参照
+   - 具体仕様は [social-growth-ui-spec.md](/Users/eiji/program/k-drop/app/v2/docs/ux/social-growth-ui-spec.md) を参照

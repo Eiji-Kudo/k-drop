@@ -305,6 +305,6 @@ type ProfileGrowthViewModel = {
 
 ## この後の接続先
 
-- 全体 UI/UX 計画: [ui-design-brushup-plan.md](/Users/eiji/program/k-drop/app/v2/docs/ui-design-brushup-plan.md)
-- ゲーミフィケーション全体計画: [gamification-plan.md](/Users/eiji/program/k-drop/app/v2/docs/gamification-plan.md)
-- ホーム / 結果 MVP 仕様: [motivation-ui-mvp-spec.md](/Users/eiji/program/k-drop/app/v2/docs/motivation-ui-mvp-spec.md)
+- 全体 UI/UX 計画: [ui-design-brushup-plan.md](/Users/eiji/program/k-drop/app/v2/docs/ux/ui-design-brushup-plan.md)
+- ゲーミフィケーション全体計画: [gamification-plan.md](/Users/eiji/program/k-drop/app/v2/docs/ux/gamification-plan.md)
+- ホーム / 結果 MVP 仕様: [motivation-ui-mvp-spec.md](/Users/eiji/program/k-drop/app/v2/docs/ux/motivation-ui-mvp-spec.md)
