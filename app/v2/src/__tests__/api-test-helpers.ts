@@ -1,4 +1,5 @@
-import { vi } from "vitest";
+import { expect, vi } from "vitest";
+import { app } from "@/lib/api/app";
 
 export const createD1Mock = (results: Record<string, unknown>[], options?: { healthCheckToken?: string }) => ({
 	DB: {
@@ -23,3 +24,17 @@ export const createFailingD1Mock = (healthCheckToken: string, message: string) =
 	},
 	HEALTH_CHECK_TOKEN: healthCheckToken,
 });
+
+export const requestDatabaseHealth = (env: Record<string, unknown>, token?: string) =>
+	app.request(
+		token ? new Request("http://localhost/api/health/database", { headers: { "X-Health-Token": token } }) : "/api/health/database",
+		undefined,
+		env,
+	);
+
+export const expectStatusJson = async (response: Response, status: number, body: Record<string, string>) => {
+	expect(response.status).toBe(status);
+	await expect(response.json()).resolves.toEqual(body);
+};
+
+export const appFetch = (...args: Parameters<typeof fetch>) => app.request(...args);

@@ -14,6 +14,7 @@ export async function insertLeaderboardSnapshot(sqliteDb: TestDb, values: Leader
 	const leaderboardSnapshotId = values.leaderboardSnapshotId ?? (leaderboardScope === "group" ? "leaderboard-group-1" : "leaderboard-1");
 	const snapshotAt = values.snapshotAt ?? NOW;
 	const createdAt = values.createdAt ?? NOW;
+	const groupId = "idolGroupId" in values ? values.idolGroupId : "group-1";
 	if (!isScope(leaderboardScope)) {
 		sqliteDb
 			.prepare(
@@ -24,7 +25,7 @@ export async function insertLeaderboardSnapshot(sqliteDb: TestDb, values: Leader
 	}
 	const factories = getTestFactories(sqliteDb).leaderboardSnapshots;
 	return leaderboardScope === "group"
-		? factories.traits.group.create({ leaderboardSnapshotId, idolGroupId: values.idolGroupId ?? "group-1", snapshotAt, createdAt })
+		? factories.traits.group.create({ leaderboardSnapshotId, idolGroupId: groupId, snapshotAt, createdAt })
 		: factories.create({ leaderboardSnapshotId, leaderboardScope, idolGroupId: values.idolGroupId ?? null, snapshotAt, createdAt });
 }
 

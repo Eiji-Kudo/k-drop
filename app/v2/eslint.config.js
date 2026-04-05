@@ -90,7 +90,7 @@ export default defineConfig([
 		},
 	},
 	{
-		files: ["**/__tests__/**/*.{ts,tsx}", "**/*.test.ts", "**/*.test.tsx"],
+		files: ["**/*.test.ts", "**/*.test.tsx"],
 		languageOptions: {
 			globals: {
 				...globals.browser,
@@ -102,6 +102,11 @@ export default defineConfig([
 			"@typescript-eslint/consistent-type-assertions": "off",
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/unbound-method": "off",
+		},
+	},
+	{
+		files: ["functions/db/__tests__/**/*.{ts,tsx}"],
+		rules: {
 			"max-lines": "off",
 		},
 	},

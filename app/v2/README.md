@@ -42,4 +42,4 @@ const factories = getTestFactories(db)
 await factories.userProfiles.create({ userId: "user-1", handle: "momo_fan", displayName: "モモ推し" })
 ```
 
-Keep intentional constraint-violation cases as raw SQL in tests. Use factories and helper wrappers for valid setup data.
+Use factories and helper wrappers for valid setup data. Keep low-level constraint checks as raw SQL when you need to bypass helper defaults directly, but helper wrappers are also fine for intentional invalid cases they explicitly support.
