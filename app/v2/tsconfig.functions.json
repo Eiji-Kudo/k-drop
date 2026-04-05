@@ -26,5 +26,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["functions", "src/lib/api"]
+	"include": ["functions", "src/lib/api", "worker-configuration.d.ts"]
 }

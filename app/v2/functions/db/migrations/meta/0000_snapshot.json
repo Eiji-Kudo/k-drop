@@ -1,0 +1,2040 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "4f03e7a4-b0e4-4166-b09b-60780ddfb370",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "drop_transactions": {
+      "name": "drop_transactions",
+      "columns": {
+        "drop_transaction_id": {
+          "name": "drop_transaction_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "delta": {
+          "name": "delta",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_type": {
+          "name": "source_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "drop_transactions_user_id_idx": {
+          "name": "drop_transactions_user_id_idx",
+          "columns": [
+            "user_id",
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "drop_transactions_user_id_users_user_id_fk": {
+          "name": "drop_transactions_user_id_users_user_id_fk",
+          "tableFrom": "drop_transactions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "drop_transactions_delta_nonzero": {
+          "name": "drop_transactions_delta_nonzero",
+          "value": "\"drop_transactions\".\"delta\" <> 0"
+        }
+      }
+    },
+    "drop_wallets": {
+      "name": "drop_wallets",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "balance": {
+          "name": "balance",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "drop_wallets_user_id_users_user_id_fk": {
+          "name": "drop_wallets_user_id_users_user_id_fk",
+          "tableFrom": "drop_wallets",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "drop_wallets_balance_min": {
+          "name": "drop_wallets_balance_min",
+          "value": "\"drop_wallets\".\"balance\" >= 0"
+        }
+      }
+    },
+    "event_groups": {
+      "name": "event_groups",
+      "columns": {
+        "event_group_id": {
+          "name": "event_group_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "event_groups_idol_group_id_idx": {
+          "name": "event_groups_idol_group_id_idx",
+          "columns": [
+            "idol_group_id"
+          ],
+          "isUnique": false
+        },
+        "event_groups_event_id_idol_group_id_unique": {
+          "name": "event_groups_event_id_idol_group_id_unique",
+          "columns": [
+            "event_id",
+            "idol_group_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "event_groups_event_id_events_event_id_fk": {
+          "name": "event_groups_event_id_events_event_id_fk",
+          "tableFrom": "event_groups",
+          "tableTo": "events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "event_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "event_groups_idol_group_id_idol_groups_idol_group_id_fk": {
+          "name": "event_groups_idol_group_id_idol_groups_idol_group_id_fk",
+          "tableFrom": "event_groups",
+          "tableTo": "idol_groups",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "event_participants": {
+      "name": "event_participants",
+      "columns": {
+        "event_participant_id": {
+          "name": "event_participant_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "participation_status": {
+          "name": "participation_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "joined_at": {
+          "name": "joined_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "event_participants_user_id_idx": {
+          "name": "event_participants_user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        },
+        "event_participants_event_id_user_id_unique": {
+          "name": "event_participants_event_id_user_id_unique",
+          "columns": [
+            "event_id",
+            "user_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "event_participants_event_id_events_event_id_fk": {
+          "name": "event_participants_event_id_events_event_id_fk",
+          "tableFrom": "event_participants",
+          "tableTo": "events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "event_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "event_participants_user_id_users_user_id_fk": {
+          "name": "event_participants_user_id_users_user_id_fk",
+          "tableFrom": "event_participants",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "event_participants_status_check": {
+          "name": "event_participants_status_check",
+          "value": "\"event_participants\".\"participation_status\" IN ('joined', 'waitlisted', 'cancelled')"
+        }
+      }
+    },
+    "events": {
+      "name": "events",
+      "columns": {
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "venue_name": {
+          "name": "venue_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "capacity": {
+          "name": "capacity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "starts_at": {
+          "name": "starts_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ends_at": {
+          "name": "ends_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "events_created_by_user_id_idx": {
+          "name": "events_created_by_user_id_idx",
+          "columns": [
+            "created_by_user_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "events_created_by_user_id_users_user_id_fk": {
+          "name": "events_created_by_user_id_users_user_id_fk",
+          "tableFrom": "events",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "events_capacity_check": {
+          "name": "events_capacity_check",
+          "value": "\"events\".\"capacity\" IS NULL OR \"events\".\"capacity\" > 0"
+        },
+        "events_dates_check": {
+          "name": "events_dates_check",
+          "value": "\"events\".\"ends_at\" >= \"events\".\"starts_at\""
+        },
+        "events_visibility_check": {
+          "name": "events_visibility_check",
+          "value": "\"events\".\"visibility\" IN ('public', 'private', 'unlisted')"
+        }
+      }
+    },
+    "group_categories": {
+      "name": "group_categories",
+      "columns": {
+        "group_category_id": {
+          "name": "group_category_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "category_name": {
+          "name": "category_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "group_categories_slug_unique": {
+          "name": "group_categories_slug_unique",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "idol_groups": {
+      "name": "idol_groups",
+      "columns": {
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "group_category_id": {
+          "name": "group_category_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "group_name": {
+          "name": "group_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "thumbnail_url": {
+          "name": "thumbnail_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idol_groups_slug_unique": {
+          "name": "idol_groups_slug_unique",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": true
+        },
+        "idol_groups_group_category_id_idx": {
+          "name": "idol_groups_group_category_id_idx",
+          "columns": [
+            "group_category_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "idol_groups_group_category_id_group_categories_group_category_id_fk": {
+          "name": "idol_groups_group_category_id_group_categories_group_category_id_fk",
+          "tableFrom": "idol_groups",
+          "tableTo": "group_categories",
+          "columnsFrom": [
+            "group_category_id"
+          ],
+          "columnsTo": [
+            "group_category_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "idol_groups_status_check": {
+          "name": "idol_groups_status_check",
+          "value": "\"idol_groups\".\"status\" IN ('active', 'inactive', 'archived')"
+        }
+      }
+    },
+    "user_favorite_groups": {
+      "name": "user_favorite_groups",
+      "columns": {
+        "user_favorite_group_id": {
+          "name": "user_favorite_group_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "started_supporting_on": {
+          "name": "started_supporting_on",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "user_favorite_groups_idol_group_id_idx": {
+          "name": "user_favorite_groups_idol_group_id_idx",
+          "columns": [
+            "idol_group_id"
+          ],
+          "isUnique": false
+        },
+        "user_favorite_groups_user_id_idol_group_id_unique": {
+          "name": "user_favorite_groups_user_id_idol_group_id_unique",
+          "columns": [
+            "user_id",
+            "idol_group_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "user_favorite_groups_user_id_users_user_id_fk": {
+          "name": "user_favorite_groups_user_id_users_user_id_fk",
+          "tableFrom": "user_favorite_groups",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_favorite_groups_idol_group_id_idol_groups_idol_group_id_fk": {
+          "name": "user_favorite_groups_idol_group_id_idol_groups_idol_group_id_fk",
+          "tableFrom": "user_favorite_groups",
+          "tableTo": "idol_groups",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "leaderboard_entries": {
+      "name": "leaderboard_entries",
+      "columns": {
+        "leaderboard_entry_id": {
+          "name": "leaderboard_entry_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "leaderboard_snapshot_id": {
+          "name": "leaderboard_snapshot_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "display_rank": {
+          "name": "display_rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "display_score": {
+          "name": "display_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "leaderboard_entries_user_id_idx": {
+          "name": "leaderboard_entries_user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        },
+        "leaderboard_entries_leaderboard_snapshot_id_user_id_unique": {
+          "name": "leaderboard_entries_leaderboard_snapshot_id_user_id_unique",
+          "columns": [
+            "leaderboard_snapshot_id",
+            "user_id"
+          ],
+          "isUnique": true
+        },
+        "leaderboard_entries_leaderboard_snapshot_id_display_rank_unique": {
+          "name": "leaderboard_entries_leaderboard_snapshot_id_display_rank_unique",
+          "columns": [
+            "leaderboard_snapshot_id",
+            "display_rank"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "leaderboard_entries_leaderboard_snapshot_id_leaderboard_snapshots_leaderboard_snapshot_id_fk": {
+          "name": "leaderboard_entries_leaderboard_snapshot_id_leaderboard_snapshots_leaderboard_snapshot_id_fk",
+          "tableFrom": "leaderboard_entries",
+          "tableTo": "leaderboard_snapshots",
+          "columnsFrom": [
+            "leaderboard_snapshot_id"
+          ],
+          "columnsTo": [
+            "leaderboard_snapshot_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "leaderboard_entries_user_id_users_user_id_fk": {
+          "name": "leaderboard_entries_user_id_users_user_id_fk",
+          "tableFrom": "leaderboard_entries",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "leaderboard_entries_display_rank_min": {
+          "name": "leaderboard_entries_display_rank_min",
+          "value": "\"leaderboard_entries\".\"display_rank\" >= 1"
+        },
+        "leaderboard_entries_display_score_min": {
+          "name": "leaderboard_entries_display_score_min",
+          "value": "\"leaderboard_entries\".\"display_score\" >= 0"
+        }
+      }
+    },
+    "leaderboard_snapshots": {
+      "name": "leaderboard_snapshots",
+      "columns": {
+        "leaderboard_snapshot_id": {
+          "name": "leaderboard_snapshot_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "leaderboard_scope": {
+          "name": "leaderboard_scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "snapshot_at": {
+          "name": "snapshot_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "leaderboard_snapshots_idol_group_id_idx": {
+          "name": "leaderboard_snapshots_idol_group_id_idx",
+          "columns": [
+            "idol_group_id"
+          ],
+          "isUnique": false
+        },
+        "leaderboard_snapshots_overall_unique": {
+          "name": "leaderboard_snapshots_overall_unique",
+          "columns": [
+            "leaderboard_scope",
+            "snapshot_at"
+          ],
+          "isUnique": true,
+          "where": "\"leaderboard_snapshots\".\"idol_group_id\" IS NULL"
+        },
+        "leaderboard_snapshots_group_unique": {
+          "name": "leaderboard_snapshots_group_unique",
+          "columns": [
+            "leaderboard_scope",
+            "idol_group_id",
+            "snapshot_at"
+          ],
+          "isUnique": true,
+          "where": "\"leaderboard_snapshots\".\"idol_group_id\" IS NOT NULL"
+        }
+      },
+      "foreignKeys": {
+        "leaderboard_snapshots_idol_group_id_idol_groups_idol_group_id_fk": {
+          "name": "leaderboard_snapshots_idol_group_id_idol_groups_idol_group_id_fk",
+          "tableFrom": "leaderboard_snapshots",
+          "tableTo": "idol_groups",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "leaderboard_scope_group_match": {
+          "name": "leaderboard_scope_group_match",
+          "value": "(\"leaderboard_snapshots\".\"leaderboard_scope\" = 'overall' AND \"leaderboard_snapshots\".\"idol_group_id\" IS NULL) OR (\"leaderboard_snapshots\".\"leaderboard_scope\" = 'group' AND \"leaderboard_snapshots\".\"idol_group_id\" IS NOT NULL)"
+        }
+      }
+    },
+    "quiz_answers": {
+      "name": "quiz_answers",
+      "columns": {
+        "quiz_answer_id": {
+          "name": "quiz_answer_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "quiz_session_question_id": {
+          "name": "quiz_session_question_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "quiz_choice_id": {
+          "name": "quiz_choice_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "awarded_score": {
+          "name": "awarded_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "answered_at": {
+          "name": "answered_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "quiz_answers_quiz_session_question_id_unique": {
+          "name": "quiz_answers_quiz_session_question_id_unique",
+          "columns": [
+            "quiz_session_question_id"
+          ],
+          "isUnique": true
+        },
+        "quiz_answers_quiz_choice_id_idx": {
+          "name": "quiz_answers_quiz_choice_id_idx",
+          "columns": [
+            "quiz_choice_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "quiz_answers_quiz_session_question_id_quiz_session_questions_quiz_session_question_id_fk": {
+          "name": "quiz_answers_quiz_session_question_id_quiz_session_questions_quiz_session_question_id_fk",
+          "tableFrom": "quiz_answers",
+          "tableTo": "quiz_session_questions",
+          "columnsFrom": [
+            "quiz_session_question_id"
+          ],
+          "columnsTo": [
+            "quiz_session_question_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "quiz_answers_quiz_choice_id_quiz_choices_quiz_choice_id_fk": {
+          "name": "quiz_answers_quiz_choice_id_quiz_choices_quiz_choice_id_fk",
+          "tableFrom": "quiz_answers",
+          "tableTo": "quiz_choices",
+          "columnsFrom": [
+            "quiz_choice_id"
+          ],
+          "columnsTo": [
+            "quiz_choice_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "awarded_score_min": {
+          "name": "awarded_score_min",
+          "value": "\"quiz_answers\".\"awarded_score\" >= 0"
+        }
+      }
+    },
+    "quiz_session_questions": {
+      "name": "quiz_session_questions",
+      "columns": {
+        "quiz_session_question_id": {
+          "name": "quiz_session_question_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "quiz_session_id": {
+          "name": "quiz_session_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "question_order": {
+          "name": "question_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "quiz_session_questions_quiz_id_idx": {
+          "name": "quiz_session_questions_quiz_id_idx",
+          "columns": [
+            "quiz_id"
+          ],
+          "isUnique": false
+        },
+        "quiz_session_questions_quiz_session_id_question_order_unique": {
+          "name": "quiz_session_questions_quiz_session_id_question_order_unique",
+          "columns": [
+            "quiz_session_id",
+            "question_order"
+          ],
+          "isUnique": true
+        },
+        "quiz_session_questions_quiz_session_id_quiz_id_unique": {
+          "name": "quiz_session_questions_quiz_session_id_quiz_id_unique",
+          "columns": [
+            "quiz_session_id",
+            "quiz_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "quiz_session_questions_quiz_session_id_quiz_sessions_quiz_session_id_fk": {
+          "name": "quiz_session_questions_quiz_session_id_quiz_sessions_quiz_session_id_fk",
+          "tableFrom": "quiz_session_questions",
+          "tableTo": "quiz_sessions",
+          "columnsFrom": [
+            "quiz_session_id"
+          ],
+          "columnsTo": [
+            "quiz_session_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "quiz_session_questions_quiz_id_quizzes_quiz_id_fk": {
+          "name": "quiz_session_questions_quiz_id_quizzes_quiz_id_fk",
+          "tableFrom": "quiz_session_questions",
+          "tableTo": "quizzes",
+          "columnsFrom": [
+            "quiz_id"
+          ],
+          "columnsTo": [
+            "quiz_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "question_order_min": {
+          "name": "question_order_min",
+          "value": "\"quiz_session_questions\".\"question_order\" >= 1"
+        }
+      }
+    },
+    "quiz_sessions": {
+      "name": "quiz_sessions",
+      "columns": {
+        "quiz_session_id": {
+          "name": "quiz_session_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "total_question_count": {
+          "name": "total_question_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "answered_question_count": {
+          "name": "answered_question_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "correct_answer_count": {
+          "name": "correct_answer_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "incorrect_answer_count": {
+          "name": "incorrect_answer_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "current_question_order": {
+          "name": "current_question_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "last_answered_at": {
+          "name": "last_answered_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "quiz_sessions_in_progress_per_user_group": {
+          "name": "quiz_sessions_in_progress_per_user_group",
+          "columns": [
+            "user_id",
+            "idol_group_id"
+          ],
+          "isUnique": true,
+          "where": "\"quiz_sessions\".\"status\" = 'in_progress'"
+        },
+        "quiz_sessions_user_id_idx": {
+          "name": "quiz_sessions_user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        },
+        "quiz_sessions_idol_group_id_idx": {
+          "name": "quiz_sessions_idol_group_id_idx",
+          "columns": [
+            "idol_group_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "quiz_sessions_user_id_users_user_id_fk": {
+          "name": "quiz_sessions_user_id_users_user_id_fk",
+          "tableFrom": "quiz_sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "quiz_sessions_idol_group_id_idol_groups_idol_group_id_fk": {
+          "name": "quiz_sessions_idol_group_id_idol_groups_idol_group_id_fk",
+          "tableFrom": "quiz_sessions",
+          "tableTo": "idol_groups",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "total_question_count_min": {
+          "name": "total_question_count_min",
+          "value": "\"quiz_sessions\".\"total_question_count\" >= 1"
+        },
+        "status_current_question_order": {
+          "name": "status_current_question_order",
+          "value": "(\"quiz_sessions\".\"status\" = 'in_progress' AND \"quiz_sessions\".\"current_question_order\" IS NOT NULL) OR (\"quiz_sessions\".\"status\" IN ('completed', 'abandoned') AND \"quiz_sessions\".\"current_question_order\" IS NULL)"
+        },
+        "completed_requires_completed_at": {
+          "name": "completed_requires_completed_at",
+          "value": "\"quiz_sessions\".\"status\" != 'completed' OR \"quiz_sessions\".\"completed_at\" IS NOT NULL"
+        },
+        "non_completed_no_completed_at": {
+          "name": "non_completed_no_completed_at",
+          "value": "\"quiz_sessions\".\"status\" = 'completed' OR \"quiz_sessions\".\"completed_at\" IS NULL"
+        },
+        "answered_requires_last_answered_at": {
+          "name": "answered_requires_last_answered_at",
+          "value": "\"quiz_sessions\".\"answered_question_count\" = 0 OR \"quiz_sessions\".\"last_answered_at\" IS NOT NULL"
+        },
+        "no_answer_no_last_answered_at": {
+          "name": "no_answer_no_last_answered_at",
+          "value": "\"quiz_sessions\".\"answered_question_count\" > 0 OR \"quiz_sessions\".\"last_answered_at\" IS NULL"
+        },
+        "answered_le_total": {
+          "name": "answered_le_total",
+          "value": "\"quiz_sessions\".\"answered_question_count\" <= \"quiz_sessions\".\"total_question_count\""
+        },
+        "answer_counts_sum": {
+          "name": "answer_counts_sum",
+          "value": "\"quiz_sessions\".\"correct_answer_count\" + \"quiz_sessions\".\"incorrect_answer_count\" = \"quiz_sessions\".\"answered_question_count\""
+        },
+        "answered_question_count_min": {
+          "name": "answered_question_count_min",
+          "value": "\"quiz_sessions\".\"answered_question_count\" >= 0"
+        },
+        "correct_answer_count_min": {
+          "name": "correct_answer_count_min",
+          "value": "\"quiz_sessions\".\"correct_answer_count\" >= 0"
+        },
+        "incorrect_answer_count_min": {
+          "name": "incorrect_answer_count_min",
+          "value": "\"quiz_sessions\".\"incorrect_answer_count\" >= 0"
+        },
+        "current_question_order_min": {
+          "name": "current_question_order_min",
+          "value": "\"quiz_sessions\".\"current_question_order\" IS NULL OR \"quiz_sessions\".\"current_question_order\" >= 1"
+        }
+      }
+    },
+    "quiz_choices": {
+      "name": "quiz_choices",
+      "columns": {
+        "quiz_choice_id": {
+          "name": "quiz_choice_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "choice_order": {
+          "name": "choice_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "choice_text": {
+          "name": "choice_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_correct": {
+          "name": "is_correct",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "quiz_choices_quiz_id_idx": {
+          "name": "quiz_choices_quiz_id_idx",
+          "columns": [
+            "quiz_id"
+          ],
+          "isUnique": false
+        },
+        "quiz_choices_quiz_id_choice_order_unique": {
+          "name": "quiz_choices_quiz_id_choice_order_unique",
+          "columns": [
+            "quiz_id",
+            "choice_order"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "quiz_choices_quiz_id_quizzes_quiz_id_fk": {
+          "name": "quiz_choices_quiz_id_quizzes_quiz_id_fk",
+          "tableFrom": "quiz_choices",
+          "tableTo": "quizzes",
+          "columnsFrom": [
+            "quiz_id"
+          ],
+          "columnsTo": [
+            "quiz_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "quiz_choices_choice_order_min": {
+          "name": "quiz_choices_choice_order_min",
+          "value": "\"quiz_choices\".\"choice_order\" >= 1"
+        },
+        "quiz_choices_is_correct_bool": {
+          "name": "quiz_choices_is_correct_bool",
+          "value": "\"quiz_choices\".\"is_correct\" IN (0, 1)"
+        }
+      }
+    },
+    "quizzes": {
+      "name": "quizzes",
+      "columns": {
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "difficulty": {
+          "name": "difficulty",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "prompt": {
+          "name": "prompt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "explanation": {
+          "name": "explanation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "quizzes_idol_group_id_status_idx": {
+          "name": "quizzes_idol_group_id_status_idx",
+          "columns": [
+            "idol_group_id",
+            "status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "quizzes_idol_group_id_idol_groups_idol_group_id_fk": {
+          "name": "quizzes_idol_group_id_idol_groups_idol_group_id_fk",
+          "tableFrom": "quizzes",
+          "tableTo": "idol_groups",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "quizzes_difficulty_check": {
+          "name": "quizzes_difficulty_check",
+          "value": "\"quizzes\".\"difficulty\" IN ('easy', 'normal', 'hard')"
+        },
+        "quizzes_status_check": {
+          "name": "quizzes_status_check",
+          "value": "\"quizzes\".\"status\" IN ('draft', 'published', 'archived')"
+        }
+      }
+    },
+    "score_tiers": {
+      "name": "score_tiers",
+      "columns": {
+        "score_tier_id": {
+          "name": "score_tier_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tier_scope": {
+          "name": "tier_scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tier_name": {
+          "name": "tier_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "min_score": {
+          "name": "min_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "max_score": {
+          "name": "max_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "score_tiers_tier_scope_tier_name_unique": {
+          "name": "score_tiers_tier_scope_tier_name_unique",
+          "columns": [
+            "tier_scope",
+            "tier_name"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "score_tiers_range_check": {
+          "name": "score_tiers_range_check",
+          "value": "\"score_tiers\".\"min_score\" <= \"score_tiers\".\"max_score\""
+        },
+        "score_tiers_tier_scope_check": {
+          "name": "score_tiers_tier_scope_check",
+          "value": "\"score_tiers\".\"tier_scope\" IN ('overall', 'group')"
+        }
+      }
+    },
+    "user_score_snapshots": {
+      "name": "user_score_snapshots",
+      "columns": {
+        "user_score_snapshot_id": {
+          "name": "user_score_snapshot_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "score_scope": {
+          "name": "score_scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "snapshot_date": {
+          "name": "snapshot_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "score_total": {
+          "name": "score_total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "user_score_snapshots_overall_scope": {
+          "name": "user_score_snapshots_overall_scope",
+          "columns": [
+            "user_id",
+            "score_scope",
+            "snapshot_date"
+          ],
+          "isUnique": true,
+          "where": "\"user_score_snapshots\".\"idol_group_id\" IS NULL"
+        },
+        "user_score_snapshots_group_scope": {
+          "name": "user_score_snapshots_group_scope",
+          "columns": [
+            "user_id",
+            "score_scope",
+            "idol_group_id",
+            "snapshot_date"
+          ],
+          "isUnique": true,
+          "where": "\"user_score_snapshots\".\"idol_group_id\" IS NOT NULL"
+        },
+        "user_score_snapshots_user_id_idx": {
+          "name": "user_score_snapshots_user_id_idx",
+          "columns": [
+            "user_id",
+            "snapshot_date"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "user_score_snapshots_user_id_users_user_id_fk": {
+          "name": "user_score_snapshots_user_id_users_user_id_fk",
+          "tableFrom": "user_score_snapshots",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_score_snapshots_idol_group_id_idol_groups_idol_group_id_fk": {
+          "name": "user_score_snapshots_idol_group_id_idol_groups_idol_group_id_fk",
+          "tableFrom": "user_score_snapshots",
+          "tableTo": "idol_groups",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "user_score_snapshots_score_total_min": {
+          "name": "user_score_snapshots_score_total_min",
+          "value": "\"user_score_snapshots\".\"score_total\" >= 0"
+        },
+        "user_score_snapshots_scope_group_match": {
+          "name": "user_score_snapshots_scope_group_match",
+          "value": "(\"user_score_snapshots\".\"score_scope\" = 'overall' AND \"user_score_snapshots\".\"idol_group_id\" IS NULL) OR (\"user_score_snapshots\".\"score_scope\" = 'group' AND \"user_score_snapshots\".\"idol_group_id\" IS NOT NULL)"
+        }
+      }
+    },
+    "user_score_states": {
+      "name": "user_score_states",
+      "columns": {
+        "user_score_state_id": {
+          "name": "user_score_state_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "score_scope": {
+          "name": "score_scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idol_group_id": {
+          "name": "idol_group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "score_tier_id": {
+          "name": "score_tier_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "score_total": {
+          "name": "score_total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "answered_count": {
+          "name": "answered_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "correct_count": {
+          "name": "correct_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "last_answered_at": {
+          "name": "last_answered_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "user_score_states_overall_scope": {
+          "name": "user_score_states_overall_scope",
+          "columns": [
+            "user_id",
+            "score_scope"
+          ],
+          "isUnique": true,
+          "where": "\"user_score_states\".\"idol_group_id\" IS NULL"
+        },
+        "user_score_states_group_scope": {
+          "name": "user_score_states_group_scope",
+          "columns": [
+            "user_id",
+            "score_scope",
+            "idol_group_id"
+          ],
+          "isUnique": true,
+          "where": "\"user_score_states\".\"idol_group_id\" IS NOT NULL"
+        },
+        "user_score_states_score_tier_id_idx": {
+          "name": "user_score_states_score_tier_id_idx",
+          "columns": [
+            "score_tier_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "user_score_states_user_id_users_user_id_fk": {
+          "name": "user_score_states_user_id_users_user_id_fk",
+          "tableFrom": "user_score_states",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_score_states_idol_group_id_idol_groups_idol_group_id_fk": {
+          "name": "user_score_states_idol_group_id_idol_groups_idol_group_id_fk",
+          "tableFrom": "user_score_states",
+          "tableTo": "idol_groups",
+          "columnsFrom": [
+            "idol_group_id"
+          ],
+          "columnsTo": [
+            "idol_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_score_states_score_tier_id_score_tiers_score_tier_id_fk": {
+          "name": "user_score_states_score_tier_id_score_tiers_score_tier_id_fk",
+          "tableFrom": "user_score_states",
+          "tableTo": "score_tiers",
+          "columnsFrom": [
+            "score_tier_id"
+          ],
+          "columnsTo": [
+            "score_tier_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "user_score_states_score_total_min": {
+          "name": "user_score_states_score_total_min",
+          "value": "\"user_score_states\".\"score_total\" >= 0"
+        },
+        "user_score_states_answered_count_min": {
+          "name": "user_score_states_answered_count_min",
+          "value": "\"user_score_states\".\"answered_count\" >= 0"
+        },
+        "user_score_states_correct_count_min": {
+          "name": "user_score_states_correct_count_min",
+          "value": "\"user_score_states\".\"correct_count\" >= 0"
+        },
+        "user_score_states_correct_le_answered": {
+          "name": "user_score_states_correct_le_answered",
+          "value": "\"user_score_states\".\"correct_count\" <= \"user_score_states\".\"answered_count\""
+        },
+        "user_score_states_scope_group_match": {
+          "name": "user_score_states_scope_group_match",
+          "value": "(\"user_score_states\".\"score_scope\" = 'overall' AND \"user_score_states\".\"idol_group_id\" IS NULL) OR (\"user_score_states\".\"score_scope\" = 'group' AND \"user_score_states\".\"idol_group_id\" IS NOT NULL)"
+        }
+      }
+    },
+    "auth_identities": {
+      "name": "auth_identities",
+      "columns": {
+        "auth_identity_id": {
+          "name": "auth_identity_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "provider": {
+          "name": "provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "provider_subject_id": {
+          "name": "provider_subject_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "auth_identities_user_id_idx": {
+          "name": "auth_identities_user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        },
+        "auth_identities_provider_provider_subject_id_unique": {
+          "name": "auth_identities_provider_provider_subject_id_unique",
+          "columns": [
+            "provider",
+            "provider_subject_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "auth_identities_user_id_users_user_id_fk": {
+          "name": "auth_identities_user_id_users_user_id_fk",
+          "tableFrom": "auth_identities",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "user_profiles": {
+      "name": "user_profiles",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "handle": {
+          "name": "handle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "bio": {
+          "name": "bio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fan_since": {
+          "name": "fan_since",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "user_profiles_handle_unique": {
+          "name": "user_profiles_handle_unique",
+          "columns": [
+            "handle"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "user_profiles_user_id_users_user_id_fk": {
+          "name": "user_profiles_user_id_users_user_id_fk",
+          "tableFrom": "user_profiles",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "users_status_check": {
+          "name": "users_status_check",
+          "value": "\"users\".\"status\" IN ('active', 'suspended', 'deleted')"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}
