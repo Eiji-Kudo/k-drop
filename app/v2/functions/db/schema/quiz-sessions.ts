@@ -57,6 +57,7 @@ export const quizSessionQuestions = sqliteTable(
 		unique().on(table.quizSessionId, table.questionOrder),
 		unique().on(table.quizSessionId, table.quizId),
 		index("quiz_session_questions_quiz_id_idx").on(table.quizId),
+		check("question_order_min", sql`${table.questionOrder} >= 1`),
 	],
 );
 
@@ -74,5 +75,5 @@ export const quizAnswers = sqliteTable(
 		awardedScore: integer("awarded_score").notNull(),
 		answeredAt: text("answered_at").notNull(),
 	},
-	(table) => [index("quiz_answers_quiz_choice_id_idx").on(table.quizChoiceId)],
+	(table) => [index("quiz_answers_quiz_choice_id_idx").on(table.quizChoiceId), check("awarded_score_min", sql`${table.awardedScore} >= 0`)],
 );

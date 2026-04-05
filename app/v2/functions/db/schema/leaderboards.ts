@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, integer, sqliteTable, text, unique, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { check, index, integer, sqliteTable, text, unique, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { idolGroups } from "./groups.ts";
 import { users } from "./users.ts";
 
@@ -14,9 +14,7 @@ export const leaderboardSnapshots = sqliteTable(
 	},
 	(table) => [
 		index("leaderboard_snapshots_idol_group_id_idx").on(table.idolGroupId),
-		uniqueIndex("leaderboard_snapshots_overall_unique")
-			.on(table.leaderboardScope, table.snapshotAt)
-			.where(sql`${table.idolGroupId} IS NULL`),
+		uniqueIndex("leaderboard_snapshots_overall_unique").on(table.leaderboardScope, table.snapshotAt).where(sql`${table.idolGroupId} IS NULL`),
 		uniqueIndex("leaderboard_snapshots_group_unique")
 			.on(table.leaderboardScope, table.idolGroupId, table.snapshotAt)
 			.where(sql`${table.idolGroupId} IS NOT NULL`),
@@ -40,5 +38,7 @@ export const leaderboardEntries = sqliteTable(
 		unique().on(table.leaderboardSnapshotId, table.userId),
 		unique().on(table.leaderboardSnapshotId, table.displayRank),
 		index("leaderboard_entries_user_id_idx").on(table.userId),
+		check("leaderboard_entries_display_rank_min", sql`${table.displayRank} >= 1`),
+		check("leaderboard_entries_display_score_min", sql`${table.displayScore} >= 0`),
 	],
 );
