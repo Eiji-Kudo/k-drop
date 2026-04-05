@@ -1,9 +1,13 @@
 // @vitest-environment node
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { app } from "@/lib/api/app";
 import { createApiClient } from "@/lib/rpc/client";
 
 describe("API", () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
 	it("returns a health check response", async () => {
 		const response = await app.request("/api/health");
 
@@ -23,6 +27,24 @@ describe("API", () => {
 		await expect(response.json()).resolves.toEqual({
 			status: "ok",
 		});
+	});
+
+	it("throws when the health check returns a non-ok response", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(() =>
+				Promise.resolve(
+					new Response("Internal Server Error", {
+						status: 500,
+						statusText: "Internal Server Error",
+					}),
+				),
+			),
+		);
+
+		const { fetchHealthCheck } = await import("@/lib/rpc/health-check");
+
+		await expect(fetchHealthCheck()).rejects.toThrow("Failed to fetch API health status: 500 Internal Server Error");
 	});
 
 	it("returns not found for unknown API routes", async () => {

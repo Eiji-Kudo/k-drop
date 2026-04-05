@@ -1,8 +1,8 @@
+import { QueryClient } from "@tanstack/react-query";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "@/lib/app-providers";
-import { createAppQueryClient } from "@/lib/query-client";
 import { createAppRouter } from "@/router";
 
 const mockFetch = vi.fn<typeof fetch>();
@@ -20,6 +20,14 @@ function getRequestUrl(input: RequestInfo | URL) {
 }
 
 async function renderRoute(path: string) {
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				retry: false,
+			},
+		},
+	});
+
 	const router = createAppRouter(
 		createMemoryHistory({
 			initialEntries: [path],
@@ -28,7 +36,7 @@ async function renderRoute(path: string) {
 
 	await router.load();
 	render(
-		<AppProviders queryClient={createAppQueryClient()}>
+		<AppProviders queryClient={queryClient}>
 			<RouterProvider router={router} />
 		</AppProviders>,
 	);
@@ -56,6 +64,7 @@ describe("App routes", () => {
 	});
 
 	afterEach(() => {
+		cleanup();
 		vi.unstubAllGlobals();
 		mockFetch.mockReset();
 	});
@@ -66,6 +75,20 @@ describe("App routes", () => {
 		expect(screen.getByRole("heading", { name: "Initial setup" })).toBeInTheDocument();
 		expect(await screen.findByText("API status: ok")).toBeInTheDocument();
 		expect(mockFetch).toHaveBeenCalledTimes(1);
+	});
+
+	it("shows loading state while the health check is pending", async () => {
+		mockFetch.mockImplementation(() => new Promise(() => {}));
+		vi.stubGlobal("fetch", mockFetch);
+		await renderRoute("/");
+		expect(screen.getByText("Checking API...")).toBeInTheDocument();
+	});
+
+	it("shows unavailable status when the health check fails", async () => {
+		mockFetch.mockRejectedValue(new TypeError("Network error"));
+		vi.stubGlobal("fetch", mockFetch);
+		await renderRoute("/");
+		expect(await screen.findByText("API status: unavailable", {}, { timeout: 3000 })).toBeInTheDocument();
 	});
 
 	it("renders the 404 page for an unknown path", async () => {
