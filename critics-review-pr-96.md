@@ -6,7 +6,7 @@
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/96
 - **調査日**: 2026-04-05
 - **レビュー方式**: 並列レビュー + 相互検証
-- **レビュー回数**: 1回目
+- **レビュー回数**: 2回目
 
 ## レビュワー構成
 
@@ -22,7 +22,7 @@
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
 | HIGH | 3 | 3 |
-| MEDIUM | 5 | 5 |
+| MEDIUM | 7 | 7 |
 
 ## 参照したガイドライン
 
@@ -109,5 +109,23 @@
 - **ファイル**: `app/v2/src/lib/app-providers.tsx`
 - **問題**: `typeof appQueryClient` で型を定義しており、意図が不明瞭で不要な変数依存
 - **対応**: `QueryClient` 型を `@tanstack/react-query` から直接使用するように変更
+
+</details>
+
+<details>
+<summary>9. api.test.ts の fetchHealthCheck エラーテストにおける不要な dynamic import（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/api.test.ts`
+- **問題**: `vi.stubGlobal` 後の dynamic import は不要で、static import で十分
+- **対応**: `fetchHealthCheck` をファイル先頭の static import に変更し、dynamic import を除去
+
+</details>
+
+<details>
+<summary>10. App.test.tsx のローディング/エラーテストで vi.stubGlobal を冗長に呼んでいる（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **問題**: `beforeEach` で既に `stubGlobal` 済みのモックに対して、テスト内で再度 `vi.stubGlobal` を呼んでおり冗長
+- **対応**: 各テスト内の冗長な `vi.stubGlobal("fetch", mockFetch)` を削除
 
 </details>

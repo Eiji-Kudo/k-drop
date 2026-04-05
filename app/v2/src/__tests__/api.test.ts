@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { app } from "@/lib/api/app";
 import { createApiClient } from "@/lib/rpc/client";
+import { fetchHealthCheck } from "@/lib/rpc/health-check";
 
 describe("API", () => {
 	afterEach(() => {
@@ -41,8 +42,6 @@ describe("API", () => {
 				),
 			),
 		);
-
-		const { fetchHealthCheck } = await import("@/lib/rpc/health-check");
 
 		await expect(fetchHealthCheck()).rejects.toThrow("Failed to fetch API health status: 500 Internal Server Error");
 	});

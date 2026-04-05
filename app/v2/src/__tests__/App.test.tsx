@@ -79,14 +79,12 @@ describe("App routes", () => {
 
 	it("shows loading state while the health check is pending", async () => {
 		mockFetch.mockImplementation(() => new Promise(() => {}));
-		vi.stubGlobal("fetch", mockFetch);
 		await renderRoute("/");
 		expect(screen.getByText("Checking API...")).toBeInTheDocument();
 	});
 
 	it("shows unavailable status when the health check fails", async () => {
 		mockFetch.mockRejectedValue(new TypeError("Network error"));
-		vi.stubGlobal("fetch", mockFetch);
 		await renderRoute("/");
 		expect(await screen.findByText("API status: unavailable", {}, { timeout: 3000 })).toBeInTheDocument();
 	});
