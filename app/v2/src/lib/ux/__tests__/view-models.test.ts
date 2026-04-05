@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { QuizResultData } from "@/components/quiz-result/types";
 import {
 	createHomeMotivationViewModel,
 	createProfileGrowthViewModel,
 	createQuizResultMotivationViewModel,
 	createRankingMotivationViewModel,
 } from "@/lib/ux";
+import type { QuizResultMotivationInput, RankingEntry } from "@/lib/ux/types";
 
 describe("motivation view models", () => {
 	it("builds home motivation data from the shared score tiers", () => {
@@ -20,15 +20,9 @@ describe("motivation view models", () => {
 	});
 
 	it("builds quiz result motivation data with a positive retry loop", () => {
-		const resultData: QuizResultData = {
+		const resultData: QuizResultMotivationInput = {
 			totalScore: 320,
-			results: [
-				{ questionId: "q1", prompt: "q1", isCorrect: true, userAnswer: "a", correctAnswer: "a", explanation: "x" },
-				{ questionId: "q2", prompt: "q2", isCorrect: true, userAnswer: "a", correctAnswer: "a", explanation: "x" },
-				{ questionId: "q3", prompt: "q3", isCorrect: true, userAnswer: "a", correctAnswer: "a", explanation: "x" },
-				{ questionId: "q4", prompt: "q4", isCorrect: true, userAnswer: "a", correctAnswer: "a", explanation: "x" },
-				{ questionId: "q5", prompt: "q5", isCorrect: false, userAnswer: "a", correctAnswer: "b", explanation: "x" },
-			],
+			results: [{ isCorrect: true }, { isCorrect: true }, { isCorrect: true }, { isCorrect: true }, { isCorrect: false }],
 		};
 
 		const viewModel = createQuizResultMotivationViewModel(resultData, "BLACKPINK");
@@ -41,18 +35,23 @@ describe("motivation view models", () => {
 	});
 
 	it("builds ranking data with top three and around-you blocks", () => {
-		const viewModel = createRankingMotivationViewModel("総合");
+		const entries: ReadonlyArray<RankingEntry> = [
+			{ rank: 1, userName: "momo_love", layerName: "マスター", score: 4980 },
+			{ rank: 2, userName: "kpop_queen", layerName: "マスター", score: 4720 },
+			{ rank: 3, userName: "twice_fan99", layerName: "エキスパート", score: 4480 },
+			{ rank: 4, userName: "bias_wrecker", layerName: "アドバンス", score: 2510 },
+			{ rank: 5, userName: "mv_reactor", layerName: "ビギナー", score: 2380 },
+		];
+		const viewModel = createRankingMotivationViewModel({
+			scopeLabel: "総合",
+			entries,
+		});
 
 		expect(viewModel.topThree).toHaveLength(3);
 		expect(viewModel.aroundYou).not.toBeNull();
 		expect(viewModel.aroundYou?.neighbors.some((entry) => entry.isSelf)).toBe(true);
 		expect(viewModel.fullList.some((entry) => entry.isSelf)).toBe(true);
-	});
-
-	it("uses group id rather than display label to derive current user ranking score", () => {
-		const viewModel = createRankingMotivationViewModel("aespa", "3");
-
-		expect(viewModel.aroundYou?.myScore).toBe(920);
+		expect(viewModel.aroundYou?.pointsToNextRank).toBe(60);
 	});
 
 	it("builds profile growth data with next goal and badge hints", () => {

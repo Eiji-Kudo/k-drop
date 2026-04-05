@@ -1,4 +1,12 @@
+import { MOCK_BADGES, MOCK_GROUPS, MOCK_PROGRESS, MOCK_USER } from "@/components/profile/mock-data";
 import type { CurrentUserProfile, ScoreTier } from "@/lib/ux/types";
+
+const GROUP_MASTERY_SCORES: Record<string, number> = {
+	"1": 520,
+	"2": 860,
+	"3": 920,
+	"4": 480,
+};
 
 export const SCORE_TIERS: ReadonlyArray<ScoreTier> = [
 	{ name: "ルーキー", minScore: 0 },
@@ -11,23 +19,17 @@ export const SCORE_TIERS: ReadonlyArray<ScoreTier> = [
 ] as const;
 
 export const CURRENT_USER: CurrentUserProfile = {
-	displayName: "KPOPファン太郎",
+	displayName: MOCK_USER.userName,
 	rankingName: "kpop_taro",
-	nickname: "@kpop_taro",
-	currentScore: 2450,
-	fanSince: new Date("2022-03-15"),
-	weeklyGrowthPercent: 12.5,
-	description: "BLACKPINK と aespa を中心に、短時間で回せるクイズを毎日1本ずつ進めているファン。",
-	badges: [
-		{ type: "quiz_master", level: "gold", name: "Quiz Master" },
-		{ type: "concert_goer", level: "silver", name: "Concert Goer" },
-		{ type: "photocard_collector", level: "bronze", name: "Photocard Collector" },
-		{ type: "dance_cover_star", level: "silver", name: "Dance Cover Star" },
-	],
-	topGroups: [
-		{ groupId: "3", groupName: "aespa", score: 920 },
-		{ groupId: "2", groupName: "BLACKPINK", score: 860 },
-		{ groupId: "5", groupName: "LE SSERAFIM", score: 640 },
-		{ groupId: "4", groupName: "IVE", score: 520 },
-	],
+	nickname: MOCK_USER.nickname,
+	currentScore: MOCK_PROGRESS.currentScore,
+	fanSince: MOCK_USER.fanSince ?? new Date(),
+	weeklyGrowthPercent: MOCK_PROGRESS.percentageIncrease ?? 0,
+	description: MOCK_USER.description,
+	badges: MOCK_BADGES,
+	topGroups: MOCK_GROUPS.map((group) => ({
+		groupId: group.id,
+		groupName: group.name,
+		score: GROUP_MASTERY_SCORES[group.id] ?? 480,
+	})).sort((left, right) => right.score - left.score),
 };

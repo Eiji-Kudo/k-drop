@@ -114,3 +114,10 @@ export type RankingEntry = {
 	score: number;
 	groupName?: string;
 };
+
+export type QuizResultMotivationInput = {
+	totalScore: number;
+	results: Array<{
+		isCorrect: boolean;
+	}>;
+};

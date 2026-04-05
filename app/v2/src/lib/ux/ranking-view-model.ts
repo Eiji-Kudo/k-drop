@@ -1,7 +1,12 @@
-import { getGroupRankings, TOTAL_RANKINGS } from "@/components/ranking/mock-data";
 import { CURRENT_USER } from "@/lib/ux/mock-state";
 import { getTierProgress } from "@/lib/ux/progression";
 import type { RankingEntry, RankingMotivationViewModel } from "@/lib/ux/types";
+
+type CreateRankingMotivationViewModelInput = {
+	scopeLabel: string;
+	entries: ReadonlyArray<RankingEntry>;
+	currentScore?: number;
+};
 
 function createRankingEntry(entry: RankingEntry, isSelf = false) {
 	return {
@@ -31,9 +36,11 @@ function injectCurrentUser(entries: ReadonlyArray<RankingEntry>, currentScore: n
 	}));
 }
 
-export function createRankingMotivationViewModel(scopeLabel: string, groupId?: string): RankingMotivationViewModel {
-	const sourceEntries = groupId ? getGroupRankings(groupId) : TOTAL_RANKINGS;
-	const currentScore = groupId ? (CURRENT_USER.topGroups.find((group) => group.groupId === groupId)?.score ?? 520) : CURRENT_USER.currentScore;
+export function createRankingMotivationViewModel({
+	scopeLabel,
+	entries: sourceEntries,
+	currentScore = CURRENT_USER.currentScore,
+}: CreateRankingMotivationViewModelInput): RankingMotivationViewModel {
 	const entries = injectCurrentUser(sourceEntries, currentScore);
 	const selfIndex = entries.findIndex((entry) => entry.userName === CURRENT_USER.rankingName);
 	const fullList = entries.map((entry) => createRankingEntry(entry, entry.userName === CURRENT_USER.rankingName));

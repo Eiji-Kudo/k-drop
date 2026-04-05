@@ -1,9 +1,8 @@
-import type { QuizResultData } from "@/components/quiz-result/types";
 import { getCurrentUserScore, getTierProgress } from "@/lib/ux/progression";
-import type { QuizResultMotivationViewModel } from "@/lib/ux/types";
+import type { QuizResultMotivationInput, QuizResultMotivationViewModel } from "@/lib/ux/types";
 
 export function createQuizResultMotivationViewModel(
-	data: QuizResultData,
+	data: QuizResultMotivationInput,
 	groupName = "BLACKPINK",
 	currentScore = getCurrentUserScore(),
 ): QuizResultMotivationViewModel {
