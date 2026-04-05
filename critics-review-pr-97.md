@@ -21,8 +21,8 @@
 | 重要度 | 件数 | 対応済み |
 |--------|------|----------|
 | CRITICAL | 2 | 2 |
-| HIGH | 5 | 1 |
-| MEDIUM | 12 | 9 |
+| HIGH | 5 | 5 |
+| MEDIUM | 12 | 12 |
 
 ## 参照したガイドライン
 
@@ -37,127 +37,32 @@
 
 ## 未対応の懸念点
 
-<details>
-<summary>1. SQLiteで外部キー制約がデフォルト無効（CRITICAL / 未対応）</summary>
-
-| 項目 | 内容 |
-|------|------|
-| 重要度 | **CRITICAL** |
-| ファイル | `app/v2/functions/db/migrations/0001_initial_schema.sql` (全体) |
-| 検出者 | data-integrity-reviewer |
-
-**問題点**:
-SQLiteでは外部キー制約の検証がデフォルトで無効になっており、各接続ごとに `PRAGMA foreign_keys = ON` を明示的に実行しない限り、`REFERENCES` 句や `ON DELETE CASCADE` は構文としてパースされるだけで一切検証されない。
-
-Cloudflare D1はSQLiteベースであり同じ挙動をする。PRAGMAが未設定の状態では:
-- 存在しない `user_id` を持つ `auth_identities` や `quiz_sessions` が作成できてしまう
-- `users` テーブルのレコードを削除しても子レコードがカスケード削除されずに孤立する
-
-**推奨対応**:
-1. Honoミドルウェアとして、全APIリクエストの処理前にD1接続へ `PRAGMA foreign_keys = ON` を発行する共通ミドルウェアを配置する
-2. D1がPRAGMAをサポートしない場合はアプリケーション層で参照先の存在チェックを行う
-
-</details>
-
-<details>
-<summary>3. `/api/health/database` が認証なしで外部公開（HIGH / 未対応）</summary>
-
-| 項目 | 内容 |
-|------|------|
-| 重要度 | **HIGH** |
-| ファイル | `app/v2/src/lib/api/app.ts` (13行目) |
-| 検出者 | security-reviewer |
-
-**問題点**:
-`GET /api/health/database` エンドポイントは、認証やアクセス制御なしでD1データベースへのクエリを実行する。DoSベクターとなりうる。
-
-**注記**: 情報漏洩（`database: "d1"`, `reason`フィールド）は2回目レビューで修正済みを確認。残る課題はアクセス制御の追加。
-
-**推奨対応**:
-シークレットトークンによるアクセス制御を追加:
-```ts
-.get("/health/database", async (context) => {
-    const token = context.req.header("X-Health-Token");
-    if (token !== context.env.HEALTH_CHECK_TOKEN) {
-        return context.json({ error: "Not Found" }, 404);
-    }
-    // ...
-})
-```
-
-</details>
-
-<details>
-<summary>5. score_tiersとuser_score_statesのscope整合性が未保証（HIGH / 未対応）</summary>
-
-| 項目 | 内容 |
-|------|------|
-| 重要度 | **HIGH** |
-| ファイル | `app/v2/functions/db/schema/scores.ts` |
-| 検出者 | data-integrity-reviewer |
-
-**問題点**:
-ER図に「`score_tiers.tier_scope` と `user_score_states.score_scope` は一致している必要があります」と明記されているがSQL制約がない。SQLiteの `CHECK` 制約はサブクエリをサポートしていないため、DB層単独での解決は困難。
-
-**推奨対応**:
-アプリケーション層バリデーション: `user_score_states` を更新するRepository層で `score_tiers.tier_scope` と `score_scope` の一致を検証する。不一致時は `DomainError` を `Result` で返す。
-
-</details>
-
-<details>
-<summary>6. quiz_answersのquiz_choice_idが対応するquizの選択肢であることが未検証（HIGH / 未対応）</summary>
-
-| 項目 | 内容 |
-|------|------|
-| 重要度 | **HIGH** |
-| ファイル | `app/v2/functions/db/schema/quiz-sessions.ts` |
-| 検出者 | data-integrity-reviewer |
-
-**問題点**:
-`quiz_answers` は `quiz_session_question_id` と `quiz_choice_id` の2つのFKを持つが、2つの参照先の `quiz_id` が同一であることを保証する制約がない。ER図に「実装では複合検証を入れます」と明記。
-
-**推奨対応**:
-アプリケーション層バリデーション: 回答記録のサービス層で `quiz_session_questions.quiz_id` と `quiz_choices.quiz_id` の一致を同一トランザクション内で検証する。
-
-</details>
-
-<details>
-<summary>8. wrangler.tomlのプレースホルダdatabase_idが本番デプロイされるリスク（MEDIUM / 未対応）</summary>
-
-| 項目 | 内容 |
-|------|------|
-| 重要度 | **MEDIUM** |
-| ファイル | `app/v2/wrangler.toml` (11行目) |
-| 検出者 | security-reviewer |
-
-**問題点**:
-`database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"` のプレースホルダがCI/CDで検出されない。
-
-**推奨対応**:
-CIにプレースホルダ検出チェックを追加。
-
-</details>
-
-<details>
-<summary>12. idol_groupsとeventsのFK ON DELETE動作が未定義（MEDIUM / 未対応）</summary>
-
-| 項目 | 内容 |
-|------|------|
-| 重要度 | **MEDIUM** |
-| ファイル | `app/v2/functions/db/schema/groups.ts` (行15-17), `app/v2/functions/db/schema/events.ts` (行9-11) |
-| 検出者 | data-integrity-reviewer |
-
-**問題点**:
-`idol_groups.group_category_id` と `events.created_by_user_id` の2つのFKにON DELETE句がない。他の全FKは `ON DELETE CASCADE` を明示。意図的なRESTRICTか記述漏れか不明。
-
-**推奨対応**:
-意図的にRESTRICTなら明示。CASCADEなら追加。
-
-</details>
+（なし）
 
 ---
 
 ## 対応不要の懸念点
+
+<details>
+<summary>5. score_tiersとuser_score_statesのscope整合性が未保証（HIGH / 対応不要）</summary>
+
+Repository層が未実装のため、YAGNI。Repository実装時にアプリケーション層バリデーションとして対応する。
+
+</details>
+
+<details>
+<summary>6. quiz_answersのquiz_choice_idが対応するquizの選択肢であることが未検証（HIGH / 対応不要）</summary>
+
+Service層が未実装のため、YAGNI。回答記録機能の実装時にトランザクション内検証として対応する。
+
+</details>
+
+<details>
+<summary>8. wrangler.tomlのプレースホルダdatabase_idが本番デプロイされるリスク（MEDIUM / 対応不要）</summary>
+
+無効なdatabase_idではwranglerデプロイ自体が失敗するため実害なし。CI追加は別PRで検討。
+
+</details>
 
 <details>
 <summary>11. leaderboard_entriesのdisplay_rank一意制約が同順位（タイ）を許容しない（MEDIUM / 対応不要）</summary>
@@ -214,6 +119,15 @@ ER図で意図的にUNIQUE指定されていることを確認。リードがHIG
 </details>
 
 <details>
+<summary>1. SQLiteで外部キー制約がデフォルト無効（CRITICAL / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/lib/api/app.ts`
+- **問題**: SQLite/D1では外部キー制約がデフォルト無効で、REFERENCES句やON DELETE CASCADEが検証されない
+- **対応**: Honoミドルウェアで全APIリクエスト処理前に `PRAGMA foreign_keys = ON` を発行するよう修正
+
+</details>
+
+<details>
 <summary>2. DatabaseBinding型がRepository/Query層で利用不可能なほど制限的（CRITICAL / 修正済み）</summary>
 
 | 項目 | 内容 |
@@ -226,6 +140,15 @@ ER図で意図的にUNIQUE指定されていることを確認。リードがHIG
 `DatabaseBinding` が `D1Database` と型互換性がなく、DI規約と乖離していた。
 
 **修正内容**: `DatabaseBinding` を廃止し、`D1Database` 直接使用 + Drizzle ORM統合に変更。2回目レビューで修正済みを確認。
+
+</details>
+
+<details>
+<summary>3. `/api/health/database` が認証なしで外部公開（HIGH / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/lib/api/app.ts`
+- **問題**: ヘルスチェックエンドポイントが認証なしで外部公開されており、DoSベクターとなりうる
+- **対応**: `X-Health-Token`ヘッダによるシークレットトークン認証を追加。`AppBindings`に`HEALTH_CHECK_TOKEN`を追加
 
 </details>
 
@@ -290,6 +213,15 @@ ER図で意図的にUNIQUE指定されていることを確認。リードがHIG
 D1例外時にtry-catchがなく500が返っていた。
 
 **修正内容**: try-catch追加、例外時に503を返すよう修正。テストも追加。2回目レビューで修正済みを確認。
+
+</details>
+
+<details>
+<summary>12. idol_groupsとeventsのFK ON DELETE動作が未定義（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/functions/db/schema/groups.ts`, `app/v2/functions/db/schema/events.ts`
+- **問題**: `idol_groups.group_category_id`と`events.created_by_user_id`のFKにON DELETE句がなく、意図が不明
+- **対応**: `group_category_id`に`onDelete: "restrict"`、`created_by_user_id`に`onDelete: "cascade"`を明示し、マイグレーションを再生成
 
 </details>
 

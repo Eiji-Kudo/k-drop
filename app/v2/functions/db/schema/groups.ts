@@ -15,7 +15,7 @@ export const idolGroups = sqliteTable(
 		idolGroupId: text("idol_group_id").primaryKey(),
 		groupCategoryId: text("group_category_id")
 			.notNull()
-			.references(() => groupCategories.groupCategoryId),
+			.references(() => groupCategories.groupCategoryId, { onDelete: "restrict" }),
 		slug: text("slug").notNull().unique(),
 		groupName: text("group_name").notNull(),
 		thumbnailUrl: text("thumbnail_url"),

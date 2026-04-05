@@ -55,7 +55,7 @@ CREATE TABLE `events` (
 	`ends_at` text NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	FOREIGN KEY (`created_by_user_id`) REFERENCES `users`(`user_id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`created_by_user_id`) REFERENCES `users`(`user_id`) ON UPDATE no action ON DELETE cascade,
 	CONSTRAINT "events_capacity_check" CHECK("events"."capacity" IS NULL OR "events"."capacity" > 0),
 	CONSTRAINT "events_dates_check" CHECK("events"."ends_at" >= "events"."starts_at")
 );
@@ -78,7 +78,7 @@ CREATE TABLE `idol_groups` (
 	`status` text NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	FOREIGN KEY (`group_category_id`) REFERENCES `group_categories`(`group_category_id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`group_category_id`) REFERENCES `group_categories`(`group_category_id`) ON UPDATE no action ON DELETE restrict,
 	CONSTRAINT "idol_groups_status_check" CHECK("idol_groups"."status" IN ('active', 'inactive', 'archived'))
 );
 --> statement-breakpoint

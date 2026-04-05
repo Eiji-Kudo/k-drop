@@ -7,12 +7,22 @@ import { getDatabase } from "../../../functions/core/db/bindings";
 const app = new Hono<AppBindings>()
 	.basePath("/api")
 	.use(secureHeaders())
+	.use(async (context, next) => {
+		if (context.env?.DB) {
+			await context.env.DB.exec("PRAGMA foreign_keys = ON");
+		}
+		await next();
+	})
 	.get("/health", (context) => {
 		return context.json({
 			status: "ok",
 		});
 	})
 	.get("/health/database", async (context) => {
+		const token = context.req.header("X-Health-Token");
+		if (token !== context.env.HEALTH_CHECK_TOKEN) {
+			return context.json({ error: "Not Found" }, 404);
+		}
 		try {
 			const db = getDatabase(context);
 			const result = await db.get<{ ok: number }>(sql`SELECT 1 AS ok`);

@@ -9,7 +9,7 @@ export const events = sqliteTable(
 		eventId: text("event_id").primaryKey(),
 		createdByUserId: text("created_by_user_id")
 			.notNull()
-			.references(() => users.userId),
+			.references(() => users.userId, { onDelete: "cascade" }),
 		title: text("title").notNull(),
 		description: text("description"),
 		venueName: text("venue_name"),

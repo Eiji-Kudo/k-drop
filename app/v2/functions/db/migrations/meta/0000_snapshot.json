@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "8225e8b0-22e4-4e04-9d29-8fba8bb8edaf",
+  "id": "9aa9151d-ce85-41e7-b9c8-7624c4f1e1b8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "drop_transactions": {
@@ -418,7 +418,7 @@
           "columnsTo": [
             "user_id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -568,7 +568,7 @@
           "columnsTo": [
             "group_category_id"
           ],
-          "onDelete": "no action",
+          "onDelete": "restrict",
           "onUpdate": "no action"
         }
       },
