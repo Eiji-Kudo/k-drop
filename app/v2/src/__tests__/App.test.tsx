@@ -47,8 +47,8 @@ describe("App routes", () => {
 		expect(screen.getByText("軽いオタク")).toBeInTheDocument();
 		expect(screen.getByText("問題を解く")).toBeInTheDocument();
 		expect(screen.getByText("問題を作成")).toBeInTheDocument();
-		expect(screen.getByText("ランキング")).toBeInTheDocument();
-		expect(screen.getByText("プロフィール")).toBeInTheDocument();
+		expect(screen.getAllByText("ランキング").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("プロフィール").length).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders star rating for user level", async () => {
