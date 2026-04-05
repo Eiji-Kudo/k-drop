@@ -21,7 +21,7 @@
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
 | HIGH | 2 | 2 |
-| MEDIUM | 3 | 3 |
+| MEDIUM | 5 | 5 |
 
 ## 参照したガイドライン
 
@@ -96,5 +96,23 @@
 - **ファイル**: `app/v2/docs/project-structure.md`, `app/v2/docs/component-placement-guide.md`
 - **問題**: `src/architecture.md` では `src/features/<feature>` を frontend 実装本体の置き場とした一方、周辺ガイドは `src/components` / `src/routes` 前提の説明を残していた。
 - **対応**: 両ドキュメントを更新し、`src/routes` は routing 関心、`src/features` は feature 実装、`src/components` は shared UI という分担を明文化した。
+
+</details>
+
+<details>
+<summary>6. feature page 内の local navigation 許容範囲がドキュメント上で曖昧だった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md`, `app/v2/docs/project-structure.md`
+- **問題**: `quiz` page が `Link` / `useNavigate` を持つ実装に対し、ドキュメントが「routing 関心は routes に集中」とだけ読める状態で、許容境界が曖昧だった。
+- **対応**: route path / loader / guard の定義元は `src/routes` としつつ、feature page が local navigation のために router hook を使うこと自体は許容する、と明文化した。
+
+</details>
+
+<details>
+<summary>7. tab shell を route 構造で表現しきれていない点は将来の pathless layout 化で検討する（MEDIUM / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/routes/__root.tsx`
+- **問題**: tab bar の表示制御は root layout の denylist で管理しており、将来 full-screen route が増えた場合は明示追加が必要になる。
+- **対応**: 現時点では既知の full-screen route が `quiz/$sessionId` と `quiz/question` に限られ、実害は解消済みのためこの PR では対応不要とした。tab shell を route tree で表現する pathless layout 化は別リファクタで扱う。
 
 </details>

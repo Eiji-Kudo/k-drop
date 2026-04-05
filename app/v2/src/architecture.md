@@ -223,8 +223,14 @@ TanStack Router の route tree に含めたくない補助ファイルは、`-` 
 - feature-local schema
 - feature-local mock
 - feature-local utility / type / constant
+- feature 内で閉じる local navigation UI
 
 `profile` `ranking` `quiz` のように、1つの feature を触る時の探索起点にする。
+
+補足:
+
+- route path / params / loader / guard の定義元は `src/routes` に置く
+- ただし feature page が自身の UI フローのために `Link` / `useNavigate` を使うこと自体は許容する
 
 ### `src/components/`
 

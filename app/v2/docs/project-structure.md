@@ -63,6 +63,11 @@ app/v2/
    - YES → `src/routes/` に配置
    - NO → `src/features/<feature>/` に配置
 
+補足:
+
+- `src/routes/` は route 定義の入口を置く
+- `src/features/<feature>/` の page / component が local navigation のために `Link` / `useNavigate` を使うのは許容する
+
 ### ステップ 2: レイヤーの決定
 
 サーバー側のドメイン機能は `docs/component-placement-guide.md` の判断フローに従い、レイヤーを決定する。
