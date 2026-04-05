@@ -1,17 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
-import { ChoicesSection } from "@/components/quiz/ChoicesSection";
+import { type Choice, ChoicesSection } from "@/components/quiz/ChoicesSection";
 import { QuestionPrompt } from "@/components/quiz/QuestionPrompt";
 import { QuizHeader } from "@/components/quiz/QuizHeader";
 
 type QuizQuestion = {
 	prompt: string;
 	explanation: string;
-	choices: ReadonlyArray<{
-		choice_order: number;
-		choice_text: string;
-		is_correct: boolean;
-	}>;
+	choices: ReadonlyArray<Choice>;
 };
 
 const MOCK_QUESTIONS: ReadonlyArray<QuizQuestion> = [

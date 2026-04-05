@@ -1,4 +1,4 @@
-type ChoiceVariant = "unanswered" | "correct" | "incorrect";
+export type ChoiceVariant = "unanswered" | "correct" | "incorrect";
 
 type QuizChoiceProps = {
 	index: number;
@@ -15,10 +15,12 @@ const variantStyles: Record<ChoiceVariant, string> = {
 };
 
 export function QuizChoice({ index, label, variant, disabled, onPress }: QuizChoiceProps) {
+	const disabledStyle = disabled && variant === "unanswered" ? "opacity-50 cursor-not-allowed" : "";
+
 	return (
 		<button
 			type="button"
-			className={`w-full rounded-lg border px-4 py-3 text-left text-base font-medium ${variantStyles[variant]}`}
+			className={`w-full rounded-lg border px-4 py-3 text-left text-base font-medium ${variantStyles[variant]} ${disabledStyle}`}
 			disabled={disabled}
 			onClick={onPress}
 		>

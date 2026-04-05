@@ -8,7 +8,7 @@ export function ResultModal({ isCorrect }: ResultModalProps) {
 	const text = isCorrect ? "正解!" : "不正解";
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20" role="dialog" aria-modal="true" aria-label={text}>
 			<div
 				className="flex aspect-square w-[70vw] max-w-[300px] flex-col items-center justify-start gap-4 rounded-3xl border-4 bg-white/90 pt-5 shadow-lg backdrop-blur-sm"
 				style={{ borderColor: color }}

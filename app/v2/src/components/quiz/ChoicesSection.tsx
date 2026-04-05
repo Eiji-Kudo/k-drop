@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { QuizChoice } from "@/components/quiz/QuizChoice";
+import { type ChoiceVariant, QuizChoice } from "@/components/quiz/QuizChoice";
 import { ResultModal } from "@/components/quiz/ResultModal";
 
 type DisplayPhase = "question" | "result" | "explanation";
 
-type Choice = {
+export type Choice = {
 	choice_order: number;
 	choice_text: string;
 	is_correct: boolean;
@@ -15,8 +15,6 @@ type ChoicesSectionProps = {
 	explanation: string;
 	onNext: () => void;
 };
-
-type ChoiceVariant = "unanswered" | "correct" | "incorrect";
 
 function getChoiceVariant(index: number, choices: ReadonlyArray<Choice>, selectedIndex: number | null): ChoiceVariant {
 	if (selectedIndex === null) return "unanswered";
