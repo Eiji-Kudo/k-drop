@@ -41,10 +41,12 @@
 		"@tanstack/router-plugin": "1.167.12",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
+		"@types/better-sqlite3": "^7.6.13",
 		"@types/node": "^22.15.0",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
 		"@vitejs/plugin-react": "^6.0.1",
+		"better-sqlite3": "^12.8.0",
 		"daisyui": "5.5.19",
 		"drizzle-kit": "^0.31.10",
 		"eslint": "^9.39.4",
@@ -61,5 +63,8 @@
 		"vite": "^8.0.1",
 		"vitest": "^4.1.2",
 		"wrangler": "4.80.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": ["better-sqlite3"]
 	}
 }
