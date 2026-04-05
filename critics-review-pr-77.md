@@ -5,7 +5,7 @@
 - **PR**: v2: TanStack Router file-based routing を導入
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/77
 - **調査日**: 2026-04-05
-- **レビュー回数**: 1
+- **レビュー回数**: 2
 - **レビュー方式**: 並列レビュー + 相互検証
 
 ## レビュワー構成
