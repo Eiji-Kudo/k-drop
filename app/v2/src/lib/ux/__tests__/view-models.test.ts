@@ -34,6 +34,16 @@ describe("motivation view models", () => {
 		expect(viewModel.primaryRetryLabel).toBe("もう一度解く");
 	});
 
+	it("falls back to a retry-oriented headline when quiz results are empty", () => {
+		const viewModel = createQuizResultMotivationViewModel({
+			totalScore: 0,
+			results: [],
+		});
+
+		expect(viewModel.totalQuestionCount).toBe(0);
+		expect(viewModel.resultHeadline).toBe("次でしっかり巻き返せる");
+	});
+
 	it("builds ranking data with top three and around-you blocks", () => {
 		const entries: ReadonlyArray<RankingEntry> = [
 			{ rank: 1, userName: "momo_love", layerName: "マスター", score: 4980 },

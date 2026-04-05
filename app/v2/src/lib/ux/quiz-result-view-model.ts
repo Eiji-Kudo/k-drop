@@ -7,7 +7,7 @@ export function createQuizResultMotivationViewModel(
 	currentScore = getCurrentUserScore(),
 ): QuizResultMotivationViewModel {
 	const correctCount = data.results.filter((result) => result.isCorrect).length;
-	const accuracy = correctCount / data.results.length;
+	const accuracy = data.results.length === 0 ? 0 : correctCount / data.results.length;
 	const headline = accuracy >= 0.8 ? "かなり仕上がってきた" : accuracy >= 0.5 ? "この調子で伸ばせる" : "次でしっかり巻き返せる";
 	const nextProgress = getTierProgress(currentScore + data.totalScore);
 

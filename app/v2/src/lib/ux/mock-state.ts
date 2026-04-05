@@ -1,5 +1,5 @@
-import { MOCK_BADGES, MOCK_GROUPS, MOCK_PROGRESS, MOCK_USER } from "@/components/profile/mock-data";
 import type { CurrentUserProfile, ScoreTier } from "@/lib/ux/types";
+import { MOCK_BADGES, MOCK_GROUPS, MOCK_PROGRESS, MOCK_USER } from "@/mocks/profile";
 
 const GROUP_MASTERY_SCORES: Record<string, number> = {
 	"1": 520,
