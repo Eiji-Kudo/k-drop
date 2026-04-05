@@ -10,8 +10,8 @@ async function renderRoute(path: string) {
 		}),
 	);
 
-	render(<RouterProvider router={router} />);
 	await router.load();
+	render(<RouterProvider router={router} />);
 }
 
 describe("App routes", () => {
