@@ -7,6 +7,7 @@
 }
 
 .hero,
+.status,
 .tooling {
 	border: 1px solid #d9dce3;
 	border-radius: 1rem;
@@ -31,8 +32,16 @@
 	line-height: 1.6;
 }
 
+.status h2,
 .tooling h2 {
 	margin: 0 0 1rem;
+}
+
+.status-value {
+	margin: 0;
+	color: #0f172a;
+	font-size: 1.125rem;
+	font-weight: 600;
 }
 
 .tooling ul {
@@ -52,6 +61,7 @@
 	}
 
 	.hero,
+	.status,
 	.tooling {
 		padding: 1.5rem;
 	}
