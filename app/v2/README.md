@@ -12,6 +12,7 @@ Vite + React + TypeScript project for `app/v2`.
 2. Use the pinned pnpm version through Corepack if your global `pnpm` is not already aligned.
    - `corepack enable`
 3. Install dependencies with `corepack pnpm install`.
+4. If you are switching from another Node.js major with an existing `node_modules`, run `corepack pnpm run rebuild:native` once before running tests or CI.
 
 `pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. If your shell still routes `pnpm` through an older toolchain, prefer `corepack pnpm ...`.
 
@@ -21,6 +22,7 @@ Vite + React + TypeScript project for `app/v2`.
 - `pnpm run build` — type-check and create a production build
 - `pnpm run test` — run Vitest once
 - `pnpm run test:watch` — run Vitest in watch mode
+- `pnpm run rebuild:native` — rebuild native test dependencies after switching Node.js majors
 - `pnpm run test:types` — run TypeScript project type-checking
 - `pnpm run lint` — run ESLint
 - `pnpm run format` — format files with Biome
