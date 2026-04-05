@@ -1,37 +1,78 @@
 import { Colors } from '@/constants/Colors'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import * as Haptics from 'expo-haptics'
+import { MotiPressable } from 'moti/interactions'
+import { StyleSheet, Text, View } from 'react-native'
 
-type SecondaryButtonProps = React.ComponentProps<typeof TouchableOpacity> & {
+type SecondaryButtonProps = {
   children: React.ReactNode
+  onPress?: () => void
+  disabled?: boolean
+  style?: object
 }
 
-export function SecondaryButton({ children, ...props }: SecondaryButtonProps) {
+export function SecondaryButton({
+  children,
+  disabled,
+  onPress,
+  style,
+}: SecondaryButtonProps) {
+  const handlePress = async () => {
+    if (!disabled && onPress) {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+      onPress()
+    }
+  }
+
   return (
-    <TouchableOpacity style={[styles.button, props.style]} {...props}>
-      <View style={styles.buttonContent}>
-        {typeof children === 'string' ? (
-          <Text style={styles.buttonText}>{children}</Text>
-        ) : (
-          children
-        )}
+    <MotiPressable
+      onPress={handlePress}
+      disabled={disabled}
+      animate={({ pressed }) => {
+        'worklet'
+        return {
+          scale: pressed ? 0.96 : 1,
+        }
+      }}
+      transition={{ type: 'timing', duration: 100 }}
+      style={style}
+    >
+      <View style={[styles.button, disabled && styles.buttonDisabled]}>
+        <View style={styles.buttonContent}>
+          {typeof children === 'string' ? (
+            <Text
+              style={[styles.buttonText, disabled && styles.buttonTextDisabled]}
+            >
+              {children}
+            </Text>
+          ) : (
+            children
+          )}
+        </View>
       </View>
-    </TouchableOpacity>
+    </MotiPressable>
   )
 }
 
 const styles = StyleSheet.create({
   button: {
     backgroundColor: Colors.secondary,
-    borderRadius: 10,
-    padding: 12,
+    borderRadius: 20,
+    padding: 16,
   },
   buttonContent: {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  buttonDisabled: {
+    backgroundColor: Colors.lightGray,
+  },
   buttonText: {
     color: Colors.text.primary,
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: '600',
     textAlign: 'center',
+  },
+  buttonTextDisabled: {
+    color: Colors.text.disabled,
   },
 })

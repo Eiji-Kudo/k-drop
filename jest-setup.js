@@ -1,3 +1,37 @@
+jest.mock('moti/interactions', () => ({
+  MotiPressable: ({ children, onPress, style, testID }) => {
+    const { TouchableOpacity } = require('react-native')
+    return require('react').createElement(
+      TouchableOpacity,
+      { onPress, style, testID },
+      children,
+    )
+  },
+}))
+
+jest.mock('moti', () => ({
+  MotiView: ({ children, style }) => {
+    const { View } = require('react-native')
+    return require('react').createElement(View, { style }, children)
+  },
+}))
+
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: ({ children, style }) => {
+    const { View } = require('react-native')
+    return require('react').createElement(View, { style }, children)
+  },
+}))
+
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn(),
+  ImpactFeedbackStyle: {
+    Light: 'light',
+    Medium: 'medium',
+    Heavy: 'heavy',
+  },
+}))
+
 jest.mock('@/utils/supabase', () => ({
   supabase: {
     auth: {

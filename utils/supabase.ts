@@ -2,6 +2,7 @@ import { Database } from '@/database.types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient } from '@supabase/supabase-js'
 import Constants from 'expo-constants'
+import { Platform } from 'react-native'
 import 'react-native-url-polyfill/auto'
 
 const supabaseUrl: string = Constants.expoConfig?.extra?.supabaseUrl ?? ''
@@ -14,11 +15,19 @@ if (!supabaseUrl || !supabaseAnonKey) {
   )
 }
 
+const isServer = Platform.OS === 'web' && typeof window === 'undefined'
+
+const noopStorage = {
+  getItem: () => Promise.resolve(null),
+  setItem: () => Promise.resolve(),
+  removeItem: () => Promise.resolve(),
+}
+
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: AsyncStorage,
+    storage: isServer ? noopStorage : AsyncStorage,
     autoRefreshToken: true,
-    persistSession: true,
+    persistSession: !isServer,
     detectSessionInUrl: false,
   },
 })
