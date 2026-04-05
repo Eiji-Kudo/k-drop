@@ -119,3 +119,117 @@ All commands should be run from `app/v2/`.
 - **Linter**: ESLint flat config
 - **Test runner**: Vitest + @testing-library/react
 - **Build**: Vite 8
+
+### Architecture
+
+- **DDD（ドメイン駆動設計）** を採用。集約境界を意識した設計を行う
+- 仕様・設計の確認が必要な場合は `app/v2/docs/` の各種ガイドを参照してから実装に着手
+
+### Directory Structure
+
+```
+app/v2/
+├── src/                        → フロントエンド (SPA)
+│   ├── components/             → 共有 UI コンポーネント
+│   ├── routes/                 → TanStack Router ページ
+│   └── lib/                    → API クライアント、ユーティリティ
+├── functions/                  → バックエンド (Pages Functions)
+│   ├── core/                   → ドメイン知識を含まない共通技術コード
+│   │   ├── errors/             → DomainError / InfraError / UnexpectedError
+│   │   ├── result/             → Result<T, E> 型
+│   │   ├── db/                 → D1 クライアント・トランザクション
+│   │   └── http/               → Hono ミドルウェア、エラーハンドラ
+│   ├── modules/                → ドメインモジュール
+│   │   └── <feature>/
+│   │       ├── domains/        → 集約・値オブジェクト
+│   │       ├── repositories/   → 1 集約 = 1 Repository
+│   │       ├── queries/        → 読み取り専用クエリ (CQRS)
+│   │       ├── services/       → アプリケーションサービス
+│   │       ├── handlers/       → Hono ハンドラ
+│   │       └── schemas/        → Zod スキーマ
+│   ├── db/                     → Drizzle スキーマ定義
+│   └── api/
+│       └── [[route]].ts        → Hono で全 API ルートをハンドル
+└── docs/                       → 設計ガイド
+```
+
+- 新規コードの配置に迷った場合:
+  1. ドメイン知識を含まない汎用技術 → `functions/core/`
+  2. ドメイン固有の機能 → `functions/modules/<feature>/`
+
+### Domain Design Principles
+
+- `domains/` 配下では不正な状態を表現できないようファクトリ (`initialize*`) を通じて生成し、ビジネスルールをドメイン層に集約
+- 状態遷移はメソッドで表現し、プロパティの直接書き換えは禁止
+- Repository は集約の復元と永続化のみを担い、読み取り系は `queries/` に分離
+- 集約間は ID 経由で参照。直接のオブジェクト参照は持たない
+
+### DI Pattern
+
+**ドメインエンティティ** (`domains/<name>/<name>.entity.ts`)
+
+```ts
+const FooEntity = z.object({ ... }).brand('Foo')
+export type Foo = z.infer<typeof FooEntity>
+
+export const initializeFoo = (input: { ... }): Foo => FooEntity.parse({ id: ulid(), ...input })
+export const reconstructFoo = (raw: { ... }): Foo => FooEntity.parse(raw)
+```
+
+**リポジトリ** (`repositories/<name>.repository.ts`)
+
+```ts
+export const fooRepository = (db: D1Database) => ({
+  findById: async (id: string) => { ... },
+  save: async (entity: Foo) => { ... },
+})
+export type FooRepository = ReturnType<typeof fooRepository>
+```
+
+**クエリ** (`queries/<name>.query.ts`)
+
+```ts
+export const listFoos = async (db: D1Database, args: ListArgs) => { ... }
+export type ListFoos = typeof listFoos
+```
+
+**ハンドラ** (`handlers/<name>.handler.ts`)
+
+```ts
+type Deps = { db: D1Database; listFoos: ListFoos }
+export const foosListHandler = ({ db, listFoos }: Deps) => {
+  return new Hono().get('/', async (c) => {
+    const result = await listFoos(db, { ... })
+    return c.json(result)
+  })
+}
+```
+
+### Error Handling
+
+- 予期した失敗は Result で返す。throw してよいのは UnexpectedError のみ
+- ハンドラーで switch + `satisfies never` による網羅性チェック
+- 詳細: `docs/error-handling.md`
+
+### Function Argument Convention
+
+| 引数の数 | スタイル | 例 |
+|---|---|---|
+| 1 つ | positional | `findById(id: string)` |
+| 2 つ以上 | named (オブジェクト) | `list({ idolGroupId, limit }: { ... })` |
+
+### Code Quality
+
+- TypeScript strict モード
+- 型アサーション（`as` キャスト）は禁止。型を正しく定義して解決する
+- `eslint-disable` コメントによるルール抑制は原則禁止。コードを再構造化して自然にルールを満たすこと
+
+### Design Documents
+
+- `docs/architecture.md` — 技術スタック・設計方針
+- `docs/project-structure.md` — モジュール配置の判断フロー
+- `docs/component-placement-guide.md` — レイヤーごとの責務整理
+- `docs/aggregate-boundary-guide.md` — 集約境界の設計指針
+- `docs/error-handling.md` — エラーハンドリング方針
+- `docs/core-module-organization.md` — コアモジュール配置方針
+- `er-diagram.md` — ER 図
