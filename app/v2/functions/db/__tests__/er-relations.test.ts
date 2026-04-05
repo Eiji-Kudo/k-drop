@@ -1,7 +1,7 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertGroupCategory, insertIdolGroup, insertQuiz, insertQuizChoice, insertQuizSession, insertSessionQuestion, insertUser, setupBaseData } from "./test-helper";
+import { NOW, createTestDb, insertGroupCategory, insertIdolGroup, insertQuiz, insertQuizChoice, insertQuizSession, insertScoreTier, insertSessionQuestion, insertUser, setupBaseData } from "./test-helper";
 
 let db: Database.Database;
 beforeEach(() => { db = createTestDb(); });
@@ -75,5 +75,24 @@ describe("FK 参照整合性", () => {
 		db.prepare("INSERT INTO auth_identities (auth_identity_id, user_id, provider, provider_subject_id, created_at, updated_at) VALUES (?,?,?,?,?,?)").run("a1", "user-1", "g", "s", NOW, NOW);
 		db.prepare("DELETE FROM users WHERE user_id = ?").run("user-1");
 		expect((db.prepare("SELECT count(*) as c FROM auth_identities WHERE user_id = ?").get("user-1") as { c: number }).c).toBe(0);
+	});
+});
+
+describe("ON DELETE no action (削除ブロック)", () => {
+	beforeEach(() => setupBaseData(db));
+
+	it("quiz_answers に参照されている quiz_choices は削除できない", () => {
+		insertQuiz(db);
+		insertQuizChoice(db, { quizChoiceId: "c1", choiceOrder: 1, isCorrect: 1 });
+		insertQuizSession(db, { answeredQuestionCount: 1, correctAnswerCount: 1, incorrectAnswerCount: 0, lastAnsweredAt: NOW });
+		insertSessionQuestion(db);
+		db.prepare("INSERT INTO quiz_answers (quiz_answer_id, quiz_session_question_id, quiz_choice_id, awarded_score, answered_at) VALUES (?,?,?,?,?)").run("a1", "sq-1", "c1", 10, NOW);
+		expect(() => db.prepare("DELETE FROM quiz_choices WHERE quiz_choice_id = ?").run("c1")).toThrow();
+	});
+
+	it("user_score_states に参照されている score_tiers は削除できない", () => {
+		insertScoreTier(db);
+		db.prepare("INSERT INTO user_score_states (user_score_state_id, user_id, score_scope, idol_group_id, score_tier_id, score_total, answered_count, correct_count, updated_at) VALUES (?,?,?,?,?,?,?,?,?)").run("uss", "user-1", "overall", null, "tier-1", 0, 0, 0, NOW);
+		expect(() => db.prepare("DELETE FROM score_tiers WHERE score_tier_id = ?").run("tier-1")).toThrow();
 	});
 });

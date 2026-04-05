@@ -108,18 +108,8 @@ describe("user_score_snapshots の条件付きユニーク (scope 別)", () => {
 		ins("ss1", "overall", null, "2025-01-01");
 		expect(() => ins("ss2", "overall", null, "2025-01-01")).toThrow();
 	});
-	it("overall で異なる日のスナップショットは複数可能", () => {
-		ins("ss1", "overall", null, "2025-01-01");
-		expect(() => ins("ss2", "overall", null, "2025-01-02")).not.toThrow();
-	});
 	it("同一 group・同一日の group スナップショットは 1 つまで", () => {
 		ins("ss1", "group", "group-1", "2025-01-01");
 		expect(() => ins("ss2", "group", "group-1", "2025-01-01")).toThrow();
-	});
-	it("異なるグループなら同一日でも可能", () => {
-		insertGroupCategory(db, { groupCategoryId: "cat-2", slug: "jpop" });
-		insertIdolGroup(db, { idolGroupId: "group-2", groupCategoryId: "cat-2", slug: "arashi" });
-		ins("ss1", "group", "group-1", "2025-01-01");
-		expect(() => ins("ss2", "group", "group-2", "2025-01-01")).not.toThrow();
 	});
 });

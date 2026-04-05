@@ -1,7 +1,7 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertQuizSession, insertScoreTier, setupBaseData } from "./test-helper";
+import { NOW, createTestDb, insertQuizSession, insertScoreTier, insertUser, setupBaseData } from "./test-helper";
 
 let db: Database.Database;
 beforeEach(() => { db = createTestDb(); setupBaseData(db); });
@@ -93,15 +93,11 @@ describe("leaderboard_entries の制約", () => {
 	it("unique(snapshot_id, display_rank)", () => { insertUser(db, { userId: "user-2" }); ins("e1", "user-1", 1, 100); expect(() => ins("e2", "user-2", 1, 90)).toThrow(); });
 });
 
-function insertUser(db: Database.Database, o: { userId: string }) {
-	db.prepare("INSERT INTO users (user_id, status, created_at, updated_at) VALUES (?,?,?,?)").run(o.userId, "active", NOW, NOW);
-}
-
-describe("user_score_snapshots のスコープ制約", () => {
-	it("overall なら idol_group_id は NULL", () => {
-		expect(() => db.prepare("INSERT INTO user_score_snapshots (user_score_snapshot_id, user_id, score_scope, idol_group_id, snapshot_date, score_total, created_at) VALUES (?,?,?,?,?,?,?)").run("sn1", "user-1", "overall", "group-1", "2025-01-01", 100, NOW)).toThrow();
-	});
-	it("group なら idol_group_id は必須", () => {
-		expect(() => db.prepare("INSERT INTO user_score_snapshots (user_score_snapshot_id, user_id, score_scope, idol_group_id, snapshot_date, score_total, created_at) VALUES (?,?,?,?,?,?,?)").run("sn1", "user-1", "group", null, "2025-01-01", 100, NOW)).toThrow();
-	});
+describe("user_score_snapshots の制約", () => {
+	const insSs = (id: string, scope: string, groupId: string | null, date: string, total = 100) =>
+		db.prepare("INSERT INTO user_score_snapshots (user_score_snapshot_id, user_id, score_scope, idol_group_id, snapshot_date, score_total, created_at) VALUES (?,?,?,?,?,?,?)").run(id, "user-1", scope, groupId, date, total, NOW);
+	it("overall なら idol_group_id は NULL", () => { expect(() => insSs("sn1", "overall", "group-1", "2025-01-01")).toThrow(); });
+	it("group なら idol_group_id は必須", () => { expect(() => insSs("sn1", "group", null, "2025-01-01")).toThrow(); });
+	it("score_total = 0 は有効", () => { expect(() => insSs("sn1", "overall", null, "2025-01-01", 0)).not.toThrow(); });
+	it("負の score_total は拒否", () => { expect(() => insSs("sn1", "overall", null, "2025-01-01", -1)).toThrow(); });
 });

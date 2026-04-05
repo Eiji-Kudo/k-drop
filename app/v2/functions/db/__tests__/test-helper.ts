@@ -1,17 +1,19 @@
 import Database from "better-sqlite3";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const MIGRATION_PATH = resolve(import.meta.dirname, "../migrations/0000_woozy_taskmaster.sql");
+const MIGRATIONS_DIR = resolve(import.meta.dirname, "../migrations");
 export const NOW = "2025-01-01T00:00:00Z";
 
 export function createTestDb(): Database.Database {
 	const db = new Database(":memory:");
 	db.pragma("journal_mode = WAL");
 	db.pragma("foreign_keys = ON");
-	const sql = readFileSync(MIGRATION_PATH, "utf-8");
-	for (const stmt of sql.split("--> statement-breakpoint").map((s) => s.trim()).filter(Boolean)) {
-		db.exec(stmt);
+	for (const file of readdirSync(MIGRATIONS_DIR).filter((f) => f.endsWith(".sql")).sort()) {
+		const sql = readFileSync(resolve(MIGRATIONS_DIR, file), "utf-8");
+		for (const stmt of sql.split("--> statement-breakpoint").map((s) => s.trim()).filter(Boolean)) {
+			db.exec(stmt);
+		}
 	}
 	return db;
 }

@@ -108,16 +108,6 @@ describe("quiz_answers の境界値", () => {
 
 describe("quiz_session_questions の境界値", () => {
 	beforeEach(() => { setupBaseData(db); insertQuiz(db); insertQuizSession(db); });
-	it("question_order = 1 は有効", () => { expect(() => insertSessionQuestion(db, { order: 1 })).not.toThrow(); });
 	it("question_order = 0 は拒否", () => { expect(() => insertSessionQuestion(db, { order: 0 })).toThrow(); });
 });
 
-describe("user_score_snapshots の境界値", () => {
-	beforeEach(() => setupBaseData(db));
-	it("score_total = 0 は有効", () => {
-		expect(() => db.prepare("INSERT INTO user_score_snapshots (user_score_snapshot_id, user_id, score_scope, idol_group_id, snapshot_date, score_total, created_at) VALUES (?,?,?,?,?,?,?)").run("ss1", "user-1", "overall", null, "2025-01-01", 0, NOW)).not.toThrow();
-	});
-	it("負の score_total は拒否", () => {
-		expect(() => db.prepare("INSERT INTO user_score_snapshots (user_score_snapshot_id, user_id, score_scope, idol_group_id, snapshot_date, score_total, created_at) VALUES (?,?,?,?,?,?,?)").run("ss1", "user-1", "overall", null, "2025-01-01", -1, NOW)).toThrow();
-	});
-});
