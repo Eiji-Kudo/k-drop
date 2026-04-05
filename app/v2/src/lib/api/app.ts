@@ -13,8 +13,12 @@ const app = new Hono<AppBindings>()
 	.get("/health/database", async (context) => {
 		const result = await getDatabase(context).prepare("SELECT 1 AS ok").first<{ ok: number }>();
 
-		if (result?.ok !== 1) {
-			return context.json({ status: "error", database: "d1" }, 503);
+		if (result == null) {
+			return context.json({ status: "error", database: "d1", reason: "query returned no rows" }, 503);
+		}
+
+		if (result.ok !== 1) {
+			return context.json({ status: "error", database: "d1", reason: "unexpected query result" }, 503);
 		}
 
 		return context.json({

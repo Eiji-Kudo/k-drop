@@ -31,6 +31,23 @@ describe("API", () => {
 		expect(env.DB.prepare).toHaveBeenCalledWith("SELECT 1 AS ok");
 	});
 
+	it("reports when the D1 health query returns no rows", async () => {
+		const env = {
+			DB: {
+				prepare: vi.fn(() => ({ first: vi.fn().mockResolvedValue(null) })),
+			},
+		} satisfies AppBindings["Bindings"];
+
+		const response = await app.request("/api/health/database", undefined, env);
+
+		expect(response.status).toBe(503);
+		await expect(response.json()).resolves.toEqual({
+			status: "error",
+			database: "d1",
+			reason: "query returned no rows",
+		});
+	});
+
 	it("returns not found for unknown API routes", async () => {
 		const response = await app.request("/api/unknown");
 
