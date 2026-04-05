@@ -84,6 +84,7 @@
 
 - 全体 Top ランキングだけでなく「自分の周辺順位」を重視する
 - 絶対順位だけでなく「次に抜ける相手」「同 tier 内の進捗差」を見せる
+- 絶対順位 leaderboard より、近い相手との相対比較を基本にする
 - ランキングは成長導線とセットで扱い、敗北感だけ残さない
 
 ## 目指す体験ループ
@@ -191,6 +192,107 @@
 
 - 単なるステータス一覧ではなく、「積み上がっている感」を出す
 
+## 画面別のデータ対応表
+
+### ホーム
+
+出したい要素:
+
+- 今日のおすすめ導線
+- 次 tier までの残り
+- 今週の進捗
+- 直近で伸びたグループ
+
+既存データで出せるもの:
+
+- `user_score_states.scoreTotal`
+- `user_score_states.scoreTierId`
+- `user_score_states.lastAnsweredAt`
+- `user_score_snapshots`
+
+導出ロジック例:
+
+- 次 tier まで残り = 現在 score と次 `score_tiers.minScore` の差
+- 今週の進捗 = 直近 7 日の `user_score_snapshots` 差分
+- 直近で伸びたグループ = group scope の score 差分が最大のもの
+
+### クイズ中
+
+出したい要素:
+
+- セッション進捗
+- 現在の正答数
+- 獲得 score
+- 連続正解感
+
+既存データで出せるもの:
+
+- `quiz_sessions.totalQuestionCount`
+- `quiz_sessions.answeredQuestionCount`
+- `quiz_sessions.correctAnswerCount`
+- `quiz_answers.awardedScore`
+
+追加ロジックで出せるもの:
+
+- 連続正解数はセッション内 state で一時管理可能
+- セッション獲得合計は `quiz_answers.awardedScore` の合算で算出可能
+
+### 結果画面
+
+出したい要素:
+
+- 今回の獲得量
+- 次 tier 進捗
+- 更新されたベスト
+- 次アクション
+
+既存データで出せるもの:
+
+- `quiz_answers.awardedScore` 合算
+- `quiz_sessions.correctAnswerCount`
+- `user_score_states.scoreTotal`
+- `score_tiers`
+
+### ランキング
+
+出したい要素:
+
+- Top 3
+- Around You
+- 次に抜ける相手との点差
+- scope 切り替え
+
+既存データで出せるもの:
+
+- `leaderboard_snapshots`
+- `leaderboard_entries`
+- `user_score_states`
+
+必要な実装メモ:
+
+- Around You 表示は、自ユーザーの rank を軸に前後数件を切り出す API / selector が必要
+
+### プロフィール
+
+出したい要素:
+
+- 現在 tier
+- 次 tier までの残り
+- 直近の成長
+- グループ別 mastery
+
+既存データで出せるもの:
+
+- `user_score_states`
+- `user_score_snapshots`
+- `score_tiers`
+
+将来追加したいもの:
+
+- 永続 achievement
+- streak history
+- daily / weekly challenge 履歴
+
 ## UI に落とすときの具体策
 
 ### Home
@@ -258,6 +360,64 @@
 - [ ] 実績解除ログ
 - [ ] 報酬通貨との接続
 
+## MVP 優先順位
+
+### 優先度 A: 先に入れる
+
+- [ ] ホームの `次 tier まで`
+- [ ] クイズ結果の `今回の獲得`
+- [ ] プロフィールの `現在 tier / 次 tier`
+- [ ] ランキングの `Around You`
+
+理由:
+
+- 既存スキーマだけで成立しやすい
+- モチベーション効果が分かりやすい
+- UI 改善との相性が良い
+
+### 優先度 B: 次に入れる
+
+- [ ] 今週の進捗
+- [ ] グループ別 mastery
+- [ ] 次に抜ける相手との点差
+- [ ] 再挑戦 CTA の強化
+
+### 優先度 C: スキーマ追加前提
+
+- [ ] streak
+- [ ] daily / weekly challenge
+- [ ] 永続 achievement
+- [ ] reward currency の本格運用
+
+## MVP の具体案
+
+### 1. ホームヒーロー下に追加するカード
+
+- 見出し: `次のレベルまで`
+- 本文: `あと 120pt で アドバンス`
+- 補助: `今日 1 セッションで届くかも`
+- CTA: `クイズに挑戦`
+
+### 2. クイズ結果ヒーローに追加する情報
+
+- `+320 Score`
+- `4 / 5 正解`
+- `LE SSERAFIM 力がアップ`
+- `次の tier まで 80pt`
+
+### 3. ランキングに追加するセクション
+
+- `Top 3`
+- `Around You`
+- `次は 12位まであと 90pt`
+
+### 4. プロフィール上部に追加する情報
+
+- `現在: インターミディエイト`
+- `次: アドバンスまで 240pt`
+- `今週 +180`
+- `最も伸びた推し: aespa`
+
 ## 画面別の計画タスク
 
 ### ホーム
@@ -298,6 +458,7 @@
 - 遠すぎる目標を大きく見せる
 - 報酬演出だけ派手で、意味のある成長が見えない
 - 負けた / 途切れた体験を強く見せすぎる
+- 初手から機能を盛りすぎて、何が効いたのか分からなくなる
 
 ## 検証したい指標
 
@@ -319,13 +480,21 @@
 ## 参考
 
 - Irrational Labs, "Knowledge Cuts Both Ways: When Progress Bars Backfire" (2022-07-29)
-- Scientific American, "Why Keeping a Streak Boosts Your Motivation" (2023-12-27)
-- INSEAD Knowledge, "Consumer Streaks Are Motivating – The Key Is Keeping Them Alive" (2022-04-11)
+  - https://irrationallabs.com/blog/knowledge-cuts-both-ways-when-progress-bars-backfire/
+- Scientific American, "Why Keeping a Streak Boosts Your Motivation" (2024-01-01)
+  - https://www.scientificamerican.com/article/why-keeping-a-streak-boosts-your-motivation/
+- INSEAD Knowledge, "Consumer Streaks Are Motivating – The Key Is Keeping Them Alive" (2022-06-22)
+  - https://knowledge.insead.edu/marketing/consumer-streaks-are-motivating-key-keeping-them-alive
 - JMIR Serious Games, "Leaderboard Design Principles to Enhance Learning and Motivation in a Gamified Educational Environment" (2021-05-11)
+  - https://games.jmir.org/2021/2/e14746/
 - Computers & Education, "A longitudinal quasi-experiment of leaderboard effectiveness on learner behaviors and course performance" (2024)
+  - https://www.sciencedirect.com/science/article/pii/S1041608024001651
 
 ## 次の打ち手
 
 1. UI/UX ブラッシュアップ計画と整合させる
 2. ホームと結果画面に入れる最小モチベ要素を決める
+   - 具体仕様は [motivation-ui-mvp-spec.md](/Users/eiji/program/k-drop/app/v2/docs/ux/motivation-ui-mvp-spec.md) を参照
 3. 既存スキーマだけで出せる指標と、追加テーブルが必要な要素を切り分ける
+4. ランキングとプロフィールの競争 / 蓄積 UI を整理する
+   - 具体仕様は [social-growth-ui-spec.md](/Users/eiji/program/k-drop/app/v2/docs/ux/social-growth-ui-spec.md) を参照
