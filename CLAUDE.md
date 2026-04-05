@@ -4,9 +4,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-K-Drop is a React Native/Expo mobile app for KPOP fans featuring quiz functionality. Users can answer quizzes, create questions, and track their "ota-ryoku" (fan power) through rankings and history.
+K-Drop is a KPOP fan app. This repository contains two independent apps:
 
-## Essential Commands
+- **app/v1/** — React Native/Expo mobile app (quiz, rankings, profile)
+- **app/v2/** — PWA (技術選定未定)
+
+## Repository Structure
+
+```
+k-drop/
+├── app/
+│   ├── v1/    # Expo project (self-contained)
+│   └── v2/    # PWA (TBD)
+├── .github/   # CI/CD workflows
+├── CLAUDE.md
+└── README.md
+```
+
+## v1 (Expo App)
+
+All commands should be run from `app/v1/`.
 
 ### Development
 
@@ -26,16 +43,16 @@ K-Drop is a React Native/Expo mobile app for KPOP fans featuring quiz functional
 
 - `npm run gen-types` - Generate TypeScript types from Supabase schema
 
-## Architecture Principles
+### Architecture Principles
 
-### File Structure
+#### File Structure
 
 - **File-based routing** with Expo Router (`app/` directory)
 - **Feature-based organization** (`features/answer-quiz/`)
 - **Separation of concerns**: Components in `/components/`, feature-specific in feature folders
 - **Test files** alongside components in `__tests__` folders
 
-### State Management Pattern
+#### State Management Pattern
 
 Follow the separation of concerns pattern:
 
@@ -48,7 +65,7 @@ Components → Custom Hooks → Context (UI State) + Utils (Pure Functions) → 
 3. **Context Layer** (`/context/`): UI state management only
 4. **Custom Hooks** (`/hooks/`): Combine the above layers for component use
 
-### Key Guidelines
+#### Key Guidelines
 
 - **UI State in Context**: Current selections, modal states, session info
 - **Business Logic in Utils**: Calculations, filtering, validation
@@ -56,21 +73,21 @@ Components → Custom Hooks → Context (UI State) + Utils (Pure Functions) → 
 - **Use React Query** for server state management
 - **Test pure functions** separately from React components
 
-### Testing Approach
+#### Testing Approach
 
 - Unit tests with Jest and React Testing Library
 - Mock Supabase client for data layer tests
 - Test business logic as pure functions
 - Use test utilities from `__tests__/testUtils.tsx`
 
-## Environment Setup
+### Environment Setup
 
 Required environment variables:
 
 - `EXPO_PUBLIC_SUPABASE_URL`
 - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
 
-## Code Style
+### Code Style
 
 - TypeScript with strict mode
 - Path aliases configured (`@/*`)

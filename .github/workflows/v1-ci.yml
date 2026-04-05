@@ -1,22 +1,28 @@
-name: CI
+name: v1 CI
 
 on:
   push:
     branches: [main]
+    paths: ['app/v1/**']
   pull_request:
     branches: [main]
+    paths: ['app/v1/**']
     types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
+    defaults:
+      run:
+        working-directory: app/v1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: app/v1/package-lock.json
 
       - name: Install dependencies
         run: npm install
