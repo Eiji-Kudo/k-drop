@@ -9,7 +9,9 @@ function NotFoundPage() {
 					<h1 className="text-4xl font-bold tracking-tight">Page not found</h1>
 					<p className="text-base text-base-content/80">お探しのページは見つかりませんでした。</p>
 					<div className="card-actions justify-center">
-						<Link to="/" className="btn btn-primary">トップページに戻る</Link>
+						<Link to="/" className="btn btn-primary">
+							トップページに戻る
+						</Link>
 					</div>
 				</div>
 			</section>
