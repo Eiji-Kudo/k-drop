@@ -19,6 +19,7 @@
 		"dev:full": "wrangler pages dev --compatibility-date=2026-04-05 -- pnpm run dev"
 	},
 	"dependencies": {
+		"@tanstack/react-query": "5.96.2",
 		"@tanstack/react-router": "1.168.10",
 		"hono": "4.12.10",
 		"react": "^19.2.4",

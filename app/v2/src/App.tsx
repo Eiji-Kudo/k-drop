@@ -1,6 +1,14 @@
 import { APP_DESCRIPTION, APP_NAME, TOOLING } from "@/constants/app";
+import { useHealthCheckQuery } from "@/lib/rpc/health-check";
 
 function App() {
+	const healthCheckQuery = useHealthCheckQuery();
+	const healthCheckLabel = healthCheckQuery.isPending
+		? "Checking API..."
+		: healthCheckQuery.isError
+			? "API status: unavailable"
+			: `API status: ${healthCheckQuery.data?.status ?? "unknown"}`;
+
 	return (
 		<main className="grid flex-1 content-start gap-4">
 			<section className="card border border-base-300 bg-white shadow-lg">
@@ -17,6 +25,13 @@ function App() {
 						<span className="badge badge-success">Success</span>
 						<span className="badge badge-error">Error</span>
 					</div>
+				</div>
+			</section>
+
+			<section className="card border border-base-300 bg-white shadow-md" aria-live="polite">
+				<div className="card-body gap-4">
+					<h2 className="card-title text-2xl">Backend connection</h2>
+					<p className="text-lg font-semibold text-base-content">{healthCheckLabel}</p>
 				</div>
 			</section>
 

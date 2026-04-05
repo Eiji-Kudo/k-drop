@@ -39,3 +39,8 @@ yarn-error.*
 app-example
 
 **/.claude/settings.local.json
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
