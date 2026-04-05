@@ -48,6 +48,23 @@ describe("API", () => {
 		});
 	});
 
+	it("reports unexpected D1 health query results", async () => {
+		const env = {
+			DB: {
+				prepare: vi.fn(() => ({ first: vi.fn().mockResolvedValue({ ok: 0 }) })),
+			},
+		} satisfies AppBindings["Bindings"];
+
+		const response = await app.request("/api/health/database", undefined, env);
+
+		expect(response.status).toBe(503);
+		await expect(response.json()).resolves.toEqual({
+			status: "error",
+			database: "d1",
+			reason: "unexpected query result",
+		});
+	});
+
 	it("returns not found for unknown API routes", async () => {
 		const response = await app.request("/api/unknown");
 

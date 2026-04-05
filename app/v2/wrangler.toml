@@ -4,6 +4,7 @@ pages_build_output_dir = "./dist"
 
 # Replace this placeholder after running:
 # `corepack pnpm run db:create`
+# Wrangler updates this field automatically when the create command succeeds.
 [[d1_databases]]
 binding = "DB"
 database_name = "k-drop-v2"
