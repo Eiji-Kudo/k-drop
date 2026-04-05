@@ -1,7 +1,22 @@
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { AppProviders, createAppQueryClient } from "@/lib/query-client";
 import { createAppRouter } from "@/router";
+
+const fetchMock = vi.fn<(input: RequestInfo | URL) => Promise<Response>>();
+
+function getRequestUrl(input: RequestInfo | URL) {
+	if (typeof input === "string") {
+		return input;
+	}
+
+	if (input instanceof URL) {
+		return input.toString();
+	}
+
+	return input.url;
+}
 
 async function renderRoute(path: string) {
 	const router = createAppRouter(
@@ -11,19 +26,49 @@ async function renderRoute(path: string) {
 	);
 
 	await router.load();
-	render(<RouterProvider router={router} />);
+	render(
+		<AppProviders queryClient={createAppQueryClient()}>
+			<RouterProvider router={router} />
+		</AppProviders>,
+	);
 }
 
 describe("App routes", () => {
+	beforeEach(() => {
+		fetchMock.mockImplementation(async (input) => {
+			const url = getRequestUrl(input);
+
+			if (url.endsWith("/api/health")) {
+				return new Response(JSON.stringify({ status: "ok" }), {
+					status: 200,
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+			}
+
+			return new Response("Not Found", { status: 404 });
+		});
+		vi.stubGlobal("fetch", fetchMock);
+	});
+
+	afterEach(() => {
+		vi.unstubAllGlobals();
+		fetchMock.mockReset();
+	});
+
 	it("renders the starter content on the top page", async () => {
 		await renderRoute("/");
 		expect(await screen.findByText("K-Drop v2")).toBeInTheDocument();
 		expect(screen.getByRole("heading", { name: "Initial setup" })).toBeInTheDocument();
+		expect(await screen.findByText("API status: ok")).toBeInTheDocument();
+		expect(fetchMock).toHaveBeenCalledTimes(1);
 	});
 
 	it("renders the 404 page for an unknown path", async () => {
 		await renderRoute("/missing");
 		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
 		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
+		expect(fetchMock).not.toHaveBeenCalled();
 	});
 });
