@@ -23,15 +23,15 @@
 
 ```text
 src/
-├── routes/         -> TanStack Router の route tree
-├── components/     -> 画面単位 UI がここに集まっている
+├── routes/         -> TanStack Router の route tree と feature-local code
+│   └── (tabs)/     -> home/profile/ranking/quiz の tab feature
+├── components/     -> shared UI
 ├── lib/            -> query client, rpc client, app providers
-├── constants/      -> shared constants
 └── mocks/          -> app-wide mock data
 ```
 
-この形でも動作はするが、feature-local な UI / helper が shared に見えてしまう。  
-今後は route 配下への co-location を標準にする。
+`profile` `ranking` `quiz` の feature-local UI / helper / schema / mock は、すでに route 配下へ colocate 済みである。  
+今後の追加実装も同じルールに揃える。
 
 ## Core Principles
 
@@ -307,18 +307,13 @@ feature に閉じる mock は route 配下の `-mock/` へ置く。
 
 - `src/lib/`
 
-## Recommended Migration
+## Migration Example
 
-優先順位は次の通り。
+この方針は `profile` `ranking` `quiz` に適用済みであり、新規 feature も同じ考え方で配置する。
 
-1. `src/routes/(tabs)/profile/` 配下へ `profile` 画面の UI と helper を移す
-2. `src/routes/(tabs)/ranking/` 配下へ `ranking` 画面の UI を移す
-3. `src/routes/(tabs)/quiz/` 配下へ `quiz` 画面の form / mocks / helpers を移す
-4. 複数 feature で使うものだけ `src/components` / `src/lib` に残す
+### Profile Example
 
-### First Concrete Example
-
-現在:
+移行前:
 
 ```text
 src/components/profile/
@@ -327,7 +322,7 @@ src/components/profile/
 └── format-fan-duration.ts
 ```
 
-推奨:
+適用後:
 
 ```text
 src/routes/(tabs)/profile/
@@ -339,7 +334,7 @@ src/routes/(tabs)/profile/
     └── format-fan-duration.ts
 ```
 
-この移動により、`profile` の変更は `profile` directory を見れば完結する。
+この配置により、`profile` の変更は `profile` directory を見れば完結する。
 
 ## Operational Rules
 
