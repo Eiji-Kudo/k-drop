@@ -20,6 +20,12 @@
 	--color-base-200: #f4e2ea;
 	--color-base-300: #ebccd9;
 	--color-base-content: #4f2443;
+	--color-neutral: #4f2443;
+	--color-neutral-content: #ffffff;
+	--color-info: #38bdf8;
+	--color-info-content: #ffffff;
+	--color-warning: #fbbf24;
+	--color-warning-content: #4f2443;
 	--color-success: #4caf50;
 	--color-success-content: #ffffff;
 	--color-error: #f44336;
@@ -38,29 +44,16 @@
 		-moz-osx-font-smoothing: grayscale;
 	}
 
-	*,
-	::before,
-	::after {
-		box-sizing: border-box;
-	}
-
 	body {
-		margin: 0;
 		min-width: 320px;
 		min-height: 100vh;
 		font-family: var(--font-sans);
-		background-color: #faf0f4;
-		color: #4f2443;
+		background-color: var(--color-base-100);
+		color: var(--color-base-content);
 	}
 
 	a {
 		color: inherit;
-	}
-
-	h1,
-	h2,
-	p {
-		margin-top: 0;
 	}
 
 	#root {

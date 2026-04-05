@@ -1,0 +1,160 @@
+# PR #104 チームレビュー懸念点
+
+## 概要
+
+- **PR**: v2: Tailwind CSS + daisyUI を導入し valentine ベースの kdrop テーマを追加
+- **URL**: https://github.com/Eiji-Kudo/k-drop/pull/104
+- **調査日**: 2026-04-05
+- **レビュー回数**: 1回目
+- **レビュー方式**: 並列レビュー + 相互検証
+
+## レビュワー構成
+
+| レビュワー | 専門領域 | 選定理由 |
+|------------|----------|----------|
+| `css-theme-reviewer` | CSS/テーマ設計 | daisyUI テーマ定義・色定義の正確性、Tailwind v4 CSS 構成の検証 |
+| `frontend-quality-reviewer` | フロントエンド品質 | コンポーネント構造、アクセシビリティ、レスポンシブ設計の検証 |
+| `build-config-reviewer` | ビルド設定・DX | Vite プラグイン構成、依存関係バージョン、Biome 設定の検証 |
+
+## サマリー
+
+| 重要度 | 件数 | 対応済み |
+|--------|------|----------|
+| CRITICAL | 0 | 0 |
+| HIGH | 1 | 1 |
+| MEDIUM | 9 | 8 |
+
+## 参照したガイドライン
+
+- `CLAUDE.md` (root)
+- `app/v2/docs/architecture.md`
+- `app/v2/docs/frontend-shell-requirements.md`
+
+## 未対応の懸念点
+
+(なし)
+
+<details>
+<summary>10. max-w-md (448px) がモバイル PWA として狭い可能性（MEDIUM / 未対応）</summary>
+
+| 項目 | 内容 |
+|------|------|
+| 重要度 | **MEDIUM** |
+| ファイル | `app/v2/src/routes/__root.tsx` (20行目) |
+| 検出者 | frontend-quality-reviewer |
+
+**問題点**:
+
+```tsx
+<div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-6 sm:px-6">
+```
+
+`max-w-md` は 28rem (448px)。タブレット (768px) では画面の42%が余白、タブレット横持ち (1024px) では56%が余白になる。`frontend-shell-requirements.md` に「デスクトップは中央寄せ」とあるが、タブレット帯の扱いが未定義。
+
+**推奨対応**:
+
+レスポンシブにブレークポイントで拡張する:
+
+```tsx
+<div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-6 sm:max-w-lg sm:px-6">
+```
+
+または、意図的な制約であれば `frontend-shell-requirements.md` にタブレット帯の扱いを明記する。
+
+</details>
+
+---
+
+## 対応不要の懸念点
+
+<details>
+<summary>10. max-w-md (448px) がモバイル PWA として狭い可能性（MEDIUM / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/routes/__root.tsx`
+- **問題**: `max-w-md` (448px) がタブレット帯で狭すぎる可能性
+- **理由**: `frontend-shell-requirements.md` に「レスポンシブ対応 → モバイルのみ（デスクトップは中央寄せ）」と明記されており、意図的な設計判断。タブレット最適化は将来のフェーズで対応。
+
+</details>
+
+## 対応済みの懸念点
+
+<details>
+<summary>1. body のハードコード色値がテーマ変数と二重管理（HIGH / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/index.css`
+- **問題**: body に `background-color: #faf0f4` と `color: #4f2443` がハードコードされ、テーマ変数と二重管理になっていた
+- **対応**: `background-color: var(--color-base-100)` と `color: var(--color-base-content)` に置き換え。懸念点3の `data-theme` 移動とセットで対応
+
+</details>
+
+<details>
+<summary>2. bg-white のハードコードがテーマカラーシステムを無視（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/App.tsx`, `app/v2/src/routes/__root.tsx`
+- **問題**: カード・リストアイテム・アラート・404ページで `bg-white` がハードコードされ、テーマパレット外の色が使われていた
+- **対応**: 全箇所の `bg-white` を `bg-base-100` に置き換え
+
+</details>
+
+<details>
+<summary>3. data-theme="kdrop" が <html> ではなくネストされた <div> に配置（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/index.html`, `app/v2/src/routes/__root.tsx`
+- **問題**: `data-theme="kdrop"` が `RootComponent` 内の `<div>` に配置され、body やポータル系コンポーネントにテーマ変数が効かなかった
+- **対応**: `index.html` の `<html>` タグに `data-theme="kdrop"` を追加し、`__root.tsx` からは削除
+
+</details>
+
+<details>
+<summary>4. warning/info/neutral カラーが未定義（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/index.css`
+- **問題**: テーマ定義で warning/info/neutral が未定義で valentine テーマからの暗黙継承に依存していた
+- **対応**: `--color-neutral`, `--color-info`, `--color-warning` とそれぞれの `-content` を明示的に定義
+
+</details>
+
+<details>
+<summary>5. Tailwind v4 Preflight との重複リセット（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/index.css`
+- **問題**: `box-sizing: border-box`, `body { margin: 0 }`, `h1,h2,p { margin-top: 0 }` が Tailwind v4 Preflight と重複していた
+- **対応**: Preflight でカバーされる `box-sizing`, `margin: 0`, `h1/h2/p margin-top: 0` の手動宣言を削除
+
+</details>
+
+<details>
+<summary>6. ボタン「valentine base」にクリックハンドラがなく機能がない（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/App.tsx`
+- **問題**: `<button>` に onClick がなく、クリック可能に見えるのにインタラクションがなかった
+- **対応**: `<button>` を `<span className="badge badge-primary badge-sm">` に変更し、ラベルとしての役割を明示
+
+</details>
+
+<details>
+<summary>7. 404 ページにナビゲーション手段がない（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/routes/__root.tsx`
+- **問題**: 404 ページにトップへの導線がなく、PWA スタンドアロンモードで行き詰まる可能性があった
+- **対応**: TanStack Router の `Link` で「トップページに戻る」ボタンを追加。テストにもリンクの存在確認を追加
+
+</details>
+
+<details>
+<summary>8. alert コンポーネントに role 属性がない（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/App.tsx`
+- **問題**: daisyUI の `.alert` に `role` 属性がなく、スクリーンリーダーがアラートとして認識しなかった
+- **対応**: `role="status"` を追加（情報告知メッセージのため）
+
+</details>
+
+<details>
+<summary>9. テストで document.querySelector を使った DOM テーマ検証（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **問題**: `document.querySelector("[data-theme='kdrop']")` が Testing Library のユーザー視点テスト原則に反していた
+- **対応**: `data-theme` を `index.html` の `<html>` に移動したため、コンポーネント内でのテーマ属性テストを削除。テーマ適用の検証は E2E テストに委ねる
+
+</details>

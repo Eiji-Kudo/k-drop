@@ -73,7 +73,6 @@ describe("App routes", () => {
 		await renderRoute("/");
 		expect(await screen.findByText("K-Drop v2")).toBeInTheDocument();
 		expect(screen.getByRole("heading", { name: "Initial setup" })).toBeInTheDocument();
-		expect(document.querySelector("[data-theme='kdrop']")).toBeInTheDocument();
 		expect(await screen.findByText("API status: ok")).toBeInTheDocument();
 		expect(mockFetch).toHaveBeenCalledTimes(1);
 	});
@@ -94,6 +93,7 @@ describe("App routes", () => {
 		await renderRoute("/missing");
 		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
 		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: "トップページに戻る" })).toBeInTheDocument();
 		expect(mockFetch).not.toHaveBeenCalled();
 	});
 });

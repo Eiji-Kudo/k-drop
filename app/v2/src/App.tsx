@@ -11,7 +11,7 @@ function App() {
 
 	return (
 		<main className="grid flex-1 content-start gap-4">
-			<section className="card border border-base-300 bg-white shadow-lg">
+			<section className="card border border-base-300 bg-base-100 shadow-lg">
 				<div className="card-body gap-4">
 					<div>
 						<p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-accent">K-Drop</p>
@@ -28,7 +28,7 @@ function App() {
 				</div>
 			</section>
 
-			<section className="card border border-base-300 bg-white shadow-md" aria-live="polite">
+			<section className="card border border-base-300 bg-base-100 shadow-md" aria-live="polite">
 				<div className="card-body gap-4">
 					<h2 className="card-title text-2xl">Backend connection</h2>
 					<p className="text-lg font-semibold text-base-content">{healthCheckLabel}</p>
@@ -42,20 +42,18 @@ function App() {
 							<p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-secondary-content/80">Theme setup</p>
 							<h2 className="card-title text-2xl text-secondary-content">Initial setup</h2>
 						</div>
-						<button type="button" className="btn btn-primary btn-sm">
-							valentine base
-						</button>
+						<span className="badge badge-primary badge-sm">valentine base</span>
 					</div>
 					<ul className="grid gap-3">
 						{TOOLING.map((item) => (
-							<li key={item} className="flex items-center gap-3 rounded-box bg-white px-4 py-3 text-sm font-medium text-base-content shadow-sm">
+							<li key={item} className="flex items-center gap-3 rounded-box bg-base-100 px-4 py-3 text-sm font-medium text-base-content shadow-sm">
 								<span aria-hidden="true" className="inline-block size-2 rounded-full bg-success" />
 								<span className="sr-only">Included:</span>
 								<span>{item}</span>
 							</li>
 						))}
 					</ul>
-					<div className="alert bg-white text-base-content shadow-sm">
+					<div role="status" className="alert bg-base-100 text-base-content shadow-sm">
 						<span>Tailwind CSS v4 + daisyUI 5 are ready for the mobile-first K-Drop shell.</span>
 					</div>
 				</div>
