@@ -31,11 +31,6 @@ resource "github_repository_ruleset" "protect_main" {
     bypass_mode = "always"
   }
 
-  bypass_actors {
-    actor_id    = 50960409
-    actor_type  = "User"
-    bypass_mode = "always"
-  }
 }
 
 resource "github_repository_ruleset" "block_branch_creation" {
