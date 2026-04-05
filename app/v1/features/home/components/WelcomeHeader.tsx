@@ -1,7 +1,8 @@
 import { Colors } from '@/constants/Colors'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MotiView } from 'moti'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
+import { styles } from './WelcomeHeader.styles'
 
 type WelcomeHeaderProps = {
   levelName?: string
@@ -24,51 +25,47 @@ export function WelcomeHeader({
       transition={{ type: 'timing', duration: 500 }}
     >
       <LinearGradient
-        colors={Colors.gradients.card}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
+        colors={Colors.gradients.hero}
+        start={{ x: 0.05, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={styles.container}
       >
+        <View style={styles.topRow}>
+          <View style={styles.badge}>
+            <Text
+              accessibilityElementsHidden
+              importantForAccessibility="no"
+              style={styles.badgeText}
+            >
+              K-DROP HOME
+            </Text>
+          </View>
+          <View style={styles.statusCard}>
+            <Text
+              accessibilityElementsHidden
+              importantForAccessibility="no"
+              style={styles.statusLabel}
+            >
+              TODAY
+            </Text>
+            <Text style={styles.statusValue}>推し知識をチャージ</Text>
+          </View>
+        </View>
         <Text style={styles.greeting}>オタ力バトルしよう！</Text>
-        <View style={styles.levelRow}>
-          <Text style={styles.stars}>{stars}</Text>
-          <Text style={styles.levelName}>{levelName}</Text>
+        <Text style={styles.description}>
+          クイズに挑戦して、ランキングとプロフィールを育てよう。
+        </Text>
+        <View style={styles.bottomRow}>
+          <View style={styles.infoCard}>
+            <Text style={styles.infoLabel}>LEVEL</Text>
+            <Text style={styles.levelName}>{levelName}</Text>
+          </View>
+          <View style={styles.infoCard}>
+            <Text style={styles.infoLabel}>OTAKU POWER</Text>
+            <Text style={styles.stars}>{stars}</Text>
+          </View>
         </View>
       </LinearGradient>
     </MotiView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    borderRadius: 24,
-    elevation: 2,
-    gap: 8,
-    padding: 24,
-    shadowColor: Colors.shadowDefault,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-  },
-  greeting: {
-    color: Colors.text.primary,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  levelName: {
-    color: Colors.tertiary,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  levelRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-  },
-  stars: {
-    color: Colors.sparkle,
-    fontSize: 18,
-    letterSpacing: 2,
-  },
-})

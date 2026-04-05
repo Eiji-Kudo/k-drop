@@ -1,9 +1,11 @@
-import { render, fireEvent, waitFor } from '@testing-library/react-native'
+import { render, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import GroupSelectionScreen from '../index'
 import { mockSupabaseData, type MockData } from './mocks/groupSelectionMocks'
 import {
   TestWrapper,
+  pressContinue,
+  selectFirstGroup,
   globalContextValue,
   resetGlobalContext,
 } from './testUtils'
@@ -54,20 +56,16 @@ describe('GroupSelectionScreen', () => {
     resetGlobalContext()
   })
 
-  it('should navigate to quiz when quiz IDs are available', async () => {
-    const { getByText } = render(<GroupSelectionScreen />, {
+  const renderScreen = () =>
+    render(<GroupSelectionScreen />, {
       wrapper: TestWrapper,
     })
 
-    await waitFor(() => {
-      expect(getByText('TWICE')).toBeTruthy()
-    })
+  it('should navigate to quiz when quiz IDs are available', async () => {
+    const { getByTestId, getByText } = renderScreen()
 
-    fireEvent.press(getByText('TWICE'))
-
-    const button = getByText('問題へ進む')
-    fireEvent.press(button)
-
+    await selectFirstGroup({ getByTestId, getByText })
+    await pressContinue({ getByTestId })
     await waitFor(() => {
       expect(globalContextValue?.selectedQuizIds).toBeInstanceOf(Array)
       expect(globalContextValue?.selectedQuizIds).toHaveLength(5)
@@ -95,19 +93,10 @@ describe('GroupSelectionScreen', () => {
   it('should not navigate when no quizzes are available', async () => {
     mockSupabaseData.quizzes = []
 
-    const { getByText } = render(<GroupSelectionScreen />, {
-      wrapper: TestWrapper,
-    })
+    const { getByTestId, getByText } = renderScreen()
 
-    await waitFor(() => {
-      expect(getByText('TWICE')).toBeTruthy()
-    })
-
-    fireEvent.press(getByText('TWICE'))
-
-    const button = getByText('問題へ進む')
-    fireEvent.press(button)
-
+    await selectFirstGroup({ getByTestId, getByText })
+    await pressContinue({ getByTestId })
     await waitFor(() => {
       expect(globalContextValue?.selectedQuizIds).toEqual([])
     })

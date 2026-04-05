@@ -8,6 +8,7 @@ type SecondaryButtonProps = {
   onPress?: () => void
   disabled?: boolean
   style?: object
+  testID?: string
 }
 
 export function SecondaryButton({
@@ -15,6 +16,7 @@ export function SecondaryButton({
   disabled,
   onPress,
   style,
+  testID,
 }: SecondaryButtonProps) {
   const handlePress = async () => {
     if (!disabled && onPress) {
@@ -35,6 +37,7 @@ export function SecondaryButton({
       }}
       transition={{ type: 'timing', duration: 100 }}
       style={style}
+      testID={testID}
     >
       <View style={[styles.button, disabled && styles.buttonDisabled]}>
         <View style={styles.buttonContent}>

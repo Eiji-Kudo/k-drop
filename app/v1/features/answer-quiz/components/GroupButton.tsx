@@ -17,6 +17,7 @@ export function GroupButton({ group, isSelected, onPress }: GroupButtonProps) {
     <SecondaryButton
       onPress={() => onPress(group.idol_group_id)}
       style={[styles.groupButton, isSelected && styles.selectedGroupButton]}
+      testID={`group-button-${group.idol_group_id}`}
     >
       <ThemedText style={styles.groupButtonText}>
         {group.idol_group_name}

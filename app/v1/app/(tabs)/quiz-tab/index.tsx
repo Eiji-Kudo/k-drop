@@ -69,6 +69,7 @@ export default function GroupSelectionScreen() {
 
         <View style={styles.actionContainer}>
           <PrimaryButton
+            testID="continue-button"
             onPress={handleContinue}
             disabled={!selectedGroupId || syncUnansweredQuizIds.isPending}
           >
