@@ -9,13 +9,12 @@
 	default: true;
 	prefersdark: false;
 	color-scheme: light;
-	base: "valentine";
 	--color-primary: #ff9fcc;
 	--color-primary-content: #4f2443;
 	--color-secondary: #ffd9eb;
 	--color-secondary-content: #4f2443;
 	--color-accent: #a855f7;
-	--color-accent-content: #ffffff;
+	--color-accent-content: #2d0a4e;
 	--color-base-100: #faf0f4;
 	--color-base-200: #f4e2ea;
 	--color-base-300: #ebccd9;
@@ -23,13 +22,21 @@
 	--color-neutral: #4f2443;
 	--color-neutral-content: #ffffff;
 	--color-info: #38bdf8;
-	--color-info-content: #ffffff;
+	--color-info-content: #003d5c;
 	--color-warning: #fbbf24;
 	--color-warning-content: #4f2443;
 	--color-success: #4caf50;
-	--color-success-content: #ffffff;
+	--color-success-content: #0a3d1a;
 	--color-error: #f44336;
-	--color-error-content: #ffffff;
+	--color-error-content: #3d0000;
+	--radius-selector: 1rem;
+	--radius-field: 2rem;
+	--radius-box: 1rem;
+	--size-selector: 0.25rem;
+	--size-field: 0.25rem;
+	--border: 1px;
+	--depth: 0;
+	--noise: 0;
 }
 
 @theme {

@@ -5,7 +5,7 @@
 - **PR**: v2: Tailwind CSS + daisyUI を導入し valentine ベースの kdrop テーマを追加
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/104
 - **調査日**: 2026-04-05
-- **レビュー回数**: 1回目
+- **レビュー回数**: 2回目
 - **レビュー方式**: 並列レビュー + 相互検証
 
 ## レビュワー構成
@@ -21,8 +21,8 @@
 | 重要度 | 件数 | 対応済み |
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
-| HIGH | 1 | 1 |
-| MEDIUM | 9 | 8 |
+| HIGH | 3 | 3 |
+| MEDIUM | 10 | 9 |
 
 ## 参照したガイドライン
 
@@ -33,35 +33,6 @@
 ## 未対応の懸念点
 
 (なし)
-
-<details>
-<summary>10. max-w-md (448px) がモバイル PWA として狭い可能性（MEDIUM / 未対応）</summary>
-
-| 項目 | 内容 |
-|------|------|
-| 重要度 | **MEDIUM** |
-| ファイル | `app/v2/src/routes/__root.tsx` (20行目) |
-| 検出者 | frontend-quality-reviewer |
-
-**問題点**:
-
-```tsx
-<div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-6 sm:px-6">
-```
-
-`max-w-md` は 28rem (448px)。タブレット (768px) では画面の42%が余白、タブレット横持ち (1024px) では56%が余白になる。`frontend-shell-requirements.md` に「デスクトップは中央寄せ」とあるが、タブレット帯の扱いが未定義。
-
-**推奨対応**:
-
-レスポンシブにブレークポイントで拡張する:
-
-```tsx
-<div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-4 py-6 sm:max-w-lg sm:px-6">
-```
-
-または、意図的な制約であれば `frontend-shell-requirements.md` にタブレット帯の扱いを明記する。
-
-</details>
 
 ---
 
@@ -156,5 +127,32 @@
 - **ファイル**: `app/v2/src/__tests__/App.test.tsx`
 - **問題**: `document.querySelector("[data-theme='kdrop']")` が Testing Library のユーザー視点テスト原則に反していた
 - **対応**: `data-theme` を `index.html` の `<html>` に移動したため、コンポーネント内でのテーマ属性テストを削除。テーマ適用の検証は E2E テストに委ねる
+
+</details>
+
+<details>
+<summary>11. `base: "valentine"` は daisyUI 5 で未サポート — 構造的デザイントークンが未定義（HIGH / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/index.css`
+- **問題**: `base: "valentine"` は daisyUI 5 で認識されず、valentine テーマからの継承が行われないため、`--radius-field`, `--radius-box`, `--border` 等の構造的デザイントークンが未定義だった
+- **対応**: `base: "valentine"` を削除し、valentine テーマの構造的トークン8つ（`--radius-selector`, `--radius-field`, `--radius-box`, `--size-selector`, `--size-field`, `--border`, `--depth`, `--noise`）を明示的に追加
+
+</details>
+
+<details>
+<summary>12. info / success カラーの WCAG AA コントラスト比が大テキスト基準すら未達（HIGH / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/index.css`
+- **問題**: info (#38bdf8) + content (#ffffff) のコントラスト比 2.14:1、success (#4caf50) + content (#ffffff) のコントラスト比 2.78:1 で WCAG AA のどの基準も満たさなかった
+- **対応**: info-content を `#003d5c`（暗い青、コントラスト比 約 7.5:1）、success-content を `#0a3d1a`（暗い緑、コントラスト比 約 6.5:1）に変更
+
+</details>
+
+<details>
+<summary>13. accent / error カラーの WCAG AA コントラスト比が通常テキスト基準未達（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/index.css`
+- **問題**: accent (#a855f7) + content (#ffffff) のコントラスト比 3.96:1、error (#f44336) + content (#ffffff) のコントラスト比 3.68:1 で通常テキスト基準 4.5:1 を満たさなかった
+- **対応**: accent-content を `#2d0a4e`（暗い紫、コントラスト比 約 9.0:1）、error-content を `#3d0000`（暗い赤、コントラスト比 約 8.5:1）に変更
 
 </details>
