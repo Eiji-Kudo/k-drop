@@ -14,6 +14,14 @@ type GroupRankingListProps = {
 
 type RankingListProps = TotalRankingListProps | GroupRankingListProps;
 
+function getTotalRankingKey(entry: TotalRankingEntry) {
+	return `total-${entry.rank}-${entry.userName}`;
+}
+
+function getGroupRankingKey(entry: GroupRankingEntry) {
+	return `group-${entry.groupName}-${entry.rank}-${entry.userName}`;
+}
+
 export function RankingList(props: RankingListProps) {
 	if (props.rankings.length === 0) {
 		return (
@@ -27,7 +35,7 @@ export function RankingList(props: RankingListProps) {
 		return (
 			<div className="px-4 py-3">
 				{props.rankings.map((entry) => (
-					<TotalRankingItem key={entry.rank} entry={entry} />
+					<TotalRankingItem key={getTotalRankingKey(entry)} entry={entry} />
 				))}
 			</div>
 		);
@@ -36,7 +44,7 @@ export function RankingList(props: RankingListProps) {
 	return (
 		<div className="px-4 py-3">
 			{props.rankings.map((entry) => (
-				<GroupRankingItem key={entry.rank} entry={entry} />
+				<GroupRankingItem key={getGroupRankingKey(entry)} entry={entry} />
 			))}
 		</div>
 	);
