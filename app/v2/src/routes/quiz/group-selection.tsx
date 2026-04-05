@@ -2,20 +2,20 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 type IdolGroup = {
-	id: string;
-	name: string;
+	idolGroupId: string;
+	groupName: string;
 	thumbnailUrl: string;
 };
 
 const MOCK_IDOL_GROUPS: ReadonlyArray<IdolGroup> = [
-	{ id: "1", name: "BLACKPINK", thumbnailUrl: "" },
-	{ id: "2", name: "BTS", thumbnailUrl: "" },
-	{ id: "3", name: "TWICE", thumbnailUrl: "" },
-	{ id: "4", name: "aespa", thumbnailUrl: "" },
-	{ id: "5", name: "Stray Kids", thumbnailUrl: "" },
-	{ id: "6", name: "IVE", thumbnailUrl: "" },
-	{ id: "7", name: "LE SSERAFIM", thumbnailUrl: "" },
-	{ id: "8", name: "NewJeans", thumbnailUrl: "" },
+	{ idolGroupId: "1", groupName: "BLACKPINK", thumbnailUrl: "" },
+	{ idolGroupId: "2", groupName: "BTS", thumbnailUrl: "" },
+	{ idolGroupId: "3", groupName: "TWICE", thumbnailUrl: "" },
+	{ idolGroupId: "4", groupName: "aespa", thumbnailUrl: "" },
+	{ idolGroupId: "5", groupName: "Stray Kids", thumbnailUrl: "" },
+	{ idolGroupId: "6", groupName: "IVE", thumbnailUrl: "" },
+	{ idolGroupId: "7", groupName: "LE SSERAFIM", thumbnailUrl: "" },
+	{ idolGroupId: "8", groupName: "NewJeans", thumbnailUrl: "" },
 ];
 
 function GroupSelectionHeader() {
@@ -31,10 +31,10 @@ function GroupButton({ group, isSelected, onPress }: { group: IdolGroup; isSelec
 	return (
 		<button
 			type="button"
-			onClick={() => onPress(group.id)}
+			onClick={() => onPress(group.idolGroupId)}
 			className={`btn w-full bg-secondary py-4 text-base font-medium text-secondary-content ${isSelected ? "ring-2 ring-primary" : ""}`}
 		>
-			{group.name}
+			{group.groupName}
 		</button>
 	);
 }
@@ -46,7 +46,7 @@ function GroupSelectionPage() {
 	const handleContinue = () => {
 		if (!selectedGroupId) return;
 		const sessionId = crypto.randomUUID();
-		navigate({ to: "/quiz/$sessionId", params: { sessionId } });
+		navigate({ to: "/quiz/$sessionId", params: { sessionId }, search: { groupId: selectedGroupId } });
 	};
 
 	return (
@@ -55,7 +55,7 @@ function GroupSelectionPage() {
 
 			<div className="flex flex-col gap-3">
 				{MOCK_IDOL_GROUPS.map((group) => (
-					<GroupButton key={group.id} group={group} isSelected={selectedGroupId === group.id} onPress={setSelectedGroupId} />
+					<GroupButton key={group.idolGroupId} group={group} isSelected={selectedGroupId === group.idolGroupId} onPress={setSelectedGroupId} />
 				))}
 			</div>
 
