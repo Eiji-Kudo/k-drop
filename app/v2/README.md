@@ -11,10 +11,14 @@ Vite + React + TypeScript project for `app/v2`.
    - `nvm use`
 2. Provision the pinned pnpm toolchain from the active Node.js 24 shell.
    - `corepack enable`
-3. Install dependencies with `pnpm install`.
-4. If you are switching from another Node.js major with an existing `node_modules`, run `pnpm run rebuild:native` once before running tests or CI.
+   - `corepack prepare pnpm@10.33.0 --activate`
+3. Verify that pnpm is attached to the same runtime.
+   - `pnpm exec node -v`
+   - Expected: `v24.14.1` or newer within the 24.x line
+4. Install dependencies with `pnpm install`.
+5. If you are switching from another Node.js major with an existing `node_modules`, run `pnpm run rebuild:native` once before running tests or CI.
 
-`pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. After `nvm use` and `corepack enable`, make sure `pnpm exec node -v` reports `v24.14.1` before continuing.
+`pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. If `pnpm exec node -v` still points at an older runtime after the steps above, refresh the shell or re-run `nvm use` before continuing.
 
 ## Scripts
 
