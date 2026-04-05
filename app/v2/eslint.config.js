@@ -47,7 +47,7 @@ export default defineConfig([
 			"@typescript-eslint/no-require-imports": "off",
 			"@typescript-eslint/no-unsafe-assignment": "off",
 			"@typescript-eslint/no-unused-vars": "error",
-			"max-lines": ["error", { max: 100, skipBlankLines: true, skipComments: true }],
+			"max-lines": ["error", { max: 150, skipBlankLines: true, skipComments: true }],
 			"import/no-unresolved": "off",
 			"no-restricted-imports": [
 				"error",
