@@ -12,9 +12,10 @@ type BentoCardProps = {
 	subtitle?: string;
 	icon: LucideIcon;
 	variant?: BentoCardVariant;
+	className?: string;
 };
 
-export function BentoCard({ to, title, subtitle, icon: Icon, variant = "default" }: BentoCardProps) {
+export function BentoCard({ to, title, subtitle, icon: Icon, variant = "default", className }: BentoCardProps) {
 	const isGradient = variant === "gradient";
 
 	return (
@@ -25,6 +26,7 @@ export function BentoCard({ to, title, subtitle, icon: Icon, variant = "default"
 				isGradient
 					? "border-white/75 bg-[linear-gradient(145deg,#ff99c7_0%,#ffd7e9_100%)] text-primary-content"
 					: "border-border-soft bg-surface text-base-content hover:bg-white/90",
+				className,
 			)}
 		>
 			<div className="flex items-start justify-between gap-3">
