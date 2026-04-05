@@ -23,3 +23,25 @@ Vite + React + TypeScript project for `app/v2`.
 - Biome formatter with `lineWidth: 150`
 - Vitest test runner
 - pnpm (enforced via `preinstall`)
+
+## ER Test Factories
+
+`functions/db/__tests__/test-helper.ts` provides a better-sqlite3 in-memory DB plus `@praha/drizzle-factory` based helpers for schema tests.
+
+```ts
+const db = createTestDb()
+await setupBaseData(db)
+await insertQuiz(db, { quizId: "q1" })
+await insertQuizChoice(db, { quizChoiceId: "q1-c1", quizId: "q1", choiceOrder: 1, isCorrect: 1 })
+```
+
+Helpers use canonical `traits.base` / `traits.groupBase` presets so valid setup can usually pass only the fields that differ.
+
+When you need direct access to the underlying factories, use `getTestFactories(db)`:
+
+```ts
+const factories = getTestFactories(db)
+await factories.userProfiles.traits.base.create({ handle: "momo_fan", displayName: "モモ推し" })
+```
+
+Use factories and helper wrappers for valid setup data. Keep low-level constraint checks as raw SQL when you need to bypass helper defaults directly, but helper wrappers are also fine for intentional invalid cases they explicitly support.

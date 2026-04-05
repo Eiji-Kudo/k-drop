@@ -104,4 +104,10 @@ export default defineConfig([
 			"@typescript-eslint/unbound-method": "off",
 		},
 	},
+	{
+		files: ["functions/db/__tests__/**/*.{ts,tsx}"],
+		rules: {
+			"max-lines": "off",
+		},
+	},
 ]);

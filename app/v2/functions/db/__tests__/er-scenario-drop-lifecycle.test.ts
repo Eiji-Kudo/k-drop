@@ -1,18 +1,22 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertUser } from "./test-helper";
+import { createTestDb, insertUser, NOW } from "./test-helper";
 
 let db: Database.Database;
-beforeEach(() => {
+beforeEach(async () => {
 	db = createTestDb();
-	insertUser(db);
+	await insertUser(db);
 	db.prepare("INSERT INTO drop_wallets (user_id, balance, updated_at) VALUES (?,?,?)").run("user-1", 0, NOW);
 });
-afterEach(() => { db.close(); });
+afterEach(() => {
+	db.close();
+});
 
 const addTx = (id: string, delta: number, reason: string, sourceType: string, sourceId: string | null = null) => {
-	db.prepare("INSERT INTO drop_transactions (drop_transaction_id, user_id, delta, reason, source_type, source_id, created_at) VALUES (?,?,?,?,?,?,?)").run(id, "user-1", delta, reason, sourceType, sourceId, NOW);
+	db.prepare(
+		"INSERT INTO drop_transactions (drop_transaction_id, user_id, delta, reason, source_type, source_id, created_at) VALUES (?,?,?,?,?,?,?)",
+	).run(id, "user-1", delta, reason, sourceType, sourceId, NOW);
 	db.prepare("UPDATE drop_wallets SET balance = balance + ?, updated_at = ? WHERE user_id = ?").run(delta, NOW, "user-1");
 };
 const getBalance = () => (db.prepare("SELECT balance FROM drop_wallets WHERE user_id=?").get("user-1") as { balance: number }).balance;

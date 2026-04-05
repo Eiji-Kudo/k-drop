@@ -48,6 +48,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.4
+      '@praha/drizzle-factory':
+        specifier: ^1.4.2
+        version: 1.4.2(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260405.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.8.0))
       '@tailwindcss/vite':
         specifier: 4.2.2
         version: 4.2.2(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@22.19.17)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0))
@@ -1254,6 +1257,11 @@ packages:
 
   '@poppinss/exception@1.2.3':
     resolution: {integrity: sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==}
+
+  '@praha/drizzle-factory@1.4.2':
+    resolution: {integrity: sha512-q+XALcuc5OUnLyaUX4YHSxsaDEQeGG96X2HAr3Gei+jqGXTOInKjqpoihKEQ5HkkPz/LcU8qEDFWf0i23Syp3g==}
+    peerDependencies:
+      drizzle-orm: 0.x
 
   '@rolldown/binding-android-arm64@1.0.0-rc.12':
     resolution: {integrity: sha512-pv1y2Fv0JybcykuiiD3qBOBdz6RteYojRFY1d+b95WVuzx211CRh+ytI/+9iVyWQ6koTh5dawe4S/yRfOFjgaA==}
@@ -4283,6 +4291,10 @@ snapshots:
       supports-color: 10.2.2
 
   '@poppinss/exception@1.2.3': {}
+
+  '@praha/drizzle-factory@1.4.2(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260405.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.8.0))':
+    dependencies:
+      drizzle-orm: 0.45.2(@cloudflare/workers-types@4.20260405.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.8.0)
 
   '@rolldown/binding-android-arm64@1.0.0-rc.12':
     optional: true

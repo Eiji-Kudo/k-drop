@@ -41,6 +41,7 @@
 		"@biomejs/biome": "^2.4.10",
 		"@cloudflare/workers-types": "4.20260405.1",
 		"@eslint/js": "^9.39.4",
+		"@praha/drizzle-factory": "^1.4.2",
 		"@tailwindcss/vite": "4.2.2",
 		"@tanstack/router-plugin": "1.167.12",
 		"@testing-library/jest-dom": "^6.9.1",
@@ -69,6 +70,8 @@
 		"wrangler": "4.80.0"
 	},
 	"pnpm": {
-		"onlyBuiltDependencies": ["better-sqlite3"]
+		"onlyBuiltDependencies": [
+			"better-sqlite3"
+		]
 	}
 }
