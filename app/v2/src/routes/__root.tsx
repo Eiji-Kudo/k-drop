@@ -1,5 +1,7 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
 import { BottomTabBar } from "@/components/bottom-tab-bar";
+
+const HIDDEN_BOTTOM_TAB_ROUTE_IDS = new Set(["/(tabs)/quiz/$sessionId", "/(tabs)/quiz/question"]);
 
 function NotFoundPage() {
 	return (
@@ -21,12 +23,15 @@ function NotFoundPage() {
 }
 
 function RootComponent() {
+	const matches = useMatches();
+	const hideBottomTabBar = matches.some((match) => HIDDEN_BOTTOM_TAB_ROUTE_IDS.has(match.routeId));
+
 	return (
 		<div className="flex min-h-[100dvh] flex-col bg-base-100">
 			<div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-20 pt-6 sm:px-6">
 				<Outlet />
 			</div>
-			<BottomTabBar />
+			{hideBottomTabBar ? null : <BottomTabBar />}
 		</div>
 	);
 }

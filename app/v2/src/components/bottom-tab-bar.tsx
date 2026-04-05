@@ -1,4 +1,4 @@
-import { Link, useLocation, useMatches } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { Crown, Home, Pencil, User } from "lucide-react";
 import type { ComponentType } from "react";
 import type { FileRoutesByTo } from "@/routeTree.gen";
@@ -17,15 +17,9 @@ const tabs: ReadonlyArray<TabItem> = [
 ];
 
 export function BottomTabBar() {
-	const matches = useMatches();
 	const pathname = useLocation({
 		select: (location) => location.pathname,
 	});
-	const isVisible = !matches.some((match) => match.routeId.endsWith("/quiz/$sessionId"));
-
-	if (!isVisible) {
-		return null;
-	}
 
 	return (
 		<nav className="dock dock-sm" aria-label="メインナビゲーション">

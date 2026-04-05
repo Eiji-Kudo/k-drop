@@ -74,6 +74,24 @@ describe("App routes", () => {
 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
 	});
 
+	it("renders the profile route through the tabs wrapper", async () => {
+		await renderRoute("/profile");
+		expect(await screen.findByRole("heading", { name: "KPOPファン太郎" })).toBeInTheDocument();
+		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
+	});
+
+	it("renders the quiz create route through the tabs wrapper", async () => {
+		await renderRoute("/quiz/create");
+		expect(await screen.findByRole("heading", { name: "クイズ作成" })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "作成する" })).toBeInTheDocument();
+	});
+
+	it("hides the tab bar on the direct quiz question route", async () => {
+		await renderRoute("/quiz/question");
+		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
+		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
+	});
+
 	it("navigates from group selection through the quiz flow to the result screen", async () => {
 		await renderRoute("/quiz");
 

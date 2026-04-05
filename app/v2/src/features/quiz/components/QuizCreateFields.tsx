@@ -1,5 +1,6 @@
 import type { UseFormRegister } from "react-hook-form";
-import { DIFFICULTY_OPTIONS, EXPLANATION_MAX_LENGTH, MOCK_IDOL_GROUPS, PROMPT_MAX_LENGTH } from "../constants";
+import { DIFFICULTY_OPTIONS, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "../constants";
+import { MOCK_QUIZ_GROUPS } from "../mock/idol-groups";
 import type { QuizCreateFormValues } from "../schemas/quiz-create-schema";
 
 type FieldProps = {
@@ -15,9 +16,9 @@ export function GroupSelect({ register, error }: FieldProps) {
 			</label>
 			<select id="idolGroupId" className={`select select-bordered w-full ${error ? "select-error" : ""}`} {...register("idolGroupId")}>
 				<option value="">グループを選択してください</option>
-				{MOCK_IDOL_GROUPS.map((group) => (
-					<option key={group.idol_group_id} value={group.idol_group_id}>
-						{group.group_name}
+				{MOCK_QUIZ_GROUPS.map((group) => (
+					<option key={group.idolGroupId} value={group.idolGroupId}>
+						{group.groupName}
 					</option>
 				))}
 			</select>
