@@ -1,14 +1,21 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertUser } from "./test-helper";
+import { createTestDb, insertUser, NOW } from "./test-helper";
 
 let db: Database.Database;
-beforeEach(() => { db = createTestDb(); insertUser(db); });
-afterEach(() => { db.close(); });
+beforeEach(() => {
+	db = createTestDb();
+	insertUser(db);
+});
+afterEach(() => {
+	db.close();
+});
 
 const insAuth = (id: string, userId: string, provider: string, sub: string) =>
-	db.prepare("INSERT INTO auth_identities (auth_identity_id, user_id, provider, provider_subject_id, created_at, updated_at) VALUES (?,?,?,?,?,?)").run(id, userId, provider, sub, NOW, NOW);
+	db
+		.prepare("INSERT INTO auth_identities (auth_identity_id, user_id, provider, provider_subject_id, created_at, updated_at) VALUES (?,?,?,?,?,?)")
+		.run(id, userId, provider, sub, NOW, NOW);
 
 describe("認証プロバイダの管理", () => {
 	it("1 ユーザーが Google + LINE の 2 つのログイン手段を持つ", () => {

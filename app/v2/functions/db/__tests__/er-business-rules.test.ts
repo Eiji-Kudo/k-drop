@@ -1,11 +1,16 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertQuiz, insertQuizChoice, insertQuizSession, insertSessionQuestion, setupBaseData } from "./test-helper";
+import { createTestDb, insertQuiz, insertQuizChoice, insertQuizSession, insertSessionQuestion, NOW, setupBaseData } from "./test-helper";
 
 let db: Database.Database;
-beforeEach(() => { db = createTestDb(); setupBaseData(db); });
-afterEach(() => { db.close(); });
+beforeEach(() => {
+	db = createTestDb();
+	setupBaseData(db);
+});
+afterEach(() => {
+	db.close();
+});
 
 describe("クイズ選択肢のビジネスルール", () => {
 	beforeEach(() => insertQuiz(db));
@@ -27,9 +32,13 @@ describe("1 出題枠につき 1 回答", () => {
 	});
 
 	it("unique(quiz_session_question_id) で 2 回目の回答を拒否", () => {
-		db.prepare("INSERT INTO quiz_answers (quiz_answer_id, quiz_session_question_id, quiz_choice_id, awarded_score, answered_at) VALUES (?,?,?,?,?)").run("a1", "sq-1", "c1", 10, NOW);
+		db.prepare(
+			"INSERT INTO quiz_answers (quiz_answer_id, quiz_session_question_id, quiz_choice_id, awarded_score, answered_at) VALUES (?,?,?,?,?)",
+		).run("a1", "sq-1", "c1", 10, NOW);
 		expect(() =>
-			db.prepare("INSERT INTO quiz_answers (quiz_answer_id, quiz_session_question_id, quiz_choice_id, awarded_score, answered_at) VALUES (?,?,?,?,?)").run("a2", "sq-1", "c1", 10, NOW),
+			db
+				.prepare("INSERT INTO quiz_answers (quiz_answer_id, quiz_session_question_id, quiz_choice_id, awarded_score, answered_at) VALUES (?,?,?,?,?)")
+				.run("a2", "sq-1", "c1", 10, NOW),
 		).toThrow();
 	});
 });
@@ -60,9 +69,14 @@ describe("同一ユーザー・グループで進行中セッションは 1 つ"
 
 	it("completed と in_progress は共存可能", () => {
 		insertQuizSession(db, {
-			quizSessionId: "s1", status: "completed", currentQuestionOrder: null,
-			answeredQuestionCount: 5, correctAnswerCount: 3, incorrectAnswerCount: 2,
-			completedAt: NOW, lastAnsweredAt: NOW,
+			quizSessionId: "s1",
+			status: "completed",
+			currentQuestionOrder: null,
+			answeredQuestionCount: 5,
+			correctAnswerCount: 3,
+			incorrectAnswerCount: 2,
+			completedAt: NOW,
+			lastAnsweredAt: NOW,
 		});
 		expect(() => insertQuizSession(db, { quizSessionId: "s2" })).not.toThrow();
 	});
