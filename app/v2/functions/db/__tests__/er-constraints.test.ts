@@ -92,3 +92,20 @@ describe("events の制約", () => {
 	it("capacity は NULL or > 0", () => { expect(() => ins({ capacity: 0 })).toThrow(); });
 	it("不正な visibility を拒否", () => { expect(() => ins({ visibility: "secret" })).toThrow(); });
 });
+
+describe("quizzes の enum 制約", () => {
+	beforeEach(() => setupBaseData(db));
+	it("不正な difficulty を拒否", () => { expect(() => insertQuiz(db, { difficulty: "extreme" })).toThrow(); });
+	it("不正な status を拒否", () => { expect(() => insertQuiz(db, { status: "deleted" })).toThrow(); });
+});
+
+describe("group_categories の制約", () => {
+	it("slug は一意", () => { insertGroupCategory(db, { groupCategoryId: "c1", slug: "kpop" }); expect(() => insertGroupCategory(db, { groupCategoryId: "c2", slug: "kpop" })).toThrow(); });
+});
+
+describe("event_participants の制約", () => {
+	beforeEach(() => { setupBaseData(db); db.prepare("INSERT INTO events (event_id, created_by_user_id, title, visibility, starts_at, ends_at, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?)").run("ev-1", "user-1", "E", "public", "2025-03-01T00:00:00Z", "2025-04-01T00:00:00Z", NOW, NOW); });
+	it("不正な participation_status を拒否", () => {
+		expect(() => db.prepare("INSERT INTO event_participants (event_participant_id, event_id, user_id, participation_status, joined_at, updated_at) VALUES (?,?,?,?,?,?)").run("ep-1", "ev-1", "user-1", "pending", NOW, NOW)).toThrow();
+	});
+});
