@@ -38,7 +38,8 @@ CREATE TABLE `event_participants` (
 	`joined_at` text NOT NULL,
 	`updated_at` text NOT NULL,
 	FOREIGN KEY (`event_id`) REFERENCES `events`(`event_id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON UPDATE no action ON DELETE cascade,
+	CONSTRAINT "event_participants_status_check" CHECK("event_participants"."participation_status" IN ('joined', 'waitlisted', 'cancelled'))
 );
 --> statement-breakpoint
 CREATE INDEX `event_participants_user_id_idx` ON `event_participants` (`user_id`);--> statement-breakpoint
@@ -57,7 +58,8 @@ CREATE TABLE `events` (
 	`updated_at` text NOT NULL,
 	FOREIGN KEY (`created_by_user_id`) REFERENCES `users`(`user_id`) ON UPDATE no action ON DELETE cascade,
 	CONSTRAINT "events_capacity_check" CHECK("events"."capacity" IS NULL OR "events"."capacity" > 0),
-	CONSTRAINT "events_dates_check" CHECK("events"."ends_at" >= "events"."starts_at")
+	CONSTRAINT "events_dates_check" CHECK("events"."ends_at" >= "events"."starts_at"),
+	CONSTRAINT "events_visibility_check" CHECK("events"."visibility" IN ('public', 'private', 'unlisted'))
 );
 --> statement-breakpoint
 CREATE INDEX `events_created_by_user_id_idx` ON `events` (`created_by_user_id`);--> statement-breakpoint
@@ -173,7 +175,11 @@ CREATE TABLE `quiz_sessions` (
 	CONSTRAINT "answered_requires_last_answered_at" CHECK("quiz_sessions"."answered_question_count" = 0 OR "quiz_sessions"."last_answered_at" IS NOT NULL),
 	CONSTRAINT "no_answer_no_last_answered_at" CHECK("quiz_sessions"."answered_question_count" > 0 OR "quiz_sessions"."last_answered_at" IS NULL),
 	CONSTRAINT "answered_le_total" CHECK("quiz_sessions"."answered_question_count" <= "quiz_sessions"."total_question_count"),
-	CONSTRAINT "answer_counts_sum" CHECK("quiz_sessions"."correct_answer_count" + "quiz_sessions"."incorrect_answer_count" = "quiz_sessions"."answered_question_count")
+	CONSTRAINT "answer_counts_sum" CHECK("quiz_sessions"."correct_answer_count" + "quiz_sessions"."incorrect_answer_count" = "quiz_sessions"."answered_question_count"),
+	CONSTRAINT "answered_question_count_min" CHECK("quiz_sessions"."answered_question_count" >= 0),
+	CONSTRAINT "correct_answer_count_min" CHECK("quiz_sessions"."correct_answer_count" >= 0),
+	CONSTRAINT "incorrect_answer_count_min" CHECK("quiz_sessions"."incorrect_answer_count" >= 0),
+	CONSTRAINT "current_question_order_min" CHECK("quiz_sessions"."current_question_order" IS NULL OR "quiz_sessions"."current_question_order" >= 1)
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `quiz_sessions_in_progress_per_user_group` ON `quiz_sessions` (`user_id`,`idol_group_id`) WHERE "quiz_sessions"."status" = 'in_progress';--> statement-breakpoint
@@ -215,7 +221,8 @@ CREATE TABLE `score_tiers` (
 	`min_score` integer NOT NULL,
 	`max_score` integer NOT NULL,
 	`sort_order` integer NOT NULL,
-	CONSTRAINT "score_tiers_range_check" CHECK("score_tiers"."min_score" <= "score_tiers"."max_score")
+	CONSTRAINT "score_tiers_range_check" CHECK("score_tiers"."min_score" <= "score_tiers"."max_score"),
+	CONSTRAINT "score_tiers_tier_scope_check" CHECK("score_tiers"."tier_scope" IN ('overall', 'group'))
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `score_tiers_tier_scope_tier_name_unique` ON `score_tiers` (`tier_scope`,`tier_name`);--> statement-breakpoint

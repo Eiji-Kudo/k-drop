@@ -47,6 +47,14 @@ describe("API", () => {
 		expect(response.status).toBe(404);
 	});
 
+	it("returns 404 when HEALTH_CHECK_TOKEN is not configured", async () => {
+		const env = createD1Mock([{ ok: 1 }]);
+
+		const response = await app.request("/api/health/database", undefined, env);
+
+		expect(response.status).toBe(404);
+	});
+
 	it("reports when the D1 health query returns no rows", async () => {
 		const token = "test-secret";
 		const env = createD1Mock([], { healthCheckToken: token });

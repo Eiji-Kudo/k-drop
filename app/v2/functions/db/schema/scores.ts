@@ -13,7 +13,11 @@ export const scoreTiers = sqliteTable(
 		maxScore: integer("max_score").notNull(),
 		sortOrder: integer("sort_order").notNull(),
 	},
-	(table) => [unique().on(table.tierScope, table.tierName), check("score_tiers_range_check", sql`${table.minScore} <= ${table.maxScore}`)],
+	(table) => [
+		unique().on(table.tierScope, table.tierName),
+		check("score_tiers_range_check", sql`${table.minScore} <= ${table.maxScore}`),
+		check("score_tiers_tier_scope_check", sql`${table.tierScope} IN ('overall', 'group')`),
+	],
 );
 
 export const userScoreStates = sqliteTable(

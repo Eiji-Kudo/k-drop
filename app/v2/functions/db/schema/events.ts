@@ -24,6 +24,7 @@ export const events = sqliteTable(
 		index("events_created_by_user_id_idx").on(table.createdByUserId),
 		check("events_capacity_check", sql`${table.capacity} IS NULL OR ${table.capacity} > 0`),
 		check("events_dates_check", sql`${table.endsAt} >= ${table.startsAt}`),
+		check("events_visibility_check", sql`${table.visibility} IN ('public', 'private', 'unlisted')`),
 	],
 );
 
@@ -56,5 +57,9 @@ export const eventParticipants = sqliteTable(
 		joinedAt: text("joined_at").notNull(),
 		updatedAt: text("updated_at").notNull(),
 	},
-	(table) => [unique().on(table.eventId, table.userId), index("event_participants_user_id_idx").on(table.userId)],
+	(table) => [
+		unique().on(table.eventId, table.userId),
+		index("event_participants_user_id_idx").on(table.userId),
+		check("event_participants_status_check", sql`${table.participationStatus} IN ('joined', 'waitlisted', 'cancelled')`),
+	],
 );

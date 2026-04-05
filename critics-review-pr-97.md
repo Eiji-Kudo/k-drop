@@ -5,7 +5,7 @@
 - **PR**: v2: Cloudflare D1 データベースセットアップ
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/97
 - **調査日**: 2026-04-05
-- **レビュー回数**: 2回目
+- **レビュー回数**: 3回目
 - **レビュー方式**: 並列レビュー + 相互検証
 
 ## レビュワー構成
@@ -20,9 +20,9 @@
 
 | 重要度 | 件数 | 対応済み |
 |--------|------|----------|
-| CRITICAL | 2 | 2 |
+| CRITICAL | 3 | 3 |
 | HIGH | 5 | 5 |
-| MEDIUM | 12 | 12 |
+| MEDIUM | 18 | 18 |
 
 ## 参照したガイドライン
 
@@ -42,6 +42,13 @@
 ---
 
 ## 対応不要の懸念点
+
+<details>
+<summary>23. events ON DELETE CASCADEによるイベント消失リスク（MEDIUM / 対応不要）</summary>
+
+`users.status = 'deleted'` による論理削除が前提であり、物理DELETE操作は通常発生しない。論理削除運用が変更される場合に再検討する。
+
+</details>
 
 <details>
 <summary>5. score_tiersとuser_score_statesのscope整合性が未保証（HIGH / 対応不要）</summary>
@@ -287,5 +294,59 @@ D1例外時にtry-catchがなく500が返っていた。
 | 検出者 | data-integrity-reviewer |
 
 **修正内容**: `quizzes_idol_group_id_status_idx` 複合インデックスに変更。2回目レビューで修正済みを確認。
+
+</details>
+
+<details>
+<summary>20. HEALTH_CHECK_TOKEN未設定時に認証がバイパスされる（CRITICAL / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/lib/api/app.ts`
+- **問題**: トークン未設定時に `undefined !== undefined` が `false` と評価され認証をバイパスする
+- **対応**: トークン未設定時はエンドポイントを無効化（404）。constant-time比較関数 `timingSafeEqual` も同時に導入。テスト追加
+
+</details>
+
+<details>
+<summary>21. quiz_sessionsのcount系カラムに >= 0のCHECK制約がない（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/functions/db/schema/quiz-sessions.ts`
+- **問題**: `answered_question_count`, `correct_answer_count`, `incorrect_answer_count` に下限制約なく負値が入り得る
+- **対応**: 3カラムに `>= 0` のCHECK制約を追加
+
+</details>
+
+<details>
+<summary>22. current_question_orderに >= 1のCHECK制約がない（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/functions/db/schema/quiz-sessions.ts`
+- **問題**: `current_question_order` に下限制約がなく、`question_order >= 1` との整合性が未保証
+- **対応**: `IS NULL OR >= 1` のCHECK制約を追加
+
+</details>
+
+<details>
+<summary>24. enumカラムのCHECK制約に一貫性がない（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/functions/db/schema/scores.ts`, `app/v2/functions/db/schema/events.ts`
+- **問題**: `score_tiers.tier_scope`, `events.visibility`, `event_participants.participation_status` にDBレベルのCHECK制約がない
+- **対応**: 3カラムにIN句のCHECK制約を追加
+
+</details>
+
+<details>
+<summary>25. getDatabaseがHono Contextに依存しDIガイドラインに不一致（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/functions/core/db/bindings.ts`
+- **問題**: `getDatabase` が `Context<AppBindings>` を引数に取り、Hono依存が伝播
+- **対応**: 引数を `D1Database` 直接に変更。呼び出し側で `getDatabase(context.env.DB)` に修正
+
+</details>
+
+<details>
+<summary>26. トークン比較がタイミング攻撃に脆弱（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/lib/api/app.ts`
+- **問題**: `!==` によるショートサーキット比較がタイミング攻撃に脆弱
+- **対応**: XORベースのconstant-time比較関数 `timingSafeEqual` を実装し使用
 
 </details>

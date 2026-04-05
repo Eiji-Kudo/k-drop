@@ -4,6 +4,15 @@ import { secureHeaders } from "hono/secure-headers";
 import type { AppBindings } from "../../../functions/core/bindings";
 import { getDatabase } from "../../../functions/core/db/bindings";
 
+const timingSafeEqual = (a: string, b: string): boolean => {
+	if (a.length !== b.length) return false;
+	let result = 0;
+	for (let i = 0; i < a.length; i++) {
+		result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+	}
+	return result === 0;
+};
+
 const app = new Hono<AppBindings>()
 	.basePath("/api")
 	.use(secureHeaders())
@@ -19,12 +28,16 @@ const app = new Hono<AppBindings>()
 		});
 	})
 	.get("/health/database", async (context) => {
+		const expected = context.env.HEALTH_CHECK_TOKEN;
+		if (!expected) {
+			return context.json({ error: "Not Found" }, 404);
+		}
 		const token = context.req.header("X-Health-Token");
-		if (token !== context.env.HEALTH_CHECK_TOKEN) {
+		if (!token || !timingSafeEqual(token, expected)) {
 			return context.json({ error: "Not Found" }, 404);
 		}
 		try {
-			const db = getDatabase(context);
+			const db = getDatabase(context.env.DB);
 			const result = await db.get<{ ok: number }>(sql`SELECT 1 AS ok`);
 
 			if (result == null || result.ok !== 1) {

@@ -39,6 +39,10 @@ export const quizSessions = sqliteTable(
 		check("no_answer_no_last_answered_at", sql`${table.answeredQuestionCount} > 0 OR ${table.lastAnsweredAt} IS NULL`),
 		check("answered_le_total", sql`${table.answeredQuestionCount} <= ${table.totalQuestionCount}`),
 		check("answer_counts_sum", sql`${table.correctAnswerCount} + ${table.incorrectAnswerCount} = ${table.answeredQuestionCount}`),
+		check("answered_question_count_min", sql`${table.answeredQuestionCount} >= 0`),
+		check("correct_answer_count_min", sql`${table.correctAnswerCount} >= 0`),
+		check("incorrect_answer_count_min", sql`${table.incorrectAnswerCount} >= 0`),
+		check("current_question_order_min", sql`${table.currentQuestionOrder} IS NULL OR ${table.currentQuestionOrder} >= 1`),
 	],
 );
 

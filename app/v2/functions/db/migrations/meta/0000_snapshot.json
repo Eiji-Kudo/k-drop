@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "9aa9151d-ce85-41e7-b9c8-7624c4f1e1b8",
+  "id": "4f03e7a4-b0e4-4166-b09b-60780ddfb370",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "drop_transactions": {
@@ -315,7 +315,12 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {}
+      "checkConstraints": {
+        "event_participants_status_check": {
+          "name": "event_participants_status_check",
+          "value": "\"event_participants\".\"participation_status\" IN ('joined', 'waitlisted', 'cancelled')"
+        }
+      }
     },
     "events": {
       "name": "events",
@@ -432,6 +437,10 @@
         "events_dates_check": {
           "name": "events_dates_check",
           "value": "\"events\".\"ends_at\" >= \"events\".\"starts_at\""
+        },
+        "events_visibility_check": {
+          "name": "events_visibility_check",
+          "value": "\"events\".\"visibility\" IN ('public', 'private', 'unlisted')"
         }
       }
     },
@@ -1233,6 +1242,22 @@
         "answer_counts_sum": {
           "name": "answer_counts_sum",
           "value": "\"quiz_sessions\".\"correct_answer_count\" + \"quiz_sessions\".\"incorrect_answer_count\" = \"quiz_sessions\".\"answered_question_count\""
+        },
+        "answered_question_count_min": {
+          "name": "answered_question_count_min",
+          "value": "\"quiz_sessions\".\"answered_question_count\" >= 0"
+        },
+        "correct_answer_count_min": {
+          "name": "correct_answer_count_min",
+          "value": "\"quiz_sessions\".\"correct_answer_count\" >= 0"
+        },
+        "incorrect_answer_count_min": {
+          "name": "incorrect_answer_count_min",
+          "value": "\"quiz_sessions\".\"incorrect_answer_count\" >= 0"
+        },
+        "current_question_order_min": {
+          "name": "current_question_order_min",
+          "value": "\"quiz_sessions\".\"current_question_order\" IS NULL OR \"quiz_sessions\".\"current_question_order\" >= 1"
         }
       }
     },
@@ -1488,6 +1513,10 @@
         "score_tiers_range_check": {
           "name": "score_tiers_range_check",
           "value": "\"score_tiers\".\"min_score\" <= \"score_tiers\".\"max_score\""
+        },
+        "score_tiers_tier_scope_check": {
+          "name": "score_tiers_tier_scope_check",
+          "value": "\"score_tiers\".\"tier_scope\" IN ('overall', 'group')"
         }
       }
     },
