@@ -4,6 +4,9 @@ import { app } from "@/lib/api/app";
 import { createApiClient } from "@/lib/rpc/client";
 import { fetchHealthCheck } from "@/lib/rpc/health-check";
 
+const HEALTH_DATABASE_PATH = "http://localhost/api/health/database",
+	TEST_TOKEN = "test-secret";
+
 const createD1Mock = (results: Record<string, unknown>[], options?: { healthCheckToken?: string }) => ({
 	DB: {
 		prepare: vi.fn(() => ({
@@ -16,30 +19,27 @@ const createD1Mock = (results: Record<string, unknown>[], options?: { healthChec
 	HEALTH_CHECK_TOKEN: options?.healthCheckToken,
 });
 
+const createHealthDatabaseRequest = (token = TEST_TOKEN) => new Request(HEALTH_DATABASE_PATH, { headers: { "X-Health-Token": token } });
+
+const requestHealthDatabase = (env: ReturnType<typeof createD1Mock>, token = TEST_TOKEN) =>
+	app.request(createHealthDatabaseRequest(token), undefined, env);
+
+const expectJsonResponse = async (response: Response, status: number, body: { status: "ok" } | { status: "error" }) => {
+	expect(response.status).toBe(status);
+	await expect(response.json()).resolves.toEqual(body);
+};
 describe("API", () => {
-	afterEach(() => {
-		vi.unstubAllGlobals();
-	});
+	afterEach(() => vi.unstubAllGlobals());
 
 	it("returns a health check response", async () => {
-		const response = await app.request("/api/health");
-
-		expect(response.status).toBe(200);
-		await expect(response.json()).resolves.toEqual({
-			status: "ok",
-		});
+		await expectJsonResponse(await app.request("/api/health"), 200, { status: "ok" });
 	});
 
 	it("allows calling the health check through the typed rpc client", async () => {
 		const apiClient = createApiClient("http://localhost", {
 			fetch: (...args: Parameters<typeof fetch>) => app.request(...args),
 		});
-		const response = await apiClient.api.health.$get();
-
-		expect(response.status).toBe(200);
-		await expect(response.json()).resolves.toEqual({
-			status: "ok",
-		});
+		await expectJsonResponse(await apiClient.api.health.$get(), 200, { status: "ok" });
 	});
 
 	it("throws when the health check returns a non-ok response", async () => {
@@ -59,63 +59,27 @@ describe("API", () => {
 	});
 
 	it("checks the D1 binding through the health endpoint", async () => {
-		const token = "test-secret";
-		const env = createD1Mock([{ ok: 1 }], { healthCheckToken: token });
-		const req = new Request("http://localhost/api/health/database", { headers: { "X-Health-Token": token } });
-
-		const response = await app.request(req, undefined, env);
-
-		expect(response.status).toBe(200);
-		await expect(response.json()).resolves.toEqual({
-			status: "ok",
-		});
+		const env = createD1Mock([{ ok: 1 }], { healthCheckToken: TEST_TOKEN });
+		await expectJsonResponse(await requestHealthDatabase(env), 200, { status: "ok" });
 		expect(env.DB.exec).toHaveBeenCalledWith("PRAGMA foreign_keys = ON");
 	});
 
-	it("returns 404 when health database endpoint is called without valid token", async () => {
-		const env = createD1Mock([{ ok: 1 }], { healthCheckToken: "real-secret" });
-
-		const response = await app.request("/api/health/database", undefined, env);
-
-		expect(response.status).toBe(404);
+	it.each([
+		["health database endpoint is called without valid token", createD1Mock([{ ok: 1 }], { healthCheckToken: "real-secret" })],
+		["HEALTH_CHECK_TOKEN is not configured", createD1Mock([{ ok: 1 }])],
+	])("returns 404 when %s", async (_label, env) => {
+		expect((await app.request("/api/health/database", undefined, env)).status).toBe(404);
 	});
 
-	it("returns 404 when HEALTH_CHECK_TOKEN is not configured", async () => {
-		const env = createD1Mock([{ ok: 1 }]);
-
-		const response = await app.request("/api/health/database", undefined, env);
-
-		expect(response.status).toBe(404);
-	});
-
-	it("reports when the D1 health query returns no rows", async () => {
-		const token = "test-secret";
-		const env = createD1Mock([], { healthCheckToken: token });
-		const req = new Request("http://localhost/api/health/database", { headers: { "X-Health-Token": token } });
-
-		const response = await app.request(req, undefined, env);
-
-		expect(response.status).toBe(503);
-		await expect(response.json()).resolves.toEqual({
-			status: "error",
-		});
-	});
-
-	it("reports unexpected D1 health query results", async () => {
-		const token = "test-secret";
-		const env = createD1Mock([{ ok: 0 }], { healthCheckToken: token });
-		const req = new Request("http://localhost/api/health/database", { headers: { "X-Health-Token": token } });
-
-		const response = await app.request(req, undefined, env);
-
-		expect(response.status).toBe(503);
-		await expect(response.json()).resolves.toEqual({
-			status: "error",
-		});
+	it.each([
+		["the D1 health query returns no rows", []],
+		["the D1 health query returns unexpected results", [{ ok: 0 }]],
+	])("reports when %s", async (_label, results) => {
+		const env = createD1Mock(results, { healthCheckToken: TEST_TOKEN });
+		await expectJsonResponse(await requestHealthDatabase(env), 503, { status: "error" });
 	});
 
 	it("returns 503 when D1 query throws an exception", async () => {
-		const token = "test-secret";
 		const env = {
 			DB: {
 				prepare: vi.fn(() => ({
@@ -125,21 +89,12 @@ describe("API", () => {
 				})),
 				exec: vi.fn().mockResolvedValue(undefined),
 			},
-			HEALTH_CHECK_TOKEN: token,
+			HEALTH_CHECK_TOKEN: TEST_TOKEN,
 		};
-		const req = new Request("http://localhost/api/health/database", { headers: { "X-Health-Token": token } });
-
-		const response = await app.request(req, undefined, env);
-
-		expect(response.status).toBe(503);
-		await expect(response.json()).resolves.toEqual({
-			status: "error",
-		});
+		await expectJsonResponse(await requestHealthDatabase(env), 503, { status: "error" });
 	});
 
 	it("returns not found for unknown API routes", async () => {
-		const response = await app.request("/api/unknown");
-
-		expect(response.status).toBe(404);
+		expect((await app.request("/api/unknown")).status).toBe(404);
 	});
 });

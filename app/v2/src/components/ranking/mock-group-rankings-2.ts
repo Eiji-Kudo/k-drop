@@ -1,0 +1,60 @@
+import type { GroupRankingEntry } from "./types";
+
+const t = (rank: number, userName: string, layerName: string, groupName: string, score: number): GroupRankingEntry => ({
+	rank,
+	userName,
+	layerName,
+	groupName,
+	score,
+});
+
+export const GROUP_RANKINGS_2: Record<string, ReadonlyArray<GroupRankingEntry>> = {
+	"5": [
+		t(1, "fearnot_1", "マスター", "LE SSERAFIM", 4650),
+		t(2, "sakura_bloom", "エキスパート", "LE SSERAFIM", 4400),
+		t(3, "chaewon_lead", "エキスパート", "LE SSERAFIM", 4150),
+		t(4, "yunjin_power", "アドバンス", "LE SSERAFIM", 3900),
+		t(5, "kazuha_grace", "アドバンス", "LE SSERAFIM", 3670),
+		t(6, "eunchae_maknae", "インターミディエイト", "LE SSERAFIM", 3440),
+		t(7, "fearless_fan", "インターミディエイト", "LE SSERAFIM", 3210),
+		t(8, "antifragile", "ビギナー", "LE SSERAFIM", 2980),
+		t(9, "unforgiven_lsf", "ビギナー", "LE SSERAFIM", 2760),
+		t(10, "perfect_night", "ルーキー", "LE SSERAFIM", 2530),
+	],
+	"6": [
+		t(1, "bunny_fan", "マスター", "NewJeans", 4600),
+		t(2, "minji_cool", "エキスパート", "NewJeans", 4350),
+		t(3, "hanni_smile", "エキスパート", "NewJeans", 4100),
+		t(4, "danielle_aus", "アドバンス", "NewJeans", 3850),
+		t(5, "haerin_cat", "アドバンス", "NewJeans", 3620),
+		t(6, "hyein_young", "インターミディエイト", "NewJeans", 3390),
+		t(7, "attention_nj", "インターミディエイト", "NewJeans", 3160),
+		t(8, "hype_boy", "ビギナー", "NewJeans", 2930),
+		t(9, "ditto_love", "ビギナー", "NewJeans", 2710),
+		t(10, "super_shy", "ルーキー", "NewJeans", 2480),
+	],
+	"7": [
+		t(1, "neverland_1", "マスター", "(G)I-DLE", 4550),
+		t(2, "miyeon_visual", "エキスパート", "(G)I-DLE", 4300),
+		t(3, "minnie_thai", "エキスパート", "(G)I-DLE", 4050),
+		t(4, "soyeon_genius", "アドバンス", "(G)I-DLE", 3800),
+		t(5, "yuqi_china", "アドバンス", "(G)I-DLE", 3570),
+		t(6, "shuhua_cute", "インターミディエイト", "(G)I-DLE", 3340),
+		t(7, "tomboy_fan", "インターミディエイト", "(G)I-DLE", 3110),
+		t(8, "queencard_luv", "ビギナー", "(G)I-DLE", 2880),
+		t(9, "nxde_art", "ビギナー", "(G)I-DLE", 2660),
+		t(10, "latata_og", "ルーキー", "(G)I-DLE", 2430),
+	],
+	"8": [
+		t(1, "midzy_top", "マスター", "ITZY", 4500),
+		t(2, "yeji_cat", "エキスパート", "ITZY", 4250),
+		t(3, "lia_angel", "エキスパート", "ITZY", 4000),
+		t(4, "ryujin_swag", "アドバンス", "ITZY", 3750),
+		t(5, "chaeryeong_dance", "アドバンス", "ITZY", 3520),
+		t(6, "yuna_tall", "インターミディエイト", "ITZY", 3290),
+		t(7, "dalla_dalla", "インターミディエイト", "ITZY", 3060),
+		t(8, "wannabe_fan", "ビギナー", "ITZY", 2830),
+		t(9, "sneakers_itzy", "ビギナー", "ITZY", 2610),
+		t(10, "cheshire_luv", "ルーキー", "ITZY", 2380),
+	],
+};

@@ -1,4 +1,4 @@
-import { Link, useMatches } from "@tanstack/react-router";
+import { Link, useLocation, useMatches } from "@tanstack/react-router";
 import { Crown, Home, Pencil, User } from "lucide-react";
 import type { ComponentType } from "react";
 import type { FileRoutesByTo } from "@/routeTree.gen";
@@ -18,6 +18,9 @@ const tabs: ReadonlyArray<TabItem> = [
 
 export function BottomTabBar() {
 	const matches = useMatches();
+	const pathname = useLocation({
+		select: (location) => location.pathname,
+	});
 	const isVisible = !matches.some((match) => match.routeId === "/quiz/$sessionId");
 
 	if (!isVisible) {
@@ -27,14 +30,14 @@ export function BottomTabBar() {
 	return (
 		<nav className="dock dock-sm" aria-label="メインナビゲーション">
 			{tabs.map((tab) => (
-				<TabButton key={tab.to} tab={tab} matches={matches} />
+				<TabButton key={tab.to} tab={tab} pathname={pathname} />
 			))}
 		</nav>
 	);
 }
 
-function TabButton({ tab, matches }: { tab: TabItem; matches: ReturnType<typeof useMatches> }) {
-	const isActive = tab.to === "/" ? matches[matches.length - 1]?.fullPath === "/" : matches.some((match) => match.fullPath.startsWith(tab.to));
+function TabButton({ tab, pathname }: { tab: TabItem; pathname: string }) {
+	const isActive = tab.to === "/" ? pathname === "/" : pathname.startsWith(tab.to);
 	const Icon = tab.icon;
 
 	return (

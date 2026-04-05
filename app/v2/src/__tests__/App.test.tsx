@@ -1,6 +1,7 @@
+// @vitest-environment happy-dom
 import { QueryClient } from "@tanstack/react-query";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "@/lib/app-providers";
 import { createAppRouter } from "@/router";
@@ -77,5 +78,21 @@ describe("App routes", () => {
 		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
 		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
 		expect(screen.getByRole("link", { name: "トップページに戻る" })).toBeInTheDocument();
+	});
+
+	it("renders the total ranking by default on the ranking page", async () => {
+		await renderRoute("/ranking");
+		expect(await screen.findByRole("button", { name: "Total" })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "TWICE" })).toBeInTheDocument();
+		expect(screen.getByText("momo_love")).toBeInTheDocument();
+		expect(screen.getByText("9850")).toBeInTheDocument();
+	});
+
+	it("switches to the selected group ranking tab", async () => {
+		await renderRoute("/ranking");
+		fireEvent.click(await screen.findByRole("button", { name: "BLACKPINK" }));
+		expect(screen.getByText("blink_no1")).toBeInTheDocument();
+		expect(screen.getByText("4850")).toBeInTheDocument();
+		expect(screen.queryByText("9850")).not.toBeInTheDocument();
 	});
 });
