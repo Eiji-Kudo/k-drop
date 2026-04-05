@@ -9,7 +9,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-	globalIgnores(["coverage", "dist", "src/routeTree.gen.ts"]),
+	globalIgnores(["coverage", "dist", "src/routeTree.gen.ts", "worker-configuration.d.ts"]),
 	{
 		files: ["**/*.{ts,tsx}"],
 		extends: [

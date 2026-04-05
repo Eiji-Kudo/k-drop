@@ -1,12 +1,25 @@
 import { Hono } from "hono";
 import { secureHeaders } from "hono/secure-headers";
+import { type AppBindings, getDatabase } from "../../../functions/core/db/bindings";
 
-const app = new Hono()
+const app = new Hono<AppBindings>()
 	.basePath("/api")
 	.use(secureHeaders())
 	.get("/health", (context) => {
 		return context.json({
 			status: "ok",
+		});
+	})
+	.get("/health/database", async (context) => {
+		const result = await getDatabase(context).prepare("SELECT 1 AS ok").first<{ ok: number }>();
+
+		if (result?.ok !== 1) {
+			return context.json({ status: "error", database: "d1" }, 503);
+		}
+
+		return context.json({
+			status: "ok",
+			database: "d1",
 		});
 	});
 

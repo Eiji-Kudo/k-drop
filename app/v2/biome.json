@@ -1,7 +1,17 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.4.10/schema.json",
 	"files": {
-		"includes": ["**", "!coverage", "!coverage/**", "!dist", "!dist/**", "!node_modules", "!node_modules/**", "!src/routeTree.gen.ts"]
+		"includes": [
+			"**",
+			"!coverage",
+			"!coverage/**",
+			"!dist",
+			"!dist/**",
+			"!node_modules",
+			"!node_modules/**",
+			"!src/routeTree.gen.ts",
+			"!worker-configuration.d.ts"
+		]
 	},
 	"formatter": {
 		"lineWidth": 150

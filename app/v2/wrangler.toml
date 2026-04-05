@@ -1,3 +1,11 @@
 name = "k-drop-v2"
 compatibility_date = "2026-04-05"
 pages_build_output_dir = "./dist"
+
+# Replace this placeholder after running:
+# `corepack pnpm exec wrangler d1 create k-drop-v2 --binding DB --update-config`
+[[d1_databases]]
+binding = "DB"
+database_name = "k-drop-v2"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "functions/db/migrations"
