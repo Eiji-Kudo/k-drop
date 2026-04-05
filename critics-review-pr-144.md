@@ -21,7 +21,7 @@
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
 | HIGH | 2 | 2 |
-| MEDIUM | 5 | 5 |
+| MEDIUM | 8 | 8 |
 
 ## 参照したガイドライン
 
@@ -60,6 +60,33 @@
 
 **対応**:
 `Current State` を移行後の構造に更新し、`Recommended Migration` を `Migration Example` に変更した。`現在/推奨` も `移行前/適用後` に置き換え、実装済みの内容を historical example として読めるようにした。
+
+</details>
+
+<details>
+<summary>8. UX ブラッシュアップ計画が旧ディレクトリ構成を編集対象として案内していた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/docs/ux/ui-design-brushup-plan.md`
+- **問題**: `src/routes/quiz/index.tsx` や `src/components/home/*` など、移行前の file path が実務ドキュメントに残っており、次の UI 改修で削除済みパスを辿る誤読を招く状態だった。
+- **対応**: group selection の作業対象を `src/features/quiz/pages/group-selection-page.tsx` に修正し、主要な編集対象ファイル一覧も `src/routes/(tabs)` と `src/features/*` ベースの現構成へ更新した。
+
+</details>
+
+<details>
+<summary>9. `quiz-create-page` が app-level の home route を直接参照していた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/features/quiz/pages/quiz-create-page.tsx`, `app/v2/src/routes/(tabs)/quiz/create.tsx`
+- **問題**: `QuizCreatePage` が `navigate({ to: "/" })` を直接持ち、feature 実装が app-level route 契約を知っている状態だった。
+- **対応**: submit 完了後の app-level 遷移は route file 側へ戻し、`QuizCreatePage` には `onCreated` callback だけを渡す形に変更した。feature 側は作成完了通知に留め、home route 依存を外した。
+
+</details>
+
+<details>
+<summary>10. `quiz/create` の callback 契約が弱く、submit 後遷移の回帰を検知できなかった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/features/quiz/pages/quiz-create-page.tsx`, `app/v2/src/__tests__/App.test.tsx`
+- **問題**: `QuizCreatePage` の `onCreated` が optional だったため、route file 側で callback を渡し忘れても型で検知できず、`/quiz/create` の smoke test も submit 完了後の遷移までは固定できていなかった。
+- **対応**: `onCreated` を必須 prop に変更し、`App.test.tsx` にクイズ作成完了後に home route へ戻ることを確認する route test を追加した。
 
 </details>
 

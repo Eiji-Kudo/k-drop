@@ -1,14 +1,15 @@
-import { useNavigate } from "@tanstack/react-router";
 import { QuizCreateForm } from "../components/QuizCreateForm";
 import type { QuizCreateFormValues } from "../schemas/quiz-create-schema";
 
-export function QuizCreatePage() {
-	const navigate = useNavigate();
+type QuizCreatePageProps = {
+	onCreated: (data: QuizCreateFormValues) => void;
+};
 
+export function QuizCreatePage({ onCreated }: QuizCreatePageProps) {
 	const handleSubmitSuccess = (data: QuizCreateFormValues) => {
 		console.log("Quiz created:", data);
 		alert("クイズを作成しました！");
-		navigate({ to: "/" });
+		onCreated(data);
 	};
 
 	return (

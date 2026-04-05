@@ -35,6 +35,7 @@ describe("App routes", () => {
 			"fetch",
 			vi.fn<typeof fetch>(() => Promise.resolve(new Response("Not Found", { status: 404 }))),
 		);
+		vi.stubGlobal("alert", vi.fn());
 	});
 
 	afterEach(() => {
@@ -84,6 +85,39 @@ describe("App routes", () => {
 		await renderRoute("/quiz/create");
 		expect(await screen.findByRole("heading", { name: "クイズ作成" })).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "作成する" })).toBeInTheDocument();
+	});
+
+	it("navigates back to the home route after creating a quiz", async () => {
+		await renderRoute("/quiz/create");
+
+		fireEvent.change(screen.getByLabelText("対象グループ"), {
+			target: { value: "01J0000000000000000000001" },
+		});
+		fireEvent.change(screen.getByLabelText("難易度"), {
+			target: { value: "easy" },
+		});
+		fireEvent.change(screen.getByLabelText("問題文"), {
+			target: { value: "TWICEのデビュー曲は？" },
+		});
+		fireEvent.change(screen.getByPlaceholderText("選択肢 1 を入力"), {
+			target: { value: "Like Ooh-Ahh" },
+		});
+		fireEvent.change(screen.getByPlaceholderText("選択肢 2 を入力"), {
+			target: { value: "CHEER UP" },
+		});
+		fireEvent.change(screen.getByPlaceholderText("選択肢 3 を入力"), {
+			target: { value: "TT" },
+		});
+		fireEvent.change(screen.getByPlaceholderText("選択肢 4 を入力"), {
+			target: { value: "SIGNAL" },
+		});
+		fireEvent.click(screen.getByRole("radio", { name: "選択肢 1" }));
+		fireEvent.change(screen.getByLabelText("解説"), {
+			target: { value: "デビュー曲は Like Ooh-Ahh。" },
+		});
+		fireEvent.click(screen.getByRole("button", { name: "作成する" }));
+
+		expect(await screen.findByText("オタ力バトルしよう！")).toBeInTheDocument();
 	});
 
 	it("hides the tab bar on the direct quiz question route", async () => {
