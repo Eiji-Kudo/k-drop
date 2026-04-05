@@ -20,14 +20,15 @@ export const MOCK_BADGES = [
 }>;
 
 export const MOCK_GROUPS = [
-	{ id: "1", name: "BLACKPINK", imageUrl: undefined },
-	{ id: "2", name: "aespa", imageUrl: undefined },
-	{ id: "3", name: "NewJeans", imageUrl: undefined },
-	{ id: "4", name: "TWICE", imageUrl: undefined },
+	{ id: "1", name: "BLACKPINK", imageUrl: undefined, masteryScore: 860 },
+	{ id: "2", name: "aespa", imageUrl: undefined, masteryScore: 920 },
+	{ id: "3", name: "NewJeans", imageUrl: undefined, masteryScore: 520 },
+	{ id: "4", name: "TWICE", imageUrl: undefined, masteryScore: 480 },
 ] satisfies Array<{
 	id: string;
 	name: string;
 	imageUrl?: string;
+	masteryScore: number;
 }>;
 
 export const MOCK_PROGRESS = {

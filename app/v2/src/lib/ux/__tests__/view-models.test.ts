@@ -55,6 +55,7 @@ describe("motivation view models", () => {
 		const viewModel = createRankingMotivationViewModel({
 			scopeLabel: "総合",
 			entries,
+			currentScore: 2450,
 		});
 
 		expect(viewModel.topThree).toHaveLength(3);
@@ -62,6 +63,30 @@ describe("motivation view models", () => {
 		expect(viewModel.aroundYou?.neighbors.some((entry) => entry.isSelf)).toBe(true);
 		expect(viewModel.fullList.some((entry) => entry.isSelf)).toBe(true);
 		expect(viewModel.aroundYou?.pointsToNextRank).toBe(60);
+	});
+
+	it("uses the scope-specific score for group ranking comparisons", () => {
+		const entries: ReadonlyArray<RankingEntry> = [
+			{ rank: 1, userName: "blink_no1", layerName: "マスター", score: 4850 },
+			{ rank: 2, userName: "lisa_dancer", layerName: "エキスパート", score: 4600 },
+			{ rank: 3, userName: "jennie_stan", layerName: "エキスパート", score: 4350 },
+			{ rank: 4, userName: "rose_vocal", layerName: "アドバンス", score: 4100 },
+			{ rank: 5, userName: "jisoo_love", layerName: "アドバンス", score: 3880 },
+			{ rank: 6, userName: "bp_forever", layerName: "インターミディエイト", score: 3650 },
+			{ rank: 7, userName: "pink_venom", layerName: "インターミディエイト", score: 3420 },
+			{ rank: 8, userName: "shut_down", layerName: "ビギナー", score: 3200 },
+			{ rank: 9, userName: "boombayah", layerName: "ビギナー", score: 2980 },
+			{ rank: 10, userName: "whistle_fan", layerName: "ルーキー", score: 2750 },
+		];
+		const viewModel = createRankingMotivationViewModel({
+			scopeLabel: "BLACKPINK",
+			entries,
+			currentScore: 860,
+		});
+
+		expect(viewModel.aroundYou?.myScore).toBe(860);
+		expect(viewModel.aroundYou?.myRank).toBe(11);
+		expect(viewModel.aroundYou?.pointsToNextRank).toBe(1890);
 	});
 
 	it("builds profile growth data with next goal and badge hints", () => {
@@ -72,5 +97,6 @@ describe("motivation view models", () => {
 		expect(viewModel.weeklyGrowthLabel).toBe("今週 +12.5%");
 		expect(viewModel.nextBadgeHint).toContain("Quiz Master");
 		expect(viewModel.topGroups[0]?.tierName).toBe("コア");
+		expect(viewModel.topGroups[0]?.groupName).toBe("aespa");
 	});
 });

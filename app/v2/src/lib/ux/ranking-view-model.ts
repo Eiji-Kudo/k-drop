@@ -5,7 +5,7 @@ import type { RankingEntry, RankingMotivationViewModel } from "@/lib/ux/types";
 type CreateRankingMotivationViewModelInput = {
 	scopeLabel: string;
 	entries: ReadonlyArray<RankingEntry>;
-	currentScore?: number;
+	currentScore: number;
 };
 
 function createRankingEntry(entry: RankingEntry, isSelf = false) {
@@ -39,7 +39,7 @@ function injectCurrentUser(entries: ReadonlyArray<RankingEntry>, currentScore: n
 export function createRankingMotivationViewModel({
 	scopeLabel,
 	entries: sourceEntries,
-	currentScore = CURRENT_USER.currentScore,
+	currentScore,
 }: CreateRankingMotivationViewModelInput): RankingMotivationViewModel {
 	const entries = injectCurrentUser(sourceEntries, currentScore);
 	const selfIndex = entries.findIndex((entry) => entry.userName === CURRENT_USER.rankingName);

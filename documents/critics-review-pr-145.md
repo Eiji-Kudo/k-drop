@@ -5,50 +5,43 @@
 - **PR**: [feat] v2: モチベーションUI向けの ViewModel / モックデータ契約を整備する
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/145
 - **調査日**: 2026-04-05
-- **レビュー方式**: 並列レビュー + 相互検証
+- **レビュー方式**: critics-lite / 修正反映済み
 
 ## レビュワー構成
 
-- `type-contract-reviewer`
-  - `src/lib/ux/` の型契約と責務分離を見る
+- `architecture-reviewer`
+  - `src/lib/ux` が presentation 側の mock 配置へ逆依存していないか確認
 - `logic-reviewer`
-  - derived 値の計算と edge case を見る
-- `testability-reviewer`
-  - テスト妥当性と後続 issue での再利用性を見る
-
-## サマリー
-
-| status | count |
-| --- | ---: |
-| 未対応 | 0 |
-| 対応済み | 2 |
-| 対応不要 | 0 |
+  - tier progress / result selector / around-you の edge case を確認
 
 ## 未対応の懸念点
 
-なし
+- なし
 
 ## 対応済みの懸念点
 
-### 1. [MEDIUM] 空の結果入力で `accuracy` が `NaN` になる
+### 1. MEDIUM: 契約層が `components/profile/mock-data` に逆依存していた
 
-- **file**: `app/v2/src/lib/ux/quiz-result-view-model.ts`
+- **対象**: `app/v2/src/lib/ux/mock-state.ts`
 - **問題点**:
-  - `correctCount / data.results.length` をそのまま計算していたため、`results.length === 0` の入力で `NaN` が発生していた。
-  - 現状は比較結果がすべて false になって最終 headline に落ちるだけだが、将来 accuracy を表示値として再利用した時に不正値がそのまま伝播する。
+  - `lib/ux` が `components/profile/mock-data` を直接 import しており、契約層が presentation 配下のファイル配置に引きずられていた
+  - 今後 `ProfilePage` 側の構成変更で selector が不要に壊れる余地があった
 - **対応**:
-  - `results.length === 0 ? 0 : ...` で明示的に 0 扱いへ変更した。
-  - テストに空配列ケースを追加した。
+  - `app/v2/src/mocks/profile.ts` を新設して shared mock state を集約
+  - `app/v2/src/components/profile/mock-data.ts` は re-export のみへ変更
 
-### 2. [MEDIUM] profile mock が `components` と `ux` で二重管理されていた
+### 2. MEDIUM: クイズ結果 selector が 0 件入力で不安定だった
 
-- **file**: `app/v2/src/lib/ux/mock-state.ts`
+- **対象**: `app/v2/src/lib/ux/quiz-result-view-model.ts`
 - **問題点**:
-  - `ux` selector 用の mock state と profile 画面側の mock 定義が別ファイルに散っており、片方だけ更新されると ViewModel 契約と実画面の前提がずれる状態だった。
+  - `accuracy = correctCount / data.results.length` のため、`results.length === 0` で `NaN` になり得た
+  - 空状態や API 接続途中の一時データを渡した場合に headline 判定が壊れる
 - **対応**:
-  - `app/v2/src/mocks/profile.ts` を追加し、profile 画面側は re-export、`ux` 側はその共通 mock を参照する形へ寄せた。
-  - これで `#136` 以降の画面実装でも同じ mock source を再利用できるようにした。
+  - 0 件時は `accuracy = 0` とするガードを追加
+  - `app/v2/src/lib/ux/__tests__/view-models.test.ts` に empty result の回帰テストを追加
 
-## 対応不要の懸念点
+## 最終確認
 
-なし
+- 未対応の懸念点: 0件
+- 対応済みの懸念点: 2件
+- 新規発見: なし
