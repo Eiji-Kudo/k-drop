@@ -6,10 +6,8 @@ function App() {
 			<section className="card border border-base-300 bg-white shadow-lg">
 				<div className="card-body gap-4">
 					<div>
-						<div>
-							<p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-accent">K-Drop</p>
-							<h1 className="text-4xl font-bold tracking-tight">{APP_NAME}</h1>
-						</div>
+						<p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-accent">K-Drop</p>
+						<h1 className="text-4xl font-bold tracking-tight">{APP_NAME}</h1>
 					</div>
 					<p className="text-base leading-7 text-base-content/80">{APP_DESCRIPTION}</p>
 					<div className="flex flex-wrap gap-2">
