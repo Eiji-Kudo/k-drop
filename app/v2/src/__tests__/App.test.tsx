@@ -40,6 +40,7 @@ describe("App routes", () => {
 	afterEach(() => {
 		cleanup();
 		vi.unstubAllGlobals();
+		vi.useRealTimers();
 	});
 
 	it("renders the home screen with welcome header and bento grid", async () => {
@@ -68,10 +69,29 @@ describe("App routes", () => {
 	});
 
 	it("hides the tab bar on quiz session page", async () => {
-		await renderRoute("/quiz/abc123");
-		expect(await screen.findByRole("heading", { name: "クイズ" })).toBeInTheDocument();
+		await renderRoute("/quiz/abc123?groupId=1");
+		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
 	});
+
+	it("navigates from group selection through the quiz flow to the result screen", async () => {
+		await renderRoute("/quiz");
+
+		fireEvent.click(screen.getByRole("button", { name: "BLACKPINK" }));
+		fireEvent.click(screen.getByRole("button", { name: "問題へ進む" }));
+
+		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
+
+		const answers = ["3. ナヨン", "2. Like Ooh-Ahh", "3. RM", "2. æ", "4. STARSHIPエンターテインメント"];
+
+		for (const answer of answers) {
+			fireEvent.click(screen.getByRole("button", { name: answer }));
+			fireEvent.click(await screen.findByRole("button", { name: "次へ" }));
+		}
+
+		expect(await screen.findByRole("heading", { name: "クイズ結果" })).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: "グループ一覧に戻る" })).toBeInTheDocument();
+	}, 10000);
 
 	it("renders the 404 page for an unknown path", async () => {
 		await renderRoute("/missing");
