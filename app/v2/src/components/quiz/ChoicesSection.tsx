@@ -1,5 +1,5 @@
 import { Sparkles } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { type ChoiceVariant, QuizChoice } from "@/components/quiz/QuizChoice";
 import { type QuizAnswerFeedback, ResultModal } from "@/components/quiz/ResultModal";
 import { PrimaryCTA } from "@/components/ui/cta";
@@ -35,15 +35,17 @@ export function ChoicesSection({ choices, explanation, questionNumber, totalQues
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 	const [displayPhase, setDisplayPhase] = useState<DisplayPhase>("question");
 	const [feedback, setFeedback] = useState<QuizAnswerFeedback | null>(null);
+	const selectionLockedRef = useRef(false);
 
 	const handleSelect = useCallback(
 		(index: number) => {
-			if (selectedIndex !== null) return;
+			if (selectionLockedRef.current) return;
+			selectionLockedRef.current = true;
 			setSelectedIndex(index);
 			setFeedback(onAnswer(index));
 			setDisplayPhase("selected");
 		},
-		[onAnswer, selectedIndex],
+		[onAnswer],
 	);
 
 	useEffect(() => {
@@ -53,6 +55,7 @@ export function ChoicesSection({ choices, explanation, questionNumber, totalQues
 	}, [displayPhase]);
 
 	const handleNext = useCallback(() => {
+		selectionLockedRef.current = false;
 		setSelectedIndex(null);
 		setDisplayPhase("question");
 		setFeedback(null);
