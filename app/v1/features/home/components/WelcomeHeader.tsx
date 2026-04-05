@@ -32,10 +32,22 @@ export function WelcomeHeader({
       >
         <View style={styles.topRow}>
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>K-DROP HOME</Text>
+            <Text
+              accessibilityElementsHidden
+              importantForAccessibility="no"
+              style={styles.badgeText}
+            >
+              K-DROP HOME
+            </Text>
           </View>
           <View style={styles.statusCard}>
-            <Text style={styles.statusLabel}>TODAY</Text>
+            <Text
+              accessibilityElementsHidden
+              importantForAccessibility="no"
+              style={styles.statusLabel}
+            >
+              TODAY
+            </Text>
             <Text style={styles.statusValue}>推し知識をチャージ</Text>
           </View>
         </View>

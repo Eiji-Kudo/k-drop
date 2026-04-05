@@ -41,7 +41,11 @@ export function BentoCardContent({
       </View>
       <View style={styles.textStack}>
         {eyebrow ? (
-          <Text style={[styles.eyebrow, { color: tokens.eyebrowColor }]}>
+          <Text
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+            style={[styles.eyebrow, { color: tokens.eyebrowColor }]}
+          >
             {eyebrow}
           </Text>
         ) : null}

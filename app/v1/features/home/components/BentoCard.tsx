@@ -78,6 +78,7 @@ export function BentoCard({
             style={[
               cardStyles,
               styles.cardDefault,
+              !onPress && styles.cardDisabled,
               {
                 backgroundColor: tokens.backgroundColor,
                 borderColor: tokens.borderColor,

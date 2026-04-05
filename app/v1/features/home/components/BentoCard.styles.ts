@@ -24,6 +24,10 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 20,
   },
+  cardDisabled: {
+    opacity: 0.72,
+    shadowOpacity: 0.05,
+  },
   cardGradient: {
     borderWidth: 1,
     elevation: 12,

@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react-native'
+import { act, fireEvent, waitFor } from '@testing-library/react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { GlobalProvider, useGlobalContext } from '@/context/GlobalContext'
 import { useEffect } from 'react'
@@ -51,15 +51,17 @@ export const selectFirstGroup = async ({
     expect(getByText('TWICE')).toBeTruthy()
   })
 
-  fireEvent.press(getByTestId('group-button-1'))
+  await act(async () => {
+    fireEvent.press(getByTestId('group-button-1'))
+    await Promise.resolve()
+  })
 }
 
-export const pressContinueUntil = async (
-  { getByTestId }: Pick<GroupSelectionQueries, 'getByTestId'>,
-  assertion: () => void,
-) => {
-  await waitFor(() => {
+export const pressContinue = async ({
+  getByTestId,
+}: Pick<GroupSelectionQueries, 'getByTestId'>) => {
+  await act(async () => {
     fireEvent.press(getByTestId('continue-button'))
-    assertion()
+    await Promise.resolve()
   })
 }

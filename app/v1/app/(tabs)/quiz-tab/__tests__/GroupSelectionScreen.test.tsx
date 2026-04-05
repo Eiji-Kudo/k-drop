@@ -4,7 +4,7 @@ import GroupSelectionScreen from '../index'
 import { mockSupabaseData, type MockData } from './mocks/groupSelectionMocks'
 import {
   TestWrapper,
-  pressContinueUntil,
+  pressContinue,
   selectFirstGroup,
   globalContextValue,
   resetGlobalContext,
@@ -65,7 +65,8 @@ describe('GroupSelectionScreen', () => {
     const { getByTestId, getByText } = renderScreen()
 
     await selectFirstGroup({ getByTestId, getByText })
-    await pressContinueUntil({ getByTestId }, () => {
+    await pressContinue({ getByTestId })
+    await waitFor(() => {
       expect(globalContextValue?.selectedQuizIds).toBeInstanceOf(Array)
       expect(globalContextValue?.selectedQuizIds).toHaveLength(5)
 
@@ -95,7 +96,8 @@ describe('GroupSelectionScreen', () => {
     const { getByTestId, getByText } = renderScreen()
 
     await selectFirstGroup({ getByTestId, getByText })
-    await pressContinueUntil({ getByTestId }, () => {
+    await pressContinue({ getByTestId })
+    await waitFor(() => {
       expect(globalContextValue?.selectedQuizIds).toEqual([])
     })
 

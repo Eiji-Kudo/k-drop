@@ -35,8 +35,8 @@ export function BentoGrid() {
         <View style={styles.sideCard}>
           <BentoCard
             title="問題を作成"
-            subtitle="推し知識を出題できるメニュー"
-            eyebrow="CREATE"
+            subtitle="出題機能は準備中"
+            eyebrow="準備中"
             icon={<CreateIcon color={Colors.tertiary} size={28} />}
             size="large"
             variant="rose"
