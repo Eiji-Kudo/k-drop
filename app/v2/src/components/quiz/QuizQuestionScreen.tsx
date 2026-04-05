@@ -3,6 +3,7 @@ import { ChoicesSection } from "@/components/quiz/ChoicesSection";
 import { MOCK_QUESTIONS } from "@/components/quiz/mock-questions";
 import { QuestionPrompt } from "@/components/quiz/QuestionPrompt";
 import { QuizHeader } from "@/components/quiz/QuizHeader";
+import { PageShell } from "@/components/ui/PageShell";
 
 type QuizQuestionScreenProps = {
 	onComplete: () => void;
@@ -22,10 +23,10 @@ export function QuizQuestionScreen({ onComplete }: QuizQuestionScreenProps) {
 	}, [currentIndex, onComplete]);
 
 	return (
-		<main className="grid flex-1 content-start gap-8">
+		<PageShell className="gap-6">
 			<QuizHeader />
 			<QuestionPrompt prompt={question.prompt} />
 			<ChoicesSection key={currentIndex} choices={question.choices} explanation={question.explanation} onNext={handleNext} />
-		</main>
+		</PageShell>
 	);
 }

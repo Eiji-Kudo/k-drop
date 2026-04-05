@@ -1,3 +1,6 @@
+import { Settings2, UserRound } from "lucide-react";
+import { SectionCard } from "@/components/ui/SectionCard";
+
 type ProfileHeaderProps = {
 	userName: string;
 	nickname?: string;
@@ -7,48 +10,35 @@ type ProfileHeaderProps = {
 
 export function ProfileHeader({ userName, nickname, avatarUrl, onSettingsPress }: ProfileHeaderProps) {
 	return (
-		<div className="flex items-center gap-4 px-4 py-4">
-			<div className="size-20 shrink-0 overflow-hidden rounded-full">
-				{avatarUrl ? (
-					<img src={avatarUrl} alt={userName} className="size-full object-cover" />
-				) : (
-					<div className="flex size-full items-center justify-center bg-secondary">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="size-10 text-secondary-content/60"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-							/>
-						</svg>
-					</div>
+		<SectionCard tone="hero" className="relative overflow-hidden px-4 py-4">
+			<div className="absolute right-0 top-0 size-28 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.42),transparent_72%)] blur-2xl" />
+			<div className="relative flex items-center gap-4">
+				<div className="size-20 shrink-0 overflow-hidden rounded-full">
+					{avatarUrl ? (
+						<img src={avatarUrl} alt={userName} className="size-full object-cover" />
+					) : (
+						<div className="flex size-full items-center justify-center bg-white/50 text-primary shadow-soft">
+							<UserRound className="size-10" strokeWidth={2} />
+						</div>
+					)}
+				</div>
+
+				<div className="flex min-w-0 flex-1 flex-col gap-1">
+					<h2 className="truncate text-2xl font-black tracking-[-0.04em] text-base-content">{userName}</h2>
+					{nickname && <p className="truncate text-sm text-base-content/65">{nickname}</p>}
+				</div>
+
+				{onSettingsPress && (
+					<button
+						type="button"
+						onClick={onSettingsPress}
+						className="flex size-11 items-center justify-center rounded-full border border-white/70 bg-white/60 text-base-content shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-base-100"
+						aria-label="設定"
+					>
+						<Settings2 className="size-5" strokeWidth={2.1} />
+					</button>
 				)}
 			</div>
-
-			<div className="flex min-w-0 flex-1 flex-col gap-1">
-				<h1 className="truncate text-xl font-bold">{userName}</h1>
-				{nickname && <p className="truncate text-sm text-base-content/60">{nickname}</p>}
-			</div>
-
-			{onSettingsPress && (
-				<button type="button" onClick={onSettingsPress} className="btn btn-ghost btn-sm btn-circle" aria-label="設定">
-					<svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-						/>
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-					</svg>
-				</button>
-			)}
-		</div>
+		</SectionCard>
 	);
 }

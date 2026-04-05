@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ChoicesFieldset, CorrectChoiceFieldset } from "@/components/quiz/quiz-choice-fields";
 import { DifficultySelect, ExplanationField, GroupSelect, PromptField } from "@/components/quiz/quiz-create-fields";
+import { PrimaryCTA } from "@/components/ui/cta";
 import { type QuizCreateFormValues, quizCreateSchema } from "@/lib/schemas/quiz-create-schema";
 
 type QuizCreateFormProps = {
@@ -34,9 +35,9 @@ export function QuizCreateForm({ onSubmitSuccess }: QuizCreateFormProps) {
 			<CorrectChoiceFieldset register={register} error={errors.correctChoiceIndex?.message} />
 			<ExplanationField register={register} error={errors.explanation?.message} />
 
-			<button type="submit" className="btn btn-primary w-full" disabled={isSubmitting}>
+			<PrimaryCTA type="submit" className="w-full" disabled={isSubmitting}>
 				{isSubmitting ? "作成中..." : "作成する"}
-			</button>
+			</PrimaryCTA>
 		</form>
 	);
 }

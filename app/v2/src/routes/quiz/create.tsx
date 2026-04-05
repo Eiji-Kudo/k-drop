@@ -1,5 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { QuizCreateForm } from "@/components/quiz/quiz-create-form";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { PageShell } from "@/components/ui/PageShell";
+import { SectionCard } from "@/components/ui/SectionCard";
 import type { QuizCreateFormValues } from "@/lib/schemas/quiz-create-schema";
 
 function QuizCreatePage() {
@@ -12,14 +15,12 @@ function QuizCreatePage() {
 	};
 
 	return (
-		<main className="grid flex-1 content-start gap-4">
-			<section className="card border border-base-300 bg-base-100 shadow-lg">
-				<div className="card-body gap-6">
-					<h1 className="card-title text-2xl">クイズ作成</h1>
-					<QuizCreateForm onSubmitSuccess={handleSubmitSuccess} />
-				</div>
-			</section>
-		</main>
+		<PageShell>
+			<PageHeader eyebrow="CREATE QUIZ" title="クイズ作成" description="後から磨き込みやすいよう、まずは共通フォームの土台を揃える。" />
+			<SectionCard className="px-5 py-5">
+				<QuizCreateForm onSubmitSuccess={handleSubmitSuccess} />
+			</SectionCard>
+		</PageShell>
 	);
 }
 
