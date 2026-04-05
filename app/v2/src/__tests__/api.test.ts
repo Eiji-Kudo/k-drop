@@ -3,18 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { app } from "@/lib/api/app";
 import { createApiClient } from "@/lib/rpc/client";
 import { fetchHealthCheck } from "@/lib/rpc/health-check";
-
-const createD1Mock = (results: Record<string, unknown>[], options?: { healthCheckToken?: string }) => ({
-	DB: {
-		prepare: vi.fn(() => ({
-			bind: vi.fn(() => ({
-				all: vi.fn().mockResolvedValue({ results }),
-			})),
-		})),
-		exec: vi.fn().mockResolvedValue(undefined),
-	},
-	HEALTH_CHECK_TOKEN: options?.healthCheckToken,
-});
+import { createD1Mock, createFailingD1Mock } from "./api-test-helpers";
 
 describe("API", () => {
 	afterEach(() => {
@@ -116,17 +105,7 @@ describe("API", () => {
 
 	it("returns 503 when D1 query throws an exception", async () => {
 		const token = "test-secret";
-		const env = {
-			DB: {
-				prepare: vi.fn(() => ({
-					bind: vi.fn(() => ({
-						all: vi.fn().mockRejectedValue(new Error("D1 connection failed")),
-					})),
-				})),
-				exec: vi.fn().mockResolvedValue(undefined),
-			},
-			HEALTH_CHECK_TOKEN: token,
-		};
+		const env = createFailingD1Mock(token, "D1 connection failed");
 		const req = new Request("http://localhost/api/health/database", { headers: { "X-Health-Token": token } });
 
 		const response = await app.request(req, undefined, env);
