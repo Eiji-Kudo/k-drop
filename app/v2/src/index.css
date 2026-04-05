@@ -49,8 +49,8 @@
 		min-width: 320px;
 		min-height: 100vh;
 		font-family: var(--font-sans);
-		background-color: var(--color-base-100);
-		color: var(--color-base-content);
+		background-color: #faf0f4;
+		color: #4f2443;
 	}
 
 	a {
