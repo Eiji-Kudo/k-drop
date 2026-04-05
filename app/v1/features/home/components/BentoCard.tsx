@@ -1,30 +1,23 @@
-import { Colors } from '@/constants/Colors'
 import * as Haptics from 'expo-haptics'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MotiPressable } from 'moti/interactions'
 import { MotiView } from 'moti'
-import { Text, View, ViewStyle } from 'react-native'
+import { View } from 'react-native'
 import { styles } from './BentoCard.styles'
-
-type BentoCardProps = {
-  title: string
-  subtitle?: string
-  icon: React.ReactNode
-  onPress?: () => void
-  size?: 'small' | 'medium' | 'large' | 'wide'
-  variant?: 'default' | 'gradient' | 'accent'
-  delay?: number
-  style?: ViewStyle
-}
+import { BentoCardContent } from './BentoCardContent'
+import { bentoCardVariantTokens } from './BentoCard.tokens'
+import type { BentoCardProps } from './BentoCard.types'
 
 export function BentoCard({
   title,
   subtitle,
+  eyebrow,
   icon,
   onPress,
   size = 'medium',
   variant = 'default',
   delay = 0,
+  showArrow = false,
   style,
 }: BentoCardProps) {
   const handlePress = async () => {
@@ -42,21 +35,7 @@ export function BentoCard({
     style,
   ]
 
-  const isWhiteText = variant === 'gradient' || variant === 'accent'
-
-  const content = (
-    <>
-      <View>{icon}</View>
-      <Text style={[styles.title, isWhiteText && styles.titleWhite]}>
-        {title}
-      </Text>
-      {subtitle && (
-        <Text style={[styles.subtitle, isWhiteText && styles.subtitleWhite]}>
-          {subtitle}
-        </Text>
-      )}
-    </>
-  )
+  const tokens = bentoCardVariantTokens[variant]
 
   return (
     <MotiView
@@ -65,33 +44,56 @@ export function BentoCard({
       transition={{ type: 'timing', duration: 400, delay }}
     >
       <MotiPressable
+        disabled={!onPress}
         onPress={handlePress}
         animate={({ pressed }) => {
           'worklet'
-          return { scale: pressed ? 0.97 : 1 }
+          return { scale: onPress && pressed ? 0.97 : 1 }
         }}
         transition={{ type: 'timing', duration: 100 }}
       >
-        {variant === 'gradient' ? (
+        {tokens.gradientColors ? (
           <LinearGradient
-            colors={Colors.gradients.primary}
+            colors={tokens.gradientColors}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={cardStyles}
+            style={[
+              cardStyles,
+              styles.cardGradient,
+              { borderColor: tokens.borderColor },
+            ]}
           >
-            {content}
-          </LinearGradient>
-        ) : variant === 'accent' ? (
-          <LinearGradient
-            colors={Colors.gradients.accent}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={cardStyles}
-          >
-            {content}
+            <BentoCardContent
+              eyebrow={eyebrow}
+              icon={icon}
+              showArrow={showArrow}
+              size={size}
+              subtitle={subtitle}
+              title={title}
+              tokens={tokens}
+            />
           </LinearGradient>
         ) : (
-          <View style={[cardStyles, styles.cardDefault]}>{content}</View>
+          <View
+            style={[
+              cardStyles,
+              styles.cardDefault,
+              {
+                backgroundColor: tokens.backgroundColor,
+                borderColor: tokens.borderColor,
+              },
+            ]}
+          >
+            <BentoCardContent
+              eyebrow={eyebrow}
+              icon={icon}
+              showArrow={showArrow}
+              size={size}
+              subtitle={subtitle}
+              title={title}
+              tokens={tokens}
+            />
+          </View>
         )}
       </MotiPressable>
     </MotiView>

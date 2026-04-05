@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react-native'
+import { fireEvent, render, waitFor } from '@testing-library/react-native'
 import { useQuizNavigation } from '../../hooks/useQuizNavigation'
 import { useQuizOnSelect } from '../../hooks/useQuizOnSelect'
 import { useQuizChoices } from '../../hooks/useQuizQuery'
@@ -55,7 +55,7 @@ describe('ChoicesSection - Navigation', () => {
     })
   })
 
-  it('handles navigation to results when all quizzes are answered', () => {
+  it('handles navigation to results when all quizzes are answered', async () => {
     const mockGoNext = jest.fn()
     ;(useQuizNavigation as jest.Mock).mockReturnValue({
       goNext: mockGoNext,
@@ -66,6 +66,8 @@ describe('ChoicesSection - Navigation', () => {
     )
 
     fireEvent.press(getByTestId('next-button'))
-    expect(mockGoNext).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(mockGoNext).toHaveBeenCalled()
+    })
   })
 })

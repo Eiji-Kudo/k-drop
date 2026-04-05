@@ -1,6 +1,8 @@
+import { fireEvent, waitFor } from '@testing-library/react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { GlobalProvider, useGlobalContext } from '@/context/GlobalContext'
 import { useEffect } from 'react'
+import type { ReactTestInstance } from 'react-test-renderer'
 
 export let globalContextValue: ReturnType<typeof useGlobalContext> | null = null
 
@@ -34,4 +36,30 @@ export const TestWrapper = ({ children }: { children: React.ReactNode }) => {
 
 export const resetGlobalContext = () => {
   globalContextValue = null
+}
+
+type GroupSelectionQueries = {
+  getByTestId: (testId: string) => ReactTestInstance
+  getByText: (text: string) => ReactTestInstance
+}
+
+export const selectFirstGroup = async ({
+  getByTestId,
+  getByText,
+}: GroupSelectionQueries) => {
+  await waitFor(() => {
+    expect(getByText('TWICE')).toBeTruthy()
+  })
+
+  fireEvent.press(getByTestId('group-button-1'))
+}
+
+export const pressContinueUntil = async (
+  { getByTestId }: Pick<GroupSelectionQueries, 'getByTestId'>,
+  assertion: () => void,
+) => {
+  await waitFor(() => {
+    fireEvent.press(getByTestId('continue-button'))
+    assertion()
+  })
 }
