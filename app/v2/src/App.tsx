@@ -8,7 +8,7 @@ function App() {
 		? "Checking API..."
 		: healthCheckQuery.isError
 			? "API status: unavailable"
-			: `API status: ${healthCheckQuery.data.status}`;
+			: `API status: ${healthCheckQuery.data?.status ?? "unknown"}`;
 
 	return (
 		<main className="app">
