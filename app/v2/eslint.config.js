@@ -67,6 +67,17 @@ export default defineConfig([
 		},
 	},
 	{
+		files: ["functions/**/*.ts", "src/lib/api/**/*.ts"],
+		languageOptions: {
+			globals: {
+				...globals.worker,
+			},
+		},
+		rules: {
+			"react-refresh/only-export-components": "off",
+		},
+	},
+	{
 		files: ["**/*.test.ts", "**/*.test.tsx"],
 		languageOptions: {
 			globals: {

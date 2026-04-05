@@ -15,7 +15,8 @@
 		"format": "biome check --write .",
 		"format:check": "biome check .",
 		"ci": "pnpm run test && pnpm run test:types && pnpm run lint && pnpm run format:check && pnpm run build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"dev:full": "wrangler pages dev --compatibility-date=2026-04-05 -- pnpm run dev"
 	},
 	"dependencies": {
 		"hono": "4.12.10",
