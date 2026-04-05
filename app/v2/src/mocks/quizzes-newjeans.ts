@@ -1,0 +1,92 @@
+import { idolGroups } from "./groups";
+import type { Quiz } from "./types";
+
+const GROUP_ID = idolGroups[1].idolGroupId;
+
+export const newjeansQuizzes: Quiz[] = [
+	{
+		quizId: "01JQXV0001QUIZ0000000006",
+		idolGroupId: GROUP_ID,
+		difficulty: "easy",
+		status: "published",
+		prompt: "NewJeansのデビュー年は？",
+		explanation: "NewJeansは2022年にHYBE傘下のADOR所属としてデビューしました。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000021", quizId: "01JQXV0001QUIZ0000000006", choiceOrder: 1, choiceText: "2021年", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000022", quizId: "01JQXV0001QUIZ0000000006", choiceOrder: 2, choiceText: "2022年", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000023", quizId: "01JQXV0001QUIZ0000000006", choiceOrder: 3, choiceText: "2023年", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000024", quizId: "01JQXV0001QUIZ0000000006", choiceOrder: 4, choiceText: "2020年", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000007",
+		idolGroupId: GROUP_ID,
+		difficulty: "easy",
+		status: "published",
+		prompt: "NewJeansのメンバー数は？",
+		explanation: "ミンジ、ハニ、ダニエル、ヘリン、ヘインの5人グループです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000025", quizId: "01JQXV0001QUIZ0000000007", choiceOrder: 1, choiceText: "4人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000026", quizId: "01JQXV0001QUIZ0000000007", choiceOrder: 2, choiceText: "5人", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000027", quizId: "01JQXV0001QUIZ0000000007", choiceOrder: 3, choiceText: "6人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000028", quizId: "01JQXV0001QUIZ0000000007", choiceOrder: 4, choiceText: "7人", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000008",
+		idolGroupId: GROUP_ID,
+		difficulty: "normal",
+		status: "published",
+		prompt: "NewJeansの代表曲「Hype Boy」の特徴は？",
+		explanation: "MVが2バージョン公開され、Y2K風のレトロな雰囲気が話題になりました。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000029", quizId: "01JQXV0001QUIZ0000000008", choiceOrder: 1, choiceText: "ダンスブレイク3回", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000030", quizId: "01JQXV0001QUIZ0000000008", choiceOrder: 2, choiceText: "MV2バージョン", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000031", quizId: "01JQXV0001QUIZ0000000008", choiceOrder: 3, choiceText: "全編英語歌詞", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000032", quizId: "01JQXV0001QUIZ0000000008", choiceOrder: 4, choiceText: "ライブ限定曲", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000009",
+		idolGroupId: GROUP_ID,
+		difficulty: "hard",
+		status: "published",
+		prompt: "NewJeansの所属レーベルは？",
+		explanation: "ADORはミン・ヒジンが設立したHYBE傘下のレーベルです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000033", quizId: "01JQXV0001QUIZ0000000009", choiceOrder: 1, choiceText: "ADOR", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000034", quizId: "01JQXV0001QUIZ0000000009", choiceOrder: 2, choiceText: "BELIFT LAB", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000035", quizId: "01JQXV0001QUIZ0000000009", choiceOrder: 3, choiceText: "SOURCE MUSIC", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000036", quizId: "01JQXV0001QUIZ0000000009", choiceOrder: 4, choiceText: "PLEDIS", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000010",
+		idolGroupId: GROUP_ID,
+		difficulty: "normal",
+		status: "published",
+		prompt: "NewJeansの最年少メンバーは？",
+		explanation: "ヘインは2008年生まれでグループ最年少です。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000037", quizId: "01JQXV0001QUIZ0000000010", choiceOrder: 1, choiceText: "ヘリン", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000038", quizId: "01JQXV0001QUIZ0000000010", choiceOrder: 2, choiceText: "ヘイン", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000039", quizId: "01JQXV0001QUIZ0000000010", choiceOrder: 3, choiceText: "ダニエル", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000040", quizId: "01JQXV0001QUIZ0000000010", choiceOrder: 4, choiceText: "ハニ", isCorrect: 0 },
+		],
+	},
+];

@@ -1,0 +1,98 @@
+import { idolGroups } from "./groups";
+import type { Quiz } from "./types";
+
+const GROUP_ID = idolGroups[0].idolGroupId;
+
+export const leSserafimQuizzes: Quiz[] = [
+	{
+		quizId: "01JQXV0001QUIZ0000000001",
+		idolGroupId: GROUP_ID,
+		difficulty: "easy",
+		status: "published",
+		prompt: "LE SSERAFIMのデビュー曲は？",
+		explanation: "「FEARLESS」は2022年5月にリリースされたデビューシングルです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000001", quizId: "01JQXV0001QUIZ0000000001", choiceOrder: 1, choiceText: "FEARLESS", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000002", quizId: "01JQXV0001QUIZ0000000001", choiceOrder: 2, choiceText: "ANTIFRAGILE", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000003", quizId: "01JQXV0001QUIZ0000000001", choiceOrder: 3, choiceText: "UNFORGIVEN", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000004", quizId: "01JQXV0001QUIZ0000000001", choiceOrder: 4, choiceText: "EASY", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000002",
+		idolGroupId: GROUP_ID,
+		difficulty: "normal",
+		status: "published",
+		prompt: "LE SSERAFIMのメンバー数は？",
+		explanation: "サクラ、チェウォン、ユンジン、カズハ、ウンチェの5人グループです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000005", quizId: "01JQXV0001QUIZ0000000002", choiceOrder: 1, choiceText: "4人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000006", quizId: "01JQXV0001QUIZ0000000002", choiceOrder: 2, choiceText: "5人", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000007", quizId: "01JQXV0001QUIZ0000000002", choiceOrder: 3, choiceText: "6人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000008", quizId: "01JQXV0001QUIZ0000000002", choiceOrder: 4, choiceText: "7人", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000003",
+		idolGroupId: GROUP_ID,
+		difficulty: "hard",
+		status: "published",
+		prompt: "LE SSERAFIMの所属事務所は？",
+		explanation: "SOURCE MUSICはHYBEの傘下レーベルです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000009", quizId: "01JQXV0001QUIZ0000000003", choiceOrder: 1, choiceText: "JYP Entertainment", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000010", quizId: "01JQXV0001QUIZ0000000003", choiceOrder: 2, choiceText: "SM Entertainment", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000011", quizId: "01JQXV0001QUIZ0000000003", choiceOrder: 3, choiceText: "SOURCE MUSIC", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000012", quizId: "01JQXV0001QUIZ0000000003", choiceOrder: 4, choiceText: "YG Entertainment", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000004",
+		idolGroupId: GROUP_ID,
+		difficulty: "normal",
+		status: "published",
+		prompt: "LE SSERAFIMのグループ名の由来は？",
+		explanation: "「I'M FEARLESS」のアナグラムから作られています。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000013", quizId: "01JQXV0001QUIZ0000000004", choiceOrder: 1, choiceText: "天使の名前", isCorrect: 0 },
+			{
+				quizChoiceId: "01JQXV0001CHCE0000000014",
+				quizId: "01JQXV0001QUIZ0000000004",
+				choiceOrder: 2,
+				choiceText: "I'M FEARLESSのアナグラム",
+				isCorrect: 1,
+			},
+			{ quizChoiceId: "01JQXV0001CHCE0000000015", quizId: "01JQXV0001QUIZ0000000004", choiceOrder: 3, choiceText: "韓国語の造語", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000016", quizId: "01JQXV0001QUIZ0000000004", choiceOrder: 4, choiceText: "フランス語の単語", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000005",
+		idolGroupId: GROUP_ID,
+		difficulty: "easy",
+		status: "published",
+		prompt: "LE SSERAFIMの日本人メンバーは何人？",
+		explanation: "サクラ（宮脇咲良）とカズハ（中村一葉）の2人が日本人メンバーです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000017", quizId: "01JQXV0001QUIZ0000000005", choiceOrder: 1, choiceText: "1人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000018", quizId: "01JQXV0001QUIZ0000000005", choiceOrder: 2, choiceText: "2人", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000019", quizId: "01JQXV0001QUIZ0000000005", choiceOrder: 3, choiceText: "3人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000020", quizId: "01JQXV0001QUIZ0000000005", choiceOrder: 4, choiceText: "0人", isCorrect: 0 },
+		],
+	},
+];

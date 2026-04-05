@@ -1,0 +1,92 @@
+import { idolGroups } from "./groups";
+import type { Quiz } from "./types";
+
+const GROUP_ID = idolGroups[2].idolGroupId;
+
+export const aespaQuizzes: Quiz[] = [
+	{
+		quizId: "01JQXV0001QUIZ0000000011",
+		idolGroupId: GROUP_ID,
+		difficulty: "easy",
+		status: "published",
+		prompt: "aespaの所属事務所は？",
+		explanation: "aespaはSM Entertainmentに所属しています。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000041", quizId: "01JQXV0001QUIZ0000000011", choiceOrder: 1, choiceText: "JYP Entertainment", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000042", quizId: "01JQXV0001QUIZ0000000011", choiceOrder: 2, choiceText: "SM Entertainment", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000043", quizId: "01JQXV0001QUIZ0000000011", choiceOrder: 3, choiceText: "YG Entertainment", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000044", quizId: "01JQXV0001QUIZ0000000011", choiceOrder: 4, choiceText: "HYBE", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000012",
+		idolGroupId: GROUP_ID,
+		difficulty: "normal",
+		status: "published",
+		prompt: "aespaの世界観に登場する仮想世界の名前は？",
+		explanation: "FLATはaespaの世界観における仮想世界です。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000045", quizId: "01JQXV0001QUIZ0000000012", choiceOrder: 1, choiceText: "KWANGYA", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000046", quizId: "01JQXV0001QUIZ0000000012", choiceOrder: 2, choiceText: "FLAT", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000047", quizId: "01JQXV0001QUIZ0000000012", choiceOrder: 3, choiceText: "SYNK", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000048", quizId: "01JQXV0001QUIZ0000000012", choiceOrder: 4, choiceText: "NAEVIS", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000013",
+		idolGroupId: GROUP_ID,
+		difficulty: "hard",
+		status: "published",
+		prompt: "aespaのデビュー曲は？",
+		explanation: "「Black Mamba」は2020年11月にリリースされたデビューシングルです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000049", quizId: "01JQXV0001QUIZ0000000013", choiceOrder: 1, choiceText: "Next Level", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000050", quizId: "01JQXV0001QUIZ0000000013", choiceOrder: 2, choiceText: "Savage", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000051", quizId: "01JQXV0001QUIZ0000000013", choiceOrder: 3, choiceText: "Black Mamba", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000052", quizId: "01JQXV0001QUIZ0000000013", choiceOrder: 4, choiceText: "Dreams Come True", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000014",
+		idolGroupId: GROUP_ID,
+		difficulty: "easy",
+		status: "published",
+		prompt: "aespaのメンバー数は？",
+		explanation: "カリナ、ジゼル、ウィンター、ニンニンの4人グループです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000053", quizId: "01JQXV0001QUIZ0000000014", choiceOrder: 1, choiceText: "3人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000054", quizId: "01JQXV0001QUIZ0000000014", choiceOrder: 2, choiceText: "4人", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000055", quizId: "01JQXV0001QUIZ0000000014", choiceOrder: 3, choiceText: "5人", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000056", quizId: "01JQXV0001QUIZ0000000014", choiceOrder: 4, choiceText: "6人", isCorrect: 0 },
+		],
+	},
+	{
+		quizId: "01JQXV0001QUIZ0000000015",
+		idolGroupId: GROUP_ID,
+		difficulty: "normal",
+		status: "published",
+		prompt: "aespaの日本人メンバーは？",
+		explanation: "ジゼル（内永えり）が日本人メンバーです。",
+		publishedAt: "2024-02-01T00:00:00Z",
+		createdAt: "2024-01-15T00:00:00Z",
+		updatedAt: "2024-02-01T00:00:00Z",
+		choices: [
+			{ quizChoiceId: "01JQXV0001CHCE0000000057", quizId: "01JQXV0001QUIZ0000000015", choiceOrder: 1, choiceText: "カリナ", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000058", quizId: "01JQXV0001QUIZ0000000015", choiceOrder: 2, choiceText: "ジゼル", isCorrect: 1 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000059", quizId: "01JQXV0001QUIZ0000000015", choiceOrder: 3, choiceText: "ウィンター", isCorrect: 0 },
+			{ quizChoiceId: "01JQXV0001CHCE0000000060", quizId: "01JQXV0001QUIZ0000000015", choiceOrder: 4, choiceText: "ニンニン", isCorrect: 0 },
+		],
+	},
+];
