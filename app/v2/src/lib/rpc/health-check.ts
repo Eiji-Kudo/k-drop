@@ -12,7 +12,7 @@ export async function fetchHealthCheck(): Promise<HealthCheckResponse> {
 	const response = await apiClient.api.health.$get();
 
 	if (!response.ok) {
-		throw new Error("Failed to fetch API health status");
+		throw new Error(`Failed to fetch API health status: ${response.status} ${response.statusText}`);
 	}
 
 	return response.json();

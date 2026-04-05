@@ -5,7 +5,7 @@ import { AppProviders } from "@/lib/app-providers";
 import { createAppQueryClient } from "@/lib/query-client";
 import { createAppRouter } from "@/router";
 
-const fetchMock = vi.fn<(input: RequestInfo | URL) => Promise<Response>>();
+const mockFetch = vi.fn<(input: RequestInfo | URL) => Promise<Response>>();
 
 function getRequestUrl(input: RequestInfo | URL) {
 	if (typeof input === "string") {
@@ -36,7 +36,7 @@ async function renderRoute(path: string) {
 
 describe("App routes", () => {
 	beforeEach(() => {
-		fetchMock.mockImplementation((input) => {
+		mockFetch.mockImplementation((input) => {
 			const url = getRequestUrl(input);
 
 			if (url.endsWith("/api/health")) {
@@ -52,12 +52,12 @@ describe("App routes", () => {
 
 			return Promise.resolve(new Response("Not Found", { status: 404 }));
 		});
-		vi.stubGlobal("fetch", fetchMock);
+		vi.stubGlobal("fetch", mockFetch);
 	});
 
 	afterEach(() => {
 		vi.unstubAllGlobals();
-		fetchMock.mockReset();
+		mockFetch.mockReset();
 	});
 
 	it("renders the starter content on the top page", async () => {
@@ -65,13 +65,13 @@ describe("App routes", () => {
 		expect(await screen.findByText("K-Drop v2")).toBeInTheDocument();
 		expect(screen.getByRole("heading", { name: "Initial setup" })).toBeInTheDocument();
 		expect(await screen.findByText("API status: ok")).toBeInTheDocument();
-		expect(fetchMock).toHaveBeenCalledTimes(1);
+		expect(mockFetch).toHaveBeenCalledTimes(1);
 	});
 
 	it("renders the 404 page for an unknown path", async () => {
 		await renderRoute("/missing");
 		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
 		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
-		expect(fetchMock).not.toHaveBeenCalled();
+		expect(mockFetch).not.toHaveBeenCalled();
 	});
 });
