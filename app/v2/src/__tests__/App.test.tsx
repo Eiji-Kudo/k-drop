@@ -76,22 +76,37 @@ describe("App routes", () => {
 	it("hides the tab bar on quiz session page", async () => {
 		await renderRoute("/quiz/abc123?groupId=1");
 		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
+		expect(screen.getByRole("progressbar", { name: "セッション進捗" })).toBeInTheDocument();
 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
 	});
 
 	it("navigates from group selection through the quiz flow to the result screen", async () => {
 		await renderRoute("/quiz");
 
+		expect(screen.getByRole("button", { name: "まずはグループを選ぶ" })).toBeDisabled();
 		fireEvent.click(screen.getByRole("button", { name: "BLACKPINK" }));
-		fireEvent.click(screen.getByRole("button", { name: "問題へ進む" }));
+		expect(screen.getByRole("button", { name: "BLACKPINKでスタート" })).toBeEnabled();
+		fireEvent.click(screen.getByRole("button", { name: "BLACKPINKでスタート" }));
 
 		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
+		expect(screen.getByText("進行 1 / 5")).toBeInTheDocument();
+		expect(screen.getByText("あと 4問")).toBeInTheDocument();
 
 		const answers = ["3. ナヨン", "2. Like Ooh-Ahh", "3. RM", "2. æ", "4. STARSHIPエンターテインメント"];
 
-		for (const answer of answers) {
+		for (const [index, answer] of answers.entries()) {
 			fireEvent.click(screen.getByRole("button", { name: answer }));
-			fireEvent.click(await screen.findByRole("button", { name: "次へ" }));
+			if (index === 0) {
+				const dialog = await screen.findByRole("dialog", { name: "正解" });
+				expect(dialog).toBeInTheDocument();
+				expect(within(dialog).getByText("+120 score")).toBeInTheDocument();
+				expect(within(dialog).getByText("1 COMBO")).toBeInTheDocument();
+				expect(within(dialog).getByText("あと 4問")).toBeInTheDocument();
+			} else {
+				expect(await screen.findByRole("dialog")).toBeInTheDocument();
+			}
+			fireEvent.click(screen.getByRole("button", { name: "解説を見る" }));
+			fireEvent.click(await screen.findByRole("button", { name: index === answers.length - 1 ? "結果を見る" : "次の問題へ" }));
 		}
 
 		expect(await screen.findByRole("heading", { name: "クイズ結果" })).toBeInTheDocument();

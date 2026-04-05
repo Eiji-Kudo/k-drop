@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { QuizQuestionScreen } from "@/components/quiz/QuizQuestionScreen";
+import { findQuizGroup } from "@/mocks/quiz-groups";
 
 type QuizSessionSearch = {
 	groupId: string;
@@ -7,8 +8,10 @@ type QuizSessionSearch = {
 
 function QuizSessionPage() {
 	const navigate = useNavigate();
+	const { groupId } = Route.useSearch();
+	const groupName = findQuizGroup(groupId)?.groupName ?? "K-POP";
 
-	return <QuizQuestionScreen onComplete={() => void navigate({ to: "/quiz/result" })} />;
+	return <QuizQuestionScreen groupName={groupName} onComplete={() => void navigate({ to: "/quiz/result" })} />;
 }
 
 export const Route = createFileRoute("/quiz/$sessionId")({
