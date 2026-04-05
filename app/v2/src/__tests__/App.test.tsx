@@ -41,10 +41,19 @@ describe("App routes", () => {
 		vi.unstubAllGlobals();
 	});
 
-	it("renders the home page", async () => {
+	it("renders the home screen with welcome header and bento grid", async () => {
 		await renderRoute("/");
-		expect(await screen.findByRole("heading", { name: "ホーム" })).toBeInTheDocument();
-		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
+		expect(screen.getByText("オタ力バトルしよう！")).toBeInTheDocument();
+		expect(screen.getByText("軽いオタク")).toBeInTheDocument();
+		expect(screen.getByText("問題を解く")).toBeInTheDocument();
+		expect(screen.getByText("問題を作成")).toBeInTheDocument();
+		expect(screen.getByText("ランキング")).toBeInTheDocument();
+		expect(screen.getByText("プロフィール")).toBeInTheDocument();
+	});
+
+	it("renders star rating for user level", async () => {
+		await renderRoute("/");
+		expect(screen.getByText("★★☆☆☆")).toBeInTheDocument();
 	});
 
 	it("renders the bottom tab bar with four tabs", async () => {
