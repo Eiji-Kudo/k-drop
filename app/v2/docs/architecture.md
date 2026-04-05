@@ -55,7 +55,7 @@ app/v2/
 ### `src/`
 
 フロントエンド本体。  
-route-centered package-by-feature の詳細は `src/architecture.md` を参照する。
+`src/routes` で URL を定義し、`src/features` に feature 実装を集約する。詳細は `src/architecture.md` を参照する。
 
 ### `functions/`
 
@@ -88,7 +88,7 @@ functions/
 
 ### 1. Frontend は feature 単位で組織化する
 
-route-local な UI や helper は、共有ディレクトリではなく feature に閉じる。  
+route file は薄く保ち、UI や helper は共有ディレクトリではなく feature に閉じる。  
 具体的な配置ルールは `src/architecture.md` で定義する。
 
 ### 2. Frontend と backend の境界は API で固定する
@@ -102,7 +102,7 @@ route-local な UI や helper は、共有ディレクトリではなく feature
 ## Document Map
 
 - `docs/architecture.md` -> 全体像と境界
-- `src/architecture.md` -> フロントエンド構造と route 配下のルール
+- `src/architecture.md` -> フロントエンド構造と `routes` / `features` のルール
 - `docs/project-structure.md` -> モジュール配置の判断フロー
 - `docs/component-placement-guide.md` -> サーバー側レイヤー配置
 - `docs/aggregate-boundary-guide.md` -> 集約境界の設計指針

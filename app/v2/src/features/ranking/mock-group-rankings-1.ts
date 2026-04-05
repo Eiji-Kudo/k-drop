@@ -1,0 +1,60 @@
+import type { GroupRankingEntry } from "./types";
+
+const t = (rank: number, userName: string, layerName: string, groupName: string, score: number): GroupRankingEntry => ({
+	rank,
+	userName,
+	layerName,
+	groupName,
+	score,
+});
+
+export const GROUP_RANKINGS_1: Record<string, ReadonlyArray<GroupRankingEntry>> = {
+	"1": [
+		t(1, "momo_love", "マスター", "TWICE", 4920),
+		t(2, "once_forever", "エキスパート", "TWICE", 4680),
+		t(3, "nayeon_bias", "エキスパート", "TWICE", 4410),
+		t(4, "sana_stan", "アドバンス", "TWICE", 4150),
+		t(5, "twice_quiz", "アドバンス", "TWICE", 3920),
+		t(6, "dahyun_fan", "インターミディエイト", "TWICE", 3700),
+		t(7, "jeongyeon_love", "インターミディエイト", "TWICE", 3480),
+		t(8, "mina_oshi", "ビギナー", "TWICE", 3250),
+		t(9, "chaeyoung_art", "ビギナー", "TWICE", 3020),
+		t(10, "tzuyu_visual", "ルーキー", "TWICE", 2800),
+	],
+	"2": [
+		t(1, "blink_no1", "マスター", "BLACKPINK", 4850),
+		t(2, "lisa_dancer", "エキスパート", "BLACKPINK", 4600),
+		t(3, "jennie_stan", "エキスパート", "BLACKPINK", 4350),
+		t(4, "rose_vocal", "アドバンス", "BLACKPINK", 4100),
+		t(5, "jisoo_love", "アドバンス", "BLACKPINK", 3880),
+		t(6, "bp_forever", "インターミディエイト", "BLACKPINK", 3650),
+		t(7, "pink_venom", "インターミディエイト", "BLACKPINK", 3420),
+		t(8, "shut_down", "ビギナー", "BLACKPINK", 3200),
+		t(9, "boombayah", "ビギナー", "BLACKPINK", 2980),
+		t(10, "whistle_fan", "ルーキー", "BLACKPINK", 2750),
+	],
+	"3": [
+		t(1, "my_karina", "マスター", "aespa", 4780),
+		t(2, "winter_cold", "エキスパート", "aespa", 4530),
+		t(3, "giselle_rap", "エキスパート", "aespa", 4280),
+		t(4, "ningning_vocal", "アドバンス", "aespa", 4030),
+		t(5, "kwangya_hero", "アドバンス", "aespa", 3800),
+		t(6, "savage_fan", "インターミディエイト", "aespa", 3570),
+		t(7, "next_level", "インターミディエイト", "aespa", 3340),
+		t(8, "black_mamba", "ビギナー", "aespa", 3110),
+		t(9, "ae_world", "ビギナー", "aespa", 2890),
+		t(10, "supernova_sm", "ルーキー", "aespa", 2660),
+	],
+	"4": [
+		t(1, "wonyoung_bias", "マスター", "IVE", 4700),
+		t(2, "yujin_captain", "エキスパート", "IVE", 4450),
+		t(3, "gaeul_autumn", "エキスパート", "IVE", 4200),
+		t(4, "rei_sunshine", "アドバンス", "IVE", 3950),
+		t(5, "liz_lovely", "アドバンス", "IVE", 3720),
+		t(6, "leeseo_cute", "インターミディエイト", "IVE", 3490),
+		t(7, "eleven_fan", "インターミディエイト", "IVE", 3260),
+		t(8, "love_dive", "ビギナー", "IVE", 3030),
+		t(9, "after_like", "ビギナー", "IVE", 2810),
+		t(10, "ive_switch", "ルーキー", "IVE", 2580),
+	],
+};

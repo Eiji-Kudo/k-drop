@@ -1,11 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { QuizQuestionScreen } from "./-components/QuizQuestionScreen";
-
-function QuizQuestionPage() {
-	const navigate = useNavigate();
-
-	return <QuizQuestionScreen onComplete={() => void navigate({ to: "/quiz/result" })} />;
-}
+import { createFileRoute } from "@tanstack/react-router";
+import { QuizQuestionPage } from "@/features/quiz/pages/quiz-question-page";
 
 export const Route = createFileRoute("/(tabs)/quiz/question")({
 	component: QuizQuestionPage,
