@@ -18,6 +18,10 @@ export const leaderboardSnapshots = sqliteTable(
 		uniqueIndex("leaderboard_snapshots_group_unique")
 			.on(table.leaderboardScope, table.idolGroupId, table.snapshotAt)
 			.where(sql`${table.idolGroupId} IS NOT NULL`),
+		check(
+			"leaderboard_scope_group_match",
+			sql`(${table.leaderboardScope} = 'overall' AND ${table.idolGroupId} IS NULL) OR (${table.leaderboardScope} = 'group' AND ${table.idolGroupId} IS NOT NULL)`,
+		),
 	],
 );
 
