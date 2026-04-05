@@ -93,6 +93,7 @@ describe("App routes", () => {
 		await renderRoute("/missing");
 		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
 		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: "トップページに戻る" })).toBeInTheDocument();
 		expect(mockFetch).not.toHaveBeenCalled();
 	});
 });
