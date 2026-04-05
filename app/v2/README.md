@@ -18,7 +18,7 @@ Vite + React + TypeScript project for `app/v2`.
 4. Install dependencies with `pnpm install`.
 5. If you are switching from another Node.js major with an existing `node_modules`, run `pnpm run rebuild:native` once before running tests or CI.
 
-`pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. If `pnpm exec node -v` still points at an older runtime after the steps above, refresh the shell or re-run `nvm use` before continuing.
+`pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. If `pnpm exec node -v` still points at an older runtime after the steps above, check `command -v pnpm` and make sure it resolves from the same Node.js 24 toolchain you activated with `nvm use`. If it does not, refresh the shell or re-run `nvm use` before continuing.
 
 ## Scripts
 
