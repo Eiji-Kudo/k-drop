@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 K-Drop is a KPOP fan app. This repository contains two independent apps:
 
 - **app/v1/** — React Native/Expo mobile app (quiz, rankings, profile)
-- **app/v2/** — PWA (技術選定未定)
+- **app/v2/** — PWA (Vite + React + TypeScript)
 
 ## Repository Structure
 
@@ -15,7 +15,7 @@ K-Drop is a KPOP fan app. This repository contains two independent apps:
 k-drop/
 ├── app/
 │   ├── v1/    # Expo project (self-contained)
-│   └── v2/    # PWA (TBD)
+│   └── v2/    # PWA (Vite + React + TypeScript)
 ├── .github/   # CI/CD workflows
 ├── CLAUDE.md
 └── README.md
@@ -93,3 +93,29 @@ Required environment variables:
 - Path aliases configured (`@/*`)
 - NO comments in code unless explicitly requested
 - Follow existing patterns in the codebase
+
+## v2 (PWA)
+
+All commands should be run from `app/v2/`.
+
+### Development
+
+- `pnpm run dev` - Start Vite dev server
+- `pnpm install` - Install dependencies (pnpm enforced via `preinstall`)
+
+### Testing & Quality
+
+- `pnpm run test` - Run Vitest tests
+- `pnpm run test:types` or `tsc -b` - TypeScript type checking
+- `pnpm run lint` - ESLint (flat config)
+- `pnpm run format` - Biome formatting
+- `pnpm run format:check` - Biome format check
+- `pnpm run check:all` - Run all checks (tests, types, lint, format, build)
+
+### Tooling
+
+- **Package manager**: pnpm (enforced, do NOT use npm/yarn)
+- **Formatter**: Biome (`lineWidth: 150`)
+- **Linter**: ESLint flat config
+- **Test runner**: Vitest + @testing-library/react
+- **Build**: Vite 8
