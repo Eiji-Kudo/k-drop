@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { PageShell } from "@/components/ui/PageShell";
 import { MOCK_QUESTIONS } from "../mock/quiz-questions";
 import { ChoicesSection } from "./ChoicesSection";
 import { QuestionPrompt } from "./QuestionPrompt";
@@ -22,10 +23,10 @@ export function QuizQuestionScreen({ onComplete }: QuizQuestionScreenProps) {
 	}, [currentIndex, onComplete]);
 
 	return (
-		<main className="grid flex-1 content-start gap-8">
+		<PageShell className="gap-6">
 			<QuizHeader />
 			<QuestionPrompt prompt={question.prompt} />
 			<ChoicesSection key={currentIndex} choices={question.choices} explanation={question.explanation} onNext={handleNext} />
-		</main>
+		</PageShell>
 	);
 }

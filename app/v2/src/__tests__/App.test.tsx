@@ -44,19 +44,24 @@ describe("App routes", () => {
 		vi.useRealTimers();
 	});
 
-	it("renders the home screen with welcome header and bento grid", async () => {
+	it("renders the home screen as a motivation hub", async () => {
 		await renderRoute("/");
-		expect(screen.getByText("オタ力バトルしよう！")).toBeInTheDocument();
-		expect(screen.getByText("軽いオタク")).toBeInTheDocument();
+		expect(screen.getByText("今日もオタ力を伸ばそう")).toBeInTheDocument();
+		expect(screen.getAllByText("軽いオタク").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getByText("次のレベルまで")).toBeInTheDocument();
+		expect(screen.getByText("あと 350pt で インターミディエイト")).toBeInTheDocument();
 		expect(screen.getByText("問題を解く")).toBeInTheDocument();
 		expect(screen.getByText("問題を作成")).toBeInTheDocument();
 		expect(screen.getAllByText("ランキング").length).toBeGreaterThanOrEqual(1);
 		expect(screen.getAllByText("プロフィール").length).toBeGreaterThanOrEqual(1);
 	});
 
-	it("renders star rating for user level", async () => {
+	it("renders momentum cues on the home screen", async () => {
 		await renderRoute("/");
-		expect(screen.getByText("★★☆☆☆")).toBeInTheDocument();
+		expect(screen.getByText("今週 2 / 3 回プレイ")).toBeInTheDocument();
+		expect(screen.getByText("前週比 +12.5%")).toBeInTheDocument();
+		expect(screen.getByText("aespa 力 +80")).toBeInTheDocument();
+		expect(screen.getByText("350pt 差を一気に縮めよう")).toBeInTheDocument();
 	});
 
 	it("renders the bottom tab bar with four tabs", async () => {
@@ -117,7 +122,7 @@ describe("App routes", () => {
 		});
 		fireEvent.click(screen.getByRole("button", { name: "作成する" }));
 
-		expect(await screen.findByText("オタ力バトルしよう！")).toBeInTheDocument();
+		expect(await screen.findByText("今日もオタ力を伸ばそう")).toBeInTheDocument();
 	});
 
 	it("hides the tab bar on the direct quiz question route", async () => {
@@ -147,14 +152,14 @@ describe("App routes", () => {
 
 	it("renders the 404 page for an unknown path", async () => {
 		await renderRoute("/missing");
-		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
-		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
+		expect(await screen.findByRole("heading", { name: "ページが見つかりません" })).toBeInTheDocument();
+		expect(screen.getByText("リンク先が変わったか、まだ準備中のページです。ホームからもう一度探してください。")).toBeInTheDocument();
 		expect(screen.getByRole("link", { name: "トップページに戻る" })).toBeInTheDocument();
 	});
 
 	it("renders the total ranking by default on the ranking page", async () => {
 		await renderRoute("/ranking");
-		expect(await screen.findByRole("button", { name: "Total" })).toBeInTheDocument();
+		expect(await screen.findByRole("button", { name: "総合" })).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "TWICE" })).toBeInTheDocument();
 		expect(screen.getByText("momo_love")).toBeInTheDocument();
 		expect(screen.getByText("9850")).toBeInTheDocument();

@@ -1,16 +1,15 @@
+import { PageShell } from "@/components/ui/PageShell";
+import { createHomeMotivationViewModel } from "@/lib/ux";
 import { BentoGrid } from "./components/BentoGrid";
 import { WelcomeHeader } from "./components/WelcomeHeader";
 
-const MOCK_USER = {
-	levelName: "軽いオタク",
-	levelStars: 2,
-};
-
 export function HomePage() {
+	const viewModel = createHomeMotivationViewModel();
+
 	return (
-		<main className="grid flex-1 content-start gap-4">
-			<WelcomeHeader levelName={MOCK_USER.levelName} levelStars={MOCK_USER.levelStars} />
-			<BentoGrid />
-		</main>
+		<PageShell className="gap-4">
+			<WelcomeHeader viewModel={viewModel} />
+			<BentoGrid viewModel={viewModel} />
+		</PageShell>
 	);
 }

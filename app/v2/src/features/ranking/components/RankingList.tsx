@@ -1,3 +1,5 @@
+import { EmptyState } from "@/components/ui/EmptyState";
+import { SectionCard } from "@/components/ui/SectionCard";
 import type { GroupRankingEntry, TotalRankingEntry } from "../types";
 import { GroupRankingItem } from "./GroupRankingItem";
 import { TotalRankingItem } from "./TotalRankingItem";
@@ -24,28 +26,24 @@ function getGroupRankingKey(entry: GroupRankingEntry) {
 
 export function RankingList(props: RankingListProps) {
 	if (props.rankings.length === 0) {
-		return (
-			<div className="flex items-center justify-center py-12">
-				<p className="text-base text-base-content/60">No rankings available</p>
-			</div>
-		);
+		return <EmptyState title="ランキングはまだありません" description="最初の挑戦が入ると、このエリアに順位が表示されます。" />;
 	}
 
 	if (props.type === "total") {
 		return (
-			<div className="px-4 py-3">
+			<SectionCard className="overflow-hidden px-0 py-0">
 				{props.rankings.map((entry) => (
 					<TotalRankingItem key={getTotalRankingKey(entry)} entry={entry} />
 				))}
-			</div>
+			</SectionCard>
 		);
 	}
 
 	return (
-		<div className="px-4 py-3">
+		<SectionCard className="overflow-hidden px-0 py-0">
 			{props.rankings.map((entry) => (
 				<GroupRankingItem key={getGroupRankingKey(entry)} entry={entry} />
 			))}
-		</div>
+		</SectionCard>
 	);
 }

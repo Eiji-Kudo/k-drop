@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { PrimaryCTA } from "@/components/ui/cta";
+import { SectionCard } from "@/components/ui/SectionCard";
 import type { Choice } from "../types";
 import { type ChoiceVariant, QuizChoice } from "./QuizChoice";
 import { ResultModal } from "./ResultModal";
@@ -63,12 +65,12 @@ export function ChoicesSection({ choices, explanation, onNext }: ChoicesSectionP
 
 			{displayPhase === "explanation" && (
 				<>
-					<div className="rounded-lg bg-base-200 p-4">
+					<SectionCard tone="soft" className="px-4 py-4">
 						<p className="text-sm leading-6">{explanation}</p>
-					</div>
-					<button type="button" className="btn btn-primary w-full" onClick={handleNext}>
+					</SectionCard>
+					<PrimaryCTA className="w-full" onClick={handleNext}>
 						次へ
-					</button>
+					</PrimaryCTA>
 				</>
 			)}
 		</div>

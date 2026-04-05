@@ -1,15 +1,15 @@
 import { useNavigate } from "@tanstack/react-router";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { PrimaryCTA } from "@/components/ui/cta";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { PageShell } from "@/components/ui/PageShell";
+import { cn } from "@/lib/cn";
 import { MOCK_QUIZ_GROUPS } from "../mock/idol-groups";
 import type { QuizGroup } from "../types";
 
 function GroupSelectionHeader() {
-	return (
-		<div className="flex flex-col items-center gap-2">
-			<h1 className="text-3xl font-bold tracking-tight">ジャンルを選択</h1>
-			<p className="text-base text-base-content/80">挑戦したいジャンルを選んでください</p>
-		</div>
-	);
+	return <PageHeader eyebrow="QUIZ START" title="ジャンルを選択" description="今の気分に合うグループを選んで、すぐにクイズへ入れます。" />;
 }
 
 function GroupButton({ group, isSelected, onPress }: { group: QuizGroup; isSelected: boolean; onPress: (groupId: string) => void }) {
@@ -17,9 +17,24 @@ function GroupButton({ group, isSelected, onPress }: { group: QuizGroup; isSelec
 		<button
 			type="button"
 			onClick={() => onPress(group.idolGroupId)}
-			className={`btn w-full bg-secondary py-4 text-base font-medium text-secondary-content ${isSelected ? "ring-2 ring-primary" : ""}`}
+			aria-label={group.groupName}
+			className={cn(
+				"flex w-full items-center justify-between rounded-panel border px-4 py-4 text-left shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 focus-visible:ring-offset-base-100",
+				isSelected
+					? "border-primary/25 bg-surface-strong text-base-content shadow-pop"
+					: "border-border-soft bg-surface text-base-content hover:bg-white",
+			)}
+			aria-pressed={isSelected}
 		>
-			{group.groupName}
+			<div className="space-y-1">
+				<p className="text-base font-black tracking-[-0.03em]">{group.groupName}</p>
+				<p className="text-xs text-muted-foreground">このグループの問題セットに挑戦する</p>
+			</div>
+			{isSelected ? (
+				<CheckCircle2 className="size-5 shrink-0 text-primary" strokeWidth={2.2} />
+			) : (
+				<ArrowRight className="size-4 shrink-0 text-muted-foreground" />
+			)}
 		</button>
 	);
 }
@@ -35,7 +50,7 @@ export function GroupSelectionPage() {
 	};
 
 	return (
-		<main className="grid flex-1 content-start gap-6">
+		<PageShell className="gap-6">
 			<GroupSelectionHeader />
 
 			<div className="flex flex-col gap-3">
@@ -44,11 +59,11 @@ export function GroupSelectionPage() {
 				))}
 			</div>
 
-			<div className="pt-4">
-				<button type="button" className="btn btn-primary w-full" disabled={!selectedGroupId} onClick={handleContinue}>
+			<div className="pt-2">
+				<PrimaryCTA className="w-full" disabled={!selectedGroupId} onClick={handleContinue}>
 					問題へ進む
-				</button>
+				</PrimaryCTA>
 			</div>
-		</main>
+		</PageShell>
 	);
 }
