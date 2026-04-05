@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a65aead9-050a-48e2-a5b5-dcf1b5ef86d5",
+  "id": "8225e8b0-22e4-4e04-9d29-8fba8bb8edaf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "drop_transactions": {
@@ -858,7 +858,12 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {}
+      "checkConstraints": {
+        "leaderboard_scope_group_match": {
+          "name": "leaderboard_scope_group_match",
+          "value": "(\"leaderboard_snapshots\".\"leaderboard_scope\" = 'overall' AND \"leaderboard_snapshots\".\"idol_group_id\" IS NULL) OR (\"leaderboard_snapshots\".\"leaderboard_scope\" = 'group' AND \"leaderboard_snapshots\".\"idol_group_id\" IS NOT NULL)"
+        }
+      }
     },
     "quiz_answers": {
       "name": "quiz_answers",
@@ -1220,6 +1225,14 @@
         "no_answer_no_last_answered_at": {
           "name": "no_answer_no_last_answered_at",
           "value": "\"quiz_sessions\".\"answered_question_count\" > 0 OR \"quiz_sessions\".\"last_answered_at\" IS NULL"
+        },
+        "answered_le_total": {
+          "name": "answered_le_total",
+          "value": "\"quiz_sessions\".\"answered_question_count\" <= \"quiz_sessions\".\"total_question_count\""
+        },
+        "answer_counts_sum": {
+          "name": "answer_counts_sum",
+          "value": "\"quiz_sessions\".\"correct_answer_count\" + \"quiz_sessions\".\"incorrect_answer_count\" = \"quiz_sessions\".\"answered_question_count\""
         }
       }
     },

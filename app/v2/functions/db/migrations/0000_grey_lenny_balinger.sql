@@ -117,7 +117,8 @@ CREATE TABLE `leaderboard_snapshots` (
 	`idol_group_id` text,
 	`snapshot_at` text NOT NULL,
 	`created_at` text NOT NULL,
-	FOREIGN KEY (`idol_group_id`) REFERENCES `idol_groups`(`idol_group_id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`idol_group_id`) REFERENCES `idol_groups`(`idol_group_id`) ON UPDATE no action ON DELETE cascade,
+	CONSTRAINT "leaderboard_scope_group_match" CHECK(("leaderboard_snapshots"."leaderboard_scope" = 'overall' AND "leaderboard_snapshots"."idol_group_id" IS NULL) OR ("leaderboard_snapshots"."leaderboard_scope" = 'group' AND "leaderboard_snapshots"."idol_group_id" IS NOT NULL))
 );
 --> statement-breakpoint
 CREATE INDEX `leaderboard_snapshots_idol_group_id_idx` ON `leaderboard_snapshots` (`idol_group_id`);--> statement-breakpoint
@@ -170,7 +171,9 @@ CREATE TABLE `quiz_sessions` (
 	CONSTRAINT "completed_requires_completed_at" CHECK("quiz_sessions"."status" != 'completed' OR "quiz_sessions"."completed_at" IS NOT NULL),
 	CONSTRAINT "non_completed_no_completed_at" CHECK("quiz_sessions"."status" = 'completed' OR "quiz_sessions"."completed_at" IS NULL),
 	CONSTRAINT "answered_requires_last_answered_at" CHECK("quiz_sessions"."answered_question_count" = 0 OR "quiz_sessions"."last_answered_at" IS NOT NULL),
-	CONSTRAINT "no_answer_no_last_answered_at" CHECK("quiz_sessions"."answered_question_count" > 0 OR "quiz_sessions"."last_answered_at" IS NULL)
+	CONSTRAINT "no_answer_no_last_answered_at" CHECK("quiz_sessions"."answered_question_count" > 0 OR "quiz_sessions"."last_answered_at" IS NULL),
+	CONSTRAINT "answered_le_total" CHECK("quiz_sessions"."answered_question_count" <= "quiz_sessions"."total_question_count"),
+	CONSTRAINT "answer_counts_sum" CHECK("quiz_sessions"."correct_answer_count" + "quiz_sessions"."incorrect_answer_count" = "quiz_sessions"."answered_question_count")
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `quiz_sessions_in_progress_per_user_group` ON `quiz_sessions` (`user_id`,`idol_group_id`) WHERE "quiz_sessions"."status" = 'in_progress';--> statement-breakpoint
