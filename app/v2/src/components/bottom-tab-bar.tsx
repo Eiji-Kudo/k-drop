@@ -21,7 +21,7 @@ export function BottomTabBar() {
 	const pathname = useLocation({
 		select: (location) => location.pathname,
 	});
-	const isVisible = !matches.some((match) => match.routeId === "/quiz/$sessionId");
+	const isVisible = !matches.some((match) => match.routeId.endsWith("/quiz/$sessionId"));
 
 	if (!isVisible) {
 		return null;
