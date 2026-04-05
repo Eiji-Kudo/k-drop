@@ -5,7 +5,7 @@ import { AppProviders } from "@/lib/app-providers";
 import { createAppQueryClient } from "@/lib/query-client";
 import { createAppRouter } from "@/router";
 
-const mockFetch = vi.fn<(input: RequestInfo | URL) => Promise<Response>>();
+const mockFetch = vi.fn<typeof fetch>();
 
 function getRequestUrl(input: RequestInfo | URL) {
 	if (typeof input === "string") {

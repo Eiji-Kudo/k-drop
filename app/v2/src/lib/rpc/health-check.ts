@@ -8,20 +8,28 @@ type HealthCheckMethod = (typeof apiClient)["api"]["health"]["$get"];
 
 export type HealthCheckResponse = InferResponseType<HealthCheckMethod, 200>;
 
-export async function fetchHealthCheck(): Promise<HealthCheckResponse> {
-	const response = await apiClient.api.health.$get();
+export function createFetchHealthCheck(client: typeof apiClient = apiClient) {
+	return async function fetchHealthCheck(): Promise<HealthCheckResponse> {
+		const response = await client.api.health.$get();
 
-	if (!response.ok) {
-		throw new Error(`Failed to fetch API health status: ${response.status} ${response.statusText}`);
-	}
+		if (!response.ok) {
+			throw new Error(`Failed to fetch API health status: ${response.status} ${response.statusText}`);
+		}
 
-	return response.json();
+		return response.json();
+	};
 }
 
-export const healthCheckQueryOptions = queryOptions({
-	queryKey: healthCheckQueryKey,
-	queryFn: fetchHealthCheck,
-});
+export const fetchHealthCheck = createFetchHealthCheck();
+
+export function createHealthCheckQueryOptions(client: typeof apiClient = apiClient) {
+	return queryOptions({
+		queryKey: healthCheckQueryKey,
+		queryFn: createFetchHealthCheck(client),
+	});
+}
+
+export const healthCheckQueryOptions = createHealthCheckQueryOptions();
 
 export function useHealthCheckQuery() {
 	return useQuery(healthCheckQueryOptions);
