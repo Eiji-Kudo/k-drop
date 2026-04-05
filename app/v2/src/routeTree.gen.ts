@@ -14,7 +14,6 @@ import { Route as RankingIndexRouteImport } from './routes/ranking/index'
 import { Route as QuizIndexRouteImport } from './routes/quiz/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as QuizResultRouteImport } from './routes/quiz/result'
-import { Route as QuizGroupSelectionRouteImport } from './routes/quiz/group-selection'
 import { Route as QuizCreateRouteImport } from './routes/quiz/create'
 import { Route as QuizSessionIdRouteImport } from './routes/quiz/$sessionId'
 
@@ -43,11 +42,6 @@ const QuizResultRoute = QuizResultRouteImport.update({
   path: '/quiz/result',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizGroupSelectionRoute = QuizGroupSelectionRouteImport.update({
-  id: '/quiz/group-selection',
-  path: '/quiz/group-selection',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const QuizCreateRoute = QuizCreateRouteImport.update({
   id: '/quiz/create',
   path: '/quiz/create',
@@ -63,7 +57,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/quiz/create': typeof QuizCreateRoute
-  '/quiz/group-selection': typeof QuizGroupSelectionRoute
   '/quiz/result': typeof QuizResultRoute
   '/profile/': typeof ProfileIndexRoute
   '/quiz/': typeof QuizIndexRoute
@@ -73,7 +66,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/quiz/create': typeof QuizCreateRoute
-  '/quiz/group-selection': typeof QuizGroupSelectionRoute
   '/quiz/result': typeof QuizResultRoute
   '/profile': typeof ProfileIndexRoute
   '/quiz': typeof QuizIndexRoute
@@ -84,7 +76,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/quiz/create': typeof QuizCreateRoute
-  '/quiz/group-selection': typeof QuizGroupSelectionRoute
   '/quiz/result': typeof QuizResultRoute
   '/profile/': typeof ProfileIndexRoute
   '/quiz/': typeof QuizIndexRoute
@@ -96,7 +87,6 @@ export interface FileRouteTypes {
     | '/'
     | '/quiz/$sessionId'
     | '/quiz/create'
-    | '/quiz/group-selection'
     | '/quiz/result'
     | '/profile/'
     | '/quiz/'
@@ -106,7 +96,6 @@ export interface FileRouteTypes {
     | '/'
     | '/quiz/$sessionId'
     | '/quiz/create'
-    | '/quiz/group-selection'
     | '/quiz/result'
     | '/profile'
     | '/quiz'
@@ -116,7 +105,6 @@ export interface FileRouteTypes {
     | '/'
     | '/quiz/$sessionId'
     | '/quiz/create'
-    | '/quiz/group-selection'
     | '/quiz/result'
     | '/profile/'
     | '/quiz/'
@@ -127,7 +115,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   QuizSessionIdRoute: typeof QuizSessionIdRoute
   QuizCreateRoute: typeof QuizCreateRoute
-  QuizGroupSelectionRoute: typeof QuizGroupSelectionRoute
   QuizResultRoute: typeof QuizResultRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
   QuizIndexRoute: typeof QuizIndexRoute
@@ -171,13 +158,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizResultRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/group-selection': {
-      id: '/quiz/group-selection'
-      path: '/quiz/group-selection'
-      fullPath: '/quiz/group-selection'
-      preLoaderRoute: typeof QuizGroupSelectionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/quiz/create': {
       id: '/quiz/create'
       path: '/quiz/create'
@@ -199,7 +179,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   QuizSessionIdRoute: QuizSessionIdRoute,
   QuizCreateRoute: QuizCreateRoute,
-  QuizGroupSelectionRoute: QuizGroupSelectionRoute,
   QuizResultRoute: QuizResultRoute,
   ProfileIndexRoute: ProfileIndexRoute,
   QuizIndexRoute: QuizIndexRoute,
