@@ -16,7 +16,11 @@ describe("motivation view models", () => {
 		expect(viewModel.nextTierName).toBe("インターミディエイト");
 		expect(viewModel.pointsToNextTier).toBe(350);
 		expect(viewModel.nextTierProgressPercent).toBe(75);
+		expect(viewModel.nextGoalLabel).toBe("あと 350pt で インターミディエイト");
+		expect(viewModel.heroTitle).toBe("今日もオタ力を伸ばそう");
+		expect(viewModel.fastestGrowingGroupLabel).toBe("aespa 力 +80");
 		expect(viewModel.primaryCtaLabel).toBe("問題を解く");
+		expect(viewModel.primaryCtaSupportLabel).toBe("350pt 差を一気に縮めよう");
 	});
 
 	it("builds quiz result motivation data with a positive retry loop", () => {
