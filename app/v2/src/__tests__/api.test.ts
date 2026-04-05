@@ -35,7 +35,6 @@ describe("API", () => {
 		await expect(response.json()).resolves.toEqual({
 			status: "ok",
 		});
-		expect(env.DB.prepare).toHaveBeenCalledWith("SELECT 1 AS ok");
 		expect(env.DB.exec).toHaveBeenCalledWith("PRAGMA foreign_keys = ON");
 	});
 

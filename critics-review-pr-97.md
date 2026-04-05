@@ -5,7 +5,7 @@
 - **PR**: v2: Cloudflare D1 データベースセットアップ
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/97
 - **調査日**: 2026-04-05
-- **レビュー回数**: 3回目
+- **レビュー回数**: 4回目
 - **レビュー方式**: 並列レビュー + 相互検証
 
 ## レビュワー構成
@@ -22,7 +22,7 @@
 |--------|------|----------|
 | CRITICAL | 3 | 3 |
 | HIGH | 5 | 5 |
-| MEDIUM | 18 | 18 |
+| MEDIUM | 22 | 22 |
 
 ## 参照したガイドライン
 
@@ -42,6 +42,29 @@
 ---
 
 ## 対応不要の懸念点
+
+<details>
+<summary>29. pnpm-lock.yamlにkyselyが間接依存として残存（MEDIUM / 対応不要）</summary>
+
+drizzle-ormのoptional peer dependencyとしてpnpmが自動解決するため、`node_modules` を削除して再インストールしても残存する。package.jsonからの直接依存は#19で削除済みであり、lockfileの残存はpnpmの依存解決仕様によるもので制御不可。
+
+</details>
+
+## 対応不要の懸念点
+
+<details>
+<summary>27. getDatabaseが毎回新しいDrizzleインスタンスを生成する（MEDIUM / 対応不要）</summary>
+
+現時点ではヘルスチ��ックで1���しか呼ばれずパフォーマンス影響なし。YAGNI。ハンドラ追加時にリクエストスコープキャッシュを導入する。
+
+</details>
+
+<details>
+<summary>28. PRAGMA foreign_keysがDB不使用ルートでも実行される（MEDIUM / 対応不要）</summary>
+
+現時点ではルート数が少なく実害なし。YAGNI。ハンドラ追加時に懸念点27と合わせてDB初期化に統合する。
+
+</details>
 
 <details>
 <summary>23. events ON DELETE CASCADEによるイベント消失リスク（MEDIUM / 対応不要）</summary>
@@ -348,5 +371,14 @@ D1例外時にtry-catchがなく500が返っていた。
 - **ファイル**: `app/v2/src/lib/api/app.ts`
 - **問題**: `!==` によるショートサーキット比較がタイミング攻撃に脆弱
 - **対応**: XORベースのconstant-time比較関数 `timingSafeEqual` を実装し使用
+
+</details>
+
+<details>
+<summary>30. テストのD1モックがDrizzle ORMの内部実装に依存（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/api.test.ts`
+- **問題**: `env.DB.prepare` が特定SQL文で呼ばれることを検証しており、Drizzle ORMの内部実装に依存
+- **対応**: `prepare` の呼び出し内容アサーションを削除。レスポンスのステータスコードとボディの検証のみに変更
 
 </details>
