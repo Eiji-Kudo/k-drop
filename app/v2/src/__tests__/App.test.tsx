@@ -19,6 +19,7 @@ describe("App routes", () => {
 		await renderRoute("/");
 		expect(await screen.findByText("K-Drop v2")).toBeInTheDocument();
 		expect(screen.getByRole("heading", { name: "Initial setup" })).toBeInTheDocument();
+		expect(document.querySelector("[data-theme='kdrop']")).toBeInTheDocument();
 	});
 
 	it("renders the 404 page for an unknown path", async () => {

@@ -6,6 +6,11 @@
 	"formatter": {
 		"lineWidth": 150
 	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
 	"linter": {
 		"enabled": false
 	}
