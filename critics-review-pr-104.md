@@ -5,24 +5,25 @@
 - **PR**: v2: Tailwind CSS + daisyUI を導入し valentine ベースの kdrop テーマを追加
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/104
 - **調査日**: 2026-04-05
-- **レビュー回数**: 2回目
+- **レビュー回数**: 3回目
 - **レビュー方式**: 並列レビュー + 相互検証
 
 ## レビュワー構成
 
 | レビュワー | 専門領域 | 選定理由 |
 |------------|----------|----------|
-| `css-theme-reviewer` | CSS/テーマ設計 | daisyUI テーマ定義・色定義の正確性、Tailwind v4 CSS 構成の検証 |
-| `frontend-quality-reviewer` | フロントエンド品質 | コンポーネント構造、アクセシビリティ、レスポンシブ設計の検証 |
-| `build-config-reviewer` | ビルド設定・DX | Vite プラグイン構成、依存関係バージョン、Biome 設定の検証 |
+| `css-theme-reviewer` | CSS/テーマ設計 | daisyUI テーマ定義の完全性、WCAG コントラスト比の最終検証、Tailwind v4 CSS 構成 |
+| `frontend-quality-reviewer` | フロントエンド品質 | コンポーネント構造、アクセシビリティ、レスポンシブ設計、テスト網羅性 |
+
+前回（2回目）のビルド設定関連の懸念点は全て解決済みのため、`build-config-reviewer` は除外し、テーマ品質とフロントエンド品質に集中する構成とした。
 
 ## サマリー
 
 | 重要度 | 件数 | 対応済み |
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
-| HIGH | 3 | 3 |
-| MEDIUM | 10 | 9 |
+| HIGH | 4 | 4 |
+| MEDIUM | 14 | 11 |
 
 ## 参照したガイドライン
 
@@ -47,7 +48,52 @@
 
 </details>
 
+<details>
+<summary>16. RootComponent にランドマーク要素がなくスキップリンクの対象が不明確（MEDIUM / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/routes/__root.tsx`
+- **問題**: RootComponent が `<div>` のみで構成されておりランドマーク要素がない
+- **理由**: 現状は各ページコンポーネント（App.tsx, NotFoundPage）が個別に `<main>` を持っており最低限機能している。ボトムタブバー追加フェーズでまとめてリファクタリングするのが妥当（YAGNI）。
+
+</details>
+
+<details>
+<summary>18. テストがテーマ適用後の daisyUI コンポーネント構造を検証していない（MEDIUM / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **問題**: daisyUI のクラス名適用を検証するテストがない
+- **理由**: Testing Library のユーザー視点テスト哲学に反するクラス名テスト。現段階はデモ画面2つのみで VRT セットアップコストに見合わない。ガワアプリの全画面が揃った段階で Playwright VRT の導入を検討。
+
+</details>
+
 ## 対応済みの懸念点
+
+<details>
+<summary>14. text-accent を base-100 背景上で使用し WCAG AA 通常テキスト基準未達（HIGH / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/App.tsx`, `app/v2/src/routes/__root.tsx`, `app/v2/src/index.css`
+- **問題**: `text-accent` (#a855f7) が `bg-base-100` (#faf0f4) 上で使用されコントラスト比 3.56:1 で WCAG AA 基準 4.5:1 を下回っていた
+- **対応**: `@theme` にカスタムカラートークン `--color-accent-on-base: #7c3aed` を追加し、`text-accent` → `text-accent-on-base` に変更。コントラスト比 約 5.4:1 を確保
+
+</details>
+
+<details>
+<summary>15. accent-content / success-content のコントラスト比が通常テキスト AA を僅かに下回る（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/index.css`
+- **問題**: accent-content (#2d0a4e) のコントラスト比 4.20:1、success-content (#0a3d1a) のコントラスト比 4.48:1 で通常テキスト AA 基準 4.5:1 を僅かに下回っていた
+- **対応**: accent-content を `#1e0636`（約 5.8:1）、success-content を `#062d12`（約 5.5:1）に暗く微調整
+
+</details>
+
+<details>
+<summary>17. min-h-screen が二重に適用され PWA スタンドアロンモードで意図しない挙動の可能性（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/routes/__root.tsx`
+- **問題**: 外側・内側の `<div>` 両方に `min-h-screen` が適用され、`body` / `#root` と合わせて計4層で重複していた
+- **対応**: 外側に `flex` を追加し、内側の `min-h-screen` を `flex-1` に変更。`min-h-screen` を外側1箇所に集約
+
+</details>
 
 <details>
 <summary>1. body のハードコード色値がテーマ変数と二重管理（HIGH / 修正済み）</summary>

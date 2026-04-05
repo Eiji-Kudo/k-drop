@@ -26,11 +26,12 @@
 - テーマ継承は `allThemes[name]` でのみ機能し、カスタム名のテーマには適用されない
 - `--radius-field`, `--radius-box`, `--border`, `--depth`, `--noise` 等の構造的デザイントークンは明示的に定義しないと全コンポーネントの角丸・ボーダー・影が消失する
 
-### 5. テーマカラー定義時は content カラーのコントラスト比を検証する
+### 5. テーマカラーのコントラスト比は正確に計算して検証する
 
-- 明るい背景色 + 白テキスト (#ffffff) の組み合わせは WCAG AA 基準を満たさないことが多い（info/success/accent/error で全滅）
-- カスタムテーマ定義時は各カラーペアのコントラスト比を確認し、通常テキスト 4.5:1 以上を確保する
-- valentine テーマ本来の content カラーは暗色系であり、白を指定したのはカスタマイズ時の判断ミス
+- 明るい背景色 + 白テキスト (#ffffff) の組み合わせは WCAG AA 基準を満たさないことが多い
+- コントラスト比の推定値（「約 9.0:1」等）は実測と乖離することがある。必ずツールや計算式で正確に求める
+- content カラー（バッジ・アラート内テキスト）だけでなく、セマンティックカラーを直接テキスト色として base 背景上で使う場合も別途コントラスト検証が必要（例: `text-accent` on `bg-base-100`）
+- 基準未達の場合はカスタムトークン（`--color-accent-on-base` 等）で AA 基準を満たす派生色を用意する
 
 ## 修正サマリ
 
@@ -49,3 +50,8 @@
 | 11 | HIGH | `base: "valentine"` が未サポート、構造的トークン未定義 | `base` 削除、valentine の構造的トークン8つを明示追加 |
 | 12 | HIGH | info/success の content カラーが WCAG AA 全基準不合格 | 暗色 content カラーに変更（info: #003d5c, success: #0a3d1a） |
 | 13 | MEDIUM | accent/error の content カラーが通常テキスト WCAG AA 不合格 | 暗色 content カラーに変更（accent: #2d0a4e, error: #3d0000） |
+| 14 | HIGH | text-accent が base-100 背景上で WCAG AA 未達 (3.56:1) | カスタムトークン `--color-accent-on-base: #7c3aed` を追加（約 5.4:1） |
+| 15 | MEDIUM | accent-content/success-content が AA を僅かに下回る | accent-content: #1e0636（約 5.8:1）、success-content: #062d12（約 5.5:1）に微調整 |
+| 16 | - | 対応不要と判断 | YAGNI: 各ページが `<main>` を持っており機能。タブバー追加時にリファクタリング |
+| 17 | MEDIUM | min-h-screen が 4 層で重複 | 外側に `flex` 追加、内側を `flex-1` に変更して 1 箇所に集約 |
+| 18 | - | 対応不要と判断 | YAGNI: Testing Library 哲学に反し、VRT は全画面揃った段階で検討 |

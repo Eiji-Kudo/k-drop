@@ -14,7 +14,7 @@
 	--color-secondary: #ffd9eb;
 	--color-secondary-content: #4f2443;
 	--color-accent: #a855f7;
-	--color-accent-content: #2d0a4e;
+	--color-accent-content: #1e0636;
 	--color-base-100: #faf0f4;
 	--color-base-200: #f4e2ea;
 	--color-base-300: #ebccd9;
@@ -26,7 +26,7 @@
 	--color-warning: #fbbf24;
 	--color-warning-content: #4f2443;
 	--color-success: #4caf50;
-	--color-success-content: #0a3d1a;
+	--color-success-content: #062d12;
 	--color-error: #f44336;
 	--color-error-content: #3d0000;
 	--radius-selector: 1rem;
@@ -41,6 +41,7 @@
 
 @theme {
 	--font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--color-accent-on-base: #7c3aed;
 }
 
 @layer base {
