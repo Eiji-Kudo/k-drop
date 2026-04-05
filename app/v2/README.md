@@ -2,6 +2,19 @@
 
 Vite + React + TypeScript project for `app/v2`.
 
+## Setup
+
+`app/v2` is pinned to `Node.js 24.14.1` via [`.nvmrc`](./.nvmrc), and `package.json#engines` is locked to the 24.x LTS line (`^24.14.1`).
+
+1. Switch to the recommended Node.js runtime.
+   - `nvm install 24.14.1`
+   - `nvm use`
+2. Use the pinned pnpm version through Corepack if your global `pnpm` is not already aligned.
+   - `corepack enable`
+3. Install dependencies with `corepack pnpm install`.
+
+`pnpm install` and the main `pnpm run ...` commands fail fast when the active Node.js version is outside the supported 24.x LTS range. If your shell still routes `pnpm` through an older toolchain, prefer `corepack pnpm ...`.
+
 ## Scripts
 
 - `pnpm run dev` — start the Vite dev server
