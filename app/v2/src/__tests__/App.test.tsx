@@ -95,14 +95,14 @@ describe("App routes", () => {
 
 	it("renders the 404 page for an unknown path", async () => {
 		await renderRoute("/missing");
-		expect(await screen.findByRole("heading", { name: "Page not found" })).toBeInTheDocument();
-		expect(screen.getByText("お探しのページは見つかりませんでした。")).toBeInTheDocument();
+		expect(await screen.findByRole("heading", { name: "ページが見つかりません" })).toBeInTheDocument();
+		expect(screen.getByText("リンク先が変わったか、まだ準備中のページです。ホームからもう一度探してください。")).toBeInTheDocument();
 		expect(screen.getByRole("link", { name: "トップページに戻る" })).toBeInTheDocument();
 	});
 
 	it("renders the total ranking by default on the ranking page", async () => {
 		await renderRoute("/ranking");
-		expect(await screen.findByRole("button", { name: "Total" })).toBeInTheDocument();
+		expect(await screen.findByRole("button", { name: "総合" })).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "TWICE" })).toBeInTheDocument();
 		expect(screen.getByText("momo_love")).toBeInTheDocument();
 		expect(screen.getByText("9850")).toBeInTheDocument();

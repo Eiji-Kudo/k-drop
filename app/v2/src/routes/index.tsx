@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BentoGrid } from "@/components/home/BentoGrid";
 import { WelcomeHeader } from "@/components/home/WelcomeHeader";
+import { PageShell } from "@/components/ui/PageShell";
 
 const MOCK_USER = {
 	levelName: "軽いオタク",
@@ -9,10 +10,10 @@ const MOCK_USER = {
 
 function HomePage() {
 	return (
-		<main className="grid flex-1 content-start gap-4">
+		<PageShell className="gap-4">
 			<WelcomeHeader levelName={MOCK_USER.levelName} levelStars={MOCK_USER.levelStars} />
 			<BentoGrid />
-		</main>
+		</PageShell>
 	);
 }
 

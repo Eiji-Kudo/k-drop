@@ -1,3 +1,4 @@
+import { SectionCard } from "@/components/ui/SectionCard";
 import { BadgeIcon } from "./BadgeIcon";
 import { getBadgeColorClass } from "./badge-colors";
 import type { Badge } from "./types";
@@ -8,8 +9,8 @@ type ProfileBadgesProps = {
 
 export function ProfileBadges({ badges }: ProfileBadgesProps) {
 	return (
-		<section className="px-4 py-3">
-			<h2 className="mb-3 text-base font-semibold">My Badges</h2>
+		<SectionCard className="px-4 py-4">
+			<h2 className="mb-3 text-base font-black tracking-[-0.02em] text-base-content">バッジ</h2>
 
 			{badges.length > 0 ? (
 				<div className="flex gap-4 overflow-x-auto pb-2">
@@ -25,6 +26,6 @@ export function ProfileBadges({ badges }: ProfileBadgesProps) {
 			) : (
 				<p className="py-4 text-center text-sm text-base-content/60">クイズに挑戦してバッジを獲得しよう！</p>
 			)}
-		</section>
+		</SectionCard>
 	);
 }

@@ -1,29 +1,32 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { BottomTabBar } from "@/components/bottom-tab-bar";
+import { primaryCTAClassName } from "@/components/ui/cta-class-names";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { PageShell } from "@/components/ui/PageShell";
 
 function NotFoundPage() {
 	return (
-		<main className="flex flex-1 items-center">
-			<section className="card w-full border border-base-300 bg-base-100 shadow-lg">
-				<div className="card-body gap-4 text-center">
-					<p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-on-base">404</p>
-					<h1 className="text-4xl font-bold tracking-tight">Page not found</h1>
-					<p className="text-base text-base-content/80">お探しのページは見つかりませんでした。</p>
-					<div className="card-actions justify-center">
-						<Link to="/" className="btn btn-primary">
-							トップページに戻る
-						</Link>
-					</div>
-				</div>
-			</section>
-		</main>
+		<PageShell className="justify-center">
+			<EmptyState
+				title="ページが見つかりません"
+				description="リンク先が変わったか、まだ準備中のページです。ホームからもう一度探してください。"
+				action={
+					<Link to="/" className={primaryCTAClassName}>
+						トップページに戻る
+					</Link>
+				}
+			/>
+		</PageShell>
 	);
 }
 
 function RootComponent() {
 	return (
-		<div className="flex min-h-[100dvh] flex-col bg-base-100">
-			<div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-20 pt-6 sm:px-6">
+		<div className="relative min-h-[100dvh] overflow-x-hidden bg-app-shell">
+			<div className="pointer-events-none absolute inset-x-0 top-0 h-[32rem] bg-[radial-gradient(circle_at_top,rgba(255,217,232,0.92),transparent_58%)]" />
+			<div className="pointer-events-none absolute -left-12 top-20 size-44 rounded-full bg-[radial-gradient(circle,rgba(255,214,241,0.8),transparent_72%)] blur-2xl" />
+			<div className="pointer-events-none absolute -right-12 top-32 size-56 rounded-full bg-[radial-gradient(circle,rgba(255,196,223,0.78),transparent_72%)] blur-3xl" />
+			<div className="relative mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-28 pt-5 sm:px-6 sm:pt-6">
 				<Outlet />
 			</div>
 			<BottomTabBar />
