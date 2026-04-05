@@ -8,7 +8,7 @@
 		"preinstall": "npx only-allow pnpm",
 		"dev": "vite",
 		"build": "tsc -b && vite build",
-		"cf:typegen": "wrangler types worker-configuration.d.ts --env-interface CloudflareEnv",
+		"cf:typegen": "wrangler types worker-configuration.d.ts --env-interface CloudflareEnv --include-runtime false",
 		"db:create": "wrangler d1 create k-drop-v2 --binding DB --update-config",
 		"db:migrate:create": "wrangler d1 migrations create DB",
 		"db:migrate:local": "wrangler d1 migrations apply DB --local",
