@@ -1,7 +1,7 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertQuiz, insertQuizChoice, insertQuizSession, insertScoreTier, insertUser, setupBaseData } from "./test-helper";
+import { NOW, createTestDb, insertQuiz, insertQuizChoice, insertQuizSession, insertScoreTier, insertSessionQuestion, insertUser, setupBaseData } from "./test-helper";
 
 let db: Database.Database;
 beforeEach(() => { db = createTestDb(); });
@@ -96,5 +96,28 @@ describe("user_score_states の境界値", () => {
 	it("score_total = 0 は有効", () => { expect(() => ins(0, 0)).not.toThrow(); });
 	it("負の score_total は拒否", () => {
 		expect(() => db.prepare("INSERT INTO user_score_states (user_score_state_id, user_id, score_scope, idol_group_id, score_tier_id, score_total, answered_count, correct_count, updated_at) VALUES (?,?,?,?,?,?,?,?,?)").run("uss1", "user-1", "overall", null, "tier-1", -1, 0, 0, NOW)).toThrow();
+	});
+});
+
+describe("quiz_answers の境界値", () => {
+	beforeEach(() => { setupBaseData(db); insertQuiz(db); insertQuizChoice(db, { quizChoiceId: "c1", choiceOrder: 1, isCorrect: 1 }); insertQuizSession(db, { answeredQuestionCount: 1, correctAnswerCount: 1, incorrectAnswerCount: 0, lastAnsweredAt: NOW }); insertSessionQuestion(db); });
+	const ins = (score: number) => db.prepare("INSERT INTO quiz_answers (quiz_answer_id, quiz_session_question_id, quiz_choice_id, awarded_score, answered_at) VALUES (?,?,?,?,?)").run("a1", "sq-1", "c1", score, NOW);
+	it("awarded_score = 0 は有効", () => { expect(() => ins(0)).not.toThrow(); });
+	it("awarded_score = -1 は拒否", () => { expect(() => ins(-1)).toThrow(); });
+});
+
+describe("quiz_session_questions の境界値", () => {
+	beforeEach(() => { setupBaseData(db); insertQuiz(db); insertQuizSession(db); });
+	it("question_order = 1 は有効", () => { expect(() => insertSessionQuestion(db, { order: 1 })).not.toThrow(); });
+	it("question_order = 0 は拒否", () => { expect(() => insertSessionQuestion(db, { order: 0 })).toThrow(); });
+});
+
+describe("user_score_snapshots の境界値", () => {
+	beforeEach(() => setupBaseData(db));
+	it("score_total = 0 は有効", () => {
+		expect(() => db.prepare("INSERT INTO user_score_snapshots (user_score_snapshot_id, user_id, score_scope, idol_group_id, snapshot_date, score_total, created_at) VALUES (?,?,?,?,?,?,?)").run("ss1", "user-1", "overall", null, "2025-01-01", 0, NOW)).not.toThrow();
+	});
+	it("負の score_total は拒否", () => {
+		expect(() => db.prepare("INSERT INTO user_score_snapshots (user_score_snapshot_id, user_id, score_scope, idol_group_id, snapshot_date, score_total, created_at) VALUES (?,?,?,?,?,?,?)").run("ss1", "user-1", "overall", null, "2025-01-01", -1, NOW)).toThrow();
 	});
 });
