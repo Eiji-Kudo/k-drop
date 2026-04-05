@@ -1,0 +1,12 @@
+export type QuizResultEntry = {
+	prompt: string;
+	isCorrect: boolean;
+	userAnswer: string;
+	correctAnswer: string;
+	explanation: string;
+};
+
+export type QuizResultData = {
+	totalScore: number;
+	results: Array<QuizResultEntry>;
+};
