@@ -5,12 +5,7 @@ export function BentoGrid() {
 		<div className="flex flex-col gap-3">
 			<div className="flex gap-3">
 				<div className="flex-[1.2]">
-					<BentoCard
-						title={"問題を解く"}
-						subtitle={"クイズに挑戦"}
-						icon={"✏️"}
-						variant="gradient"
-					/>
+					<BentoCard title={"問題を解く"} subtitle={"クイズに挑戦"} icon={"✏️"} variant="gradient" />
 				</div>
 				<div className="flex-[0.8]">
 					<BentoCard title={"問題を作成"} icon={"➕"} />
