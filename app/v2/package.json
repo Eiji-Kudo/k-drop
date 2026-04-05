@@ -20,6 +20,7 @@
 		"lint": "eslint .",
 		"format": "biome check --write .",
 		"format:check": "biome check .",
+		"check:all": "pnpm run ci",
 		"ci": "pnpm run test && pnpm run test:types && pnpm run lint && pnpm run format:check && pnpm run build",
 		"preview": "vite preview",
 		"dev:full": "wrangler pages dev --compatibility-date=2026-04-05 -- pnpm run dev"

@@ -5,7 +5,7 @@
 - **PR**: v2: Cloudflare D1 データベースセットアップ
 - **URL**: https://github.com/Eiji-Kudo/k-drop/pull/97
 - **調査日**: 2026-04-05
-- **レビュー回数**: 4回目
+- **レビュー回数**: 5回目
 - **レビュー方式**: 並列レビュー + 相互検証
 
 ## レビュワー構成
@@ -22,7 +22,7 @@
 |--------|------|----------|
 | CRITICAL | 3 | 3 |
 | HIGH | 5 | 5 |
-| MEDIUM | 22 | 22 |
+| MEDIUM | 24 | 24 |
 
 ## 参照したガイドライン
 
@@ -380,5 +380,23 @@ D1例外時にtry-catchがなく500が返っていた。
 - **ファイル**: `app/v2/src/__tests__/api.test.ts`
 - **問題**: `env.DB.prepare` が特定SQL文で呼ばれることを検証しており、Drizzle ORMの内部実装に依存
 - **対応**: `prepare` の呼び出し内容アサーションを削除。レスポンスのステータスコードとボディの検証のみに変更
+
+</details>
+
+<details>
+<summary>31. timingSafeEqualの自前実装に長さリーク（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/lib/api/app.ts`
+- **問題**: `if (a.length !== b.length) return false;` が即座に返りトークン長がタイミング差分から推測可能
+- **対応**: `Math.max` で両方の長さ分ループし、`lenA ^ lenB` を初期値に含めることで長さリークを解消。`crypto.subtle.timingSafeEqual` はテスト環境で未対応のため自前実装を改善
+
+</details>
+
+<details>
+<summary>32. package.jsonのcheck:allスクリプトが存在せずCLAUDE.mdと不整合（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/package.json`
+- **問題**: CLAUDE.mdに `pnpm run check:all` の記載があるがスクリプトが存在しない
+- **対応**: `"check:all": "pnpm run ci"` エイリアスを追加
 
 </details>
