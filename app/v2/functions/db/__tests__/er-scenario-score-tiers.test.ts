@@ -1,11 +1,16 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertScoreTier, setupBaseData } from "./test-helper";
+import { createTestDb, insertScoreTier, NOW, setupBaseData } from "./test-helper";
 
 let db: Database.Database;
-beforeEach(() => { db = createTestDb(); setupBaseData(db); });
-afterEach(() => { db.close(); });
+beforeEach(() => {
+	db = createTestDb();
+	setupBaseData(db);
+});
+afterEach(() => {
+	db.close();
+});
 
 const insOverallTiers = () => {
 	insertScoreTier(db, { scoreTierId: "t-bronze", tierScope: "overall", tierName: "Bronze", minScore: 0, maxScore: 99 });
@@ -13,24 +18,41 @@ const insOverallTiers = () => {
 	insertScoreTier(db, { scoreTierId: "t-gold", tierScope: "overall", tierName: "Gold", minScore: 300, maxScore: 999 });
 };
 const insState = (id: string, tierId: string, score: number, answered: number, correct: number) =>
-	db.prepare("INSERT INTO user_score_states (user_score_state_id, user_id, score_scope, idol_group_id, score_tier_id, score_total, answered_count, correct_count, last_answered_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)").run(id, "user-1", "overall", null, tierId, score, answered, correct, NOW, NOW);
+	db
+		.prepare(
+			"INSERT INTO user_score_states (user_score_state_id, user_id, score_scope, idol_group_id, score_tier_id, score_total, answered_count, correct_count, last_answered_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)",
+		)
+		.run(id, "user-1", "overall", null, tierId, score, answered, correct, NOW, NOW);
 
 describe("スコアティアの段階的な昇格", () => {
 	beforeEach(() => insOverallTiers());
 
 	it("Bronze → Silver → Gold とティアが上がる", () => {
 		insState("uss", "t-bronze", 50, 5, 3);
-		db.prepare("UPDATE user_score_states SET score_total=150, answered_count=15, correct_count=10, score_tier_id='t-silver', updated_at=? WHERE user_score_state_id=?").run(NOW, "uss");
-		expect((db.prepare("SELECT score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("uss") as { score_tier_id: string }).score_tier_id).toBe("t-silver");
+		db.prepare(
+			"UPDATE user_score_states SET score_total=150, answered_count=15, correct_count=10, score_tier_id='t-silver', updated_at=? WHERE user_score_state_id=?",
+		).run(NOW, "uss");
+		expect(
+			(db.prepare("SELECT score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("uss") as { score_tier_id: string }).score_tier_id,
+		).toBe("t-silver");
 
-		db.prepare("UPDATE user_score_states SET score_total=350, answered_count=35, correct_count=25, score_tier_id='t-gold', updated_at=? WHERE user_score_state_id=?").run(NOW, "uss");
-		expect((db.prepare("SELECT score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("uss") as { score_tier_id: string }).score_tier_id).toBe("t-gold");
+		db.prepare(
+			"UPDATE user_score_states SET score_total=350, answered_count=35, correct_count=25, score_tier_id='t-gold', updated_at=? WHERE user_score_state_id=?",
+		).run(NOW, "uss");
+		expect(
+			(db.prepare("SELECT score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("uss") as { score_tier_id: string }).score_tier_id,
+		).toBe("t-gold");
 	});
 
 	it("ティアの境界値でちょうど次のティアに昇格", () => {
 		insState("uss", "t-bronze", 99, 10, 7);
-		db.prepare("UPDATE user_score_states SET score_total=100, answered_count=11, correct_count=8, score_tier_id='t-silver', updated_at=? WHERE user_score_state_id=?").run(NOW, "uss");
-		const s = db.prepare("SELECT score_total, score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("uss") as Record<string, unknown>;
+		db.prepare(
+			"UPDATE user_score_states SET score_total=100, answered_count=11, correct_count=8, score_tier_id='t-silver', updated_at=? WHERE user_score_state_id=?",
+		).run(NOW, "uss");
+		const s = db.prepare("SELECT score_total, score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("uss") as Record<
+			string,
+			unknown
+		>;
 		expect(s.score_total).toBe(100);
 		expect(s.score_tier_id).toBe("t-silver");
 	});
@@ -41,9 +63,9 @@ describe("overall と group で別々のティア体系", () => {
 		insOverallTiers();
 		insertScoreTier(db, { scoreTierId: "tg-gold", tierScope: "group", tierName: "Gold", minScore: 50, maxScore: 999 });
 		insState("ov", "t-bronze", 30, 3, 2);
-		db.prepare("INSERT INTO user_score_states (user_score_state_id, user_id, score_scope, idol_group_id, score_tier_id, score_total, answered_count, correct_count, last_answered_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)").run(
-			"gr", "user-1", "group", "group-1", "tg-gold", 80, 8, 6, NOW, NOW,
-		);
+		db.prepare(
+			"INSERT INTO user_score_states (user_score_state_id, user_id, score_scope, idol_group_id, score_tier_id, score_total, answered_count, correct_count, last_answered_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)",
+		).run("gr", "user-1", "group", "group-1", "tg-gold", 80, 8, 6, NOW, NOW);
 		const ov = db.prepare("SELECT score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("ov") as { score_tier_id: string };
 		const gr = db.prepare("SELECT score_tier_id FROM user_score_states WHERE user_score_state_id=?").get("gr") as { score_tier_id: string };
 		expect(ov.score_tier_id).toBe("t-bronze");
@@ -57,13 +79,18 @@ describe("複数セッションにわたるスコア蓄積", () => {
 		insState("ov", "t-bronze", 0, 0, 0);
 
 		const addScore = (score: number, answered: number, correct: number) => {
-			db.prepare("UPDATE user_score_states SET score_total=score_total+?, answered_count=answered_count+?, correct_count=correct_count+?, last_answered_at=?, updated_at=? WHERE user_score_state_id=?").run(score, answered, correct, NOW, NOW, "ov");
+			db.prepare(
+				"UPDATE user_score_states SET score_total=score_total+?, answered_count=answered_count+?, correct_count=correct_count+?, last_answered_at=?, updated_at=? WHERE user_score_state_id=?",
+			).run(score, answered, correct, NOW, NOW, "ov");
 		};
 		addScore(30, 5, 3);
 		addScore(50, 5, 4);
 		addScore(40, 5, 3);
 
-		const s = db.prepare("SELECT score_total, answered_count, correct_count FROM user_score_states WHERE user_score_state_id=?").get("ov") as Record<string, number>;
+		const s = db.prepare("SELECT score_total, answered_count, correct_count FROM user_score_states WHERE user_score_state_id=?").get("ov") as Record<
+			string,
+			number
+		>;
 		expect(s.score_total).toBe(120);
 		expect(s.answered_count).toBe(15);
 		expect(s.correct_count).toBe(10);

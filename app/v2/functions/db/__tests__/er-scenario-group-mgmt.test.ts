@@ -1,11 +1,15 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertGroupCategory, insertIdolGroup, insertQuiz, insertUser } from "./test-helper";
+import { createTestDb, insertGroupCategory, insertIdolGroup, insertQuiz, insertUser, NOW } from "./test-helper";
 
 let db: Database.Database;
-beforeEach(() => { db = createTestDb(); });
-afterEach(() => { db.close(); });
+beforeEach(() => {
+	db = createTestDb();
+});
+afterEach(() => {
+	db.close();
+});
 
 describe("グループカテゴリとグループの管理", () => {
 	it("カテゴリ配下に複数グループを配置", () => {
@@ -52,10 +56,15 @@ describe("グループ削除時の影響範囲", () => {
 		insertIdolGroup(db);
 		insertUser(db);
 		insertQuiz(db);
-		db.prepare("INSERT INTO user_favorite_groups (user_favorite_group_id, user_id, idol_group_id, created_at) VALUES (?,?,?,?)").run("f1", "user-1", "group-1", NOW);
-		db.prepare("INSERT INTO quiz_sessions (quiz_session_id, user_id, idol_group_id, status, total_question_count, answered_question_count, correct_answer_count, incorrect_answer_count, current_question_order, started_at, last_answered_at, completed_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)").run(
-			"s1", "user-1", "group-1", "in_progress", 1, 0, 0, 0, 1, NOW, null, null,
+		db.prepare("INSERT INTO user_favorite_groups (user_favorite_group_id, user_id, idol_group_id, created_at) VALUES (?,?,?,?)").run(
+			"f1",
+			"user-1",
+			"group-1",
+			NOW,
 		);
+		db.prepare(
+			"INSERT INTO quiz_sessions (quiz_session_id, user_id, idol_group_id, status, total_question_count, answered_question_count, correct_answer_count, incorrect_answer_count, current_question_order, started_at, last_answered_at, completed_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+		).run("s1", "user-1", "group-1", "in_progress", 1, 0, 0, 0, 1, NOW, null, null);
 		db.prepare("DELETE FROM idol_groups WHERE idol_group_id=?").run("group-1");
 		expect((db.prepare("SELECT count(*) as c FROM quizzes WHERE idol_group_id=?").get("group-1") as { c: number }).c).toBe(0);
 		expect((db.prepare("SELECT count(*) as c FROM user_favorite_groups WHERE idol_group_id=?").get("group-1") as { c: number }).c).toBe(0);

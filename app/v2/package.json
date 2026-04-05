@@ -70,6 +70,8 @@
 		"wrangler": "4.80.0"
 	},
 	"pnpm": {
-		"onlyBuiltDependencies": ["better-sqlite3"]
+		"onlyBuiltDependencies": [
+			"better-sqlite3"
+		]
 	}
 }

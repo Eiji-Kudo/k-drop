@@ -1,17 +1,24 @@
 // @vitest-environment node
 import type Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NOW, createTestDb, insertQuiz, insertQuizChoice, setupBaseData } from "./test-helper";
+import { createTestDb, insertQuiz, insertQuizChoice, NOW, setupBaseData } from "./test-helper";
 
 let db: Database.Database;
-beforeEach(() => { db = createTestDb(); setupBaseData(db); });
-afterEach(() => { db.close(); });
+beforeEach(() => {
+	db = createTestDb();
+	setupBaseData(db);
+});
+afterEach(() => {
+	db.close();
+});
 
 describe("クイズコンテンツのライフサイクル", () => {
 	it("draft → published → archived のステータス遷移", () => {
 		insertQuiz(db, { status: "draft" });
 		db.prepare("UPDATE quizzes SET status='published', published_at=?, updated_at=? WHERE quiz_id=?").run(NOW, NOW, "quiz-1");
-		expect((db.prepare("SELECT status, published_at FROM quizzes WHERE quiz_id=?").get("quiz-1") as Record<string, unknown>).status).toBe("published");
+		expect((db.prepare("SELECT status, published_at FROM quizzes WHERE quiz_id=?").get("quiz-1") as Record<string, unknown>).status).toBe(
+			"published",
+		);
 		db.prepare("UPDATE quizzes SET status='archived', updated_at=? WHERE quiz_id=?").run(NOW, "quiz-1");
 		expect((db.prepare("SELECT status FROM quizzes WHERE quiz_id=?").get("quiz-1") as { status: string }).status).toBe("archived");
 	});
@@ -32,7 +39,10 @@ describe("選択肢の構成パターン", () => {
 		insertQuizChoice(db, { quizChoiceId: "c2", choiceOrder: 2, isCorrect: 0 });
 		insertQuizChoice(db, { quizChoiceId: "c3", choiceOrder: 3, isCorrect: 0 });
 		insertQuizChoice(db, { quizChoiceId: "c4", choiceOrder: 4, isCorrect: 0 });
-		const choices = db.prepare("SELECT choice_order, is_correct FROM quiz_choices WHERE quiz_id=? ORDER BY choice_order").all("quiz-1") as { choice_order: number; is_correct: number }[];
+		const choices = db.prepare("SELECT choice_order, is_correct FROM quiz_choices WHERE quiz_id=? ORDER BY choice_order").all("quiz-1") as {
+			choice_order: number;
+			is_correct: number;
+		}[];
 		expect(choices).toHaveLength(4);
 		expect(choices.filter((c) => c.is_correct === 1)).toHaveLength(1);
 		expect(choices.filter((c) => c.is_correct === 0)).toHaveLength(3);
