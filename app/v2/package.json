@@ -14,7 +14,7 @@
 		"lint": "eslint .",
 		"format": "biome check --write .",
 		"format:check": "biome check .",
-		"check:all": "pnpm run test && pnpm run test:types && pnpm run lint && pnpm run format:check && pnpm run build",
+		"ci": "pnpm run test && pnpm run test:types && pnpm run lint && pnpm run format:check && pnpm run build",
 		"preview": "vite preview"
 	},
 	"dependencies": {
