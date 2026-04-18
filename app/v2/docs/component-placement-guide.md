@@ -182,9 +182,11 @@ queries → handlers/services/repositories
 
 ## フロントエンド配置規約
 
-- ルートファイル（`src/routes/*.tsx`）はルーティング関心に集中させ、独立した UI セクションは `src/components/` 以下に抽出する。目安として 150 行を超えたら抽出を検討
-- 詳細ページ: `components/<entity>-detail/` にサブコンポーネントを配置
-- レイアウト: `components/layout/` にヘッダー・フッター等の共有 UI 部品を配置
+- ルートファイル（`src/routes/*.tsx`）は URL / loader / guard / params などのルーティング関心に集中させる
+- feature 固有の page / component / schema / mock / utils は `src/features/<feature>/` に配置する
+- `src/components/` は複数 feature から使われる shared UI のみを置く
+- 詳細ページのサブコンポーネントも、feature 固有なら `src/features/<feature>/components/` に配置する
+- 共通プリミティブ（`PageShell` / `PageHeader` / CTA 等）は `src/components/ui/` に配置する
 - カスタムフックは意味や目的ごとに適切な粒度で分割する。1 つのコンポーネントが複数のフックを使い分けるのが自然な設計
 - `server/modules/*/schemas/` に定義された Zod スキーマと同じ型をフロント側で手書きしない。`z.infer<typeof Schema>` や `Pick`/`Omit` で導出する
 

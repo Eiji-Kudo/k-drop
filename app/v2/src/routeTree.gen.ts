@@ -9,86 +9,86 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as RankingIndexRouteImport } from './routes/ranking/index'
-import { Route as QuizIndexRouteImport } from './routes/quiz/index'
-import { Route as ProfileIndexRouteImport } from './routes/profile/index'
-import { Route as QuizResultRouteImport } from './routes/quiz/result'
-import { Route as QuizQuestionRouteImport } from './routes/quiz/question'
-import { Route as QuizCreateRouteImport } from './routes/quiz/create'
-import { Route as QuizSessionIdRouteImport } from './routes/quiz/$sessionId'
+import { Route as tabsIndexRouteImport } from './routes/(tabs)/index'
+import { Route as tabsRankingIndexRouteImport } from './routes/(tabs)/ranking/index'
+import { Route as tabsQuizIndexRouteImport } from './routes/(tabs)/quiz/index'
+import { Route as tabsProfileIndexRouteImport } from './routes/(tabs)/profile/index'
+import { Route as tabsQuizResultRouteImport } from './routes/(tabs)/quiz/result'
+import { Route as tabsQuizQuestionRouteImport } from './routes/(tabs)/quiz/question'
+import { Route as tabsQuizCreateRouteImport } from './routes/(tabs)/quiz/create'
+import { Route as tabsQuizSessionIdRouteImport } from './routes/(tabs)/quiz/$sessionId'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
+const tabsIndexRoute = tabsIndexRouteImport.update({
+  id: '/(tabs)/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RankingIndexRoute = RankingIndexRouteImport.update({
-  id: '/ranking/',
+const tabsRankingIndexRoute = tabsRankingIndexRouteImport.update({
+  id: '/(tabs)/ranking/',
   path: '/ranking/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizIndexRoute = QuizIndexRouteImport.update({
-  id: '/quiz/',
+const tabsQuizIndexRoute = tabsQuizIndexRouteImport.update({
+  id: '/(tabs)/quiz/',
   path: '/quiz/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/profile/',
+const tabsProfileIndexRoute = tabsProfileIndexRouteImport.update({
+  id: '/(tabs)/profile/',
   path: '/profile/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizResultRoute = QuizResultRouteImport.update({
-  id: '/quiz/result',
+const tabsQuizResultRoute = tabsQuizResultRouteImport.update({
+  id: '/(tabs)/quiz/result',
   path: '/quiz/result',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizQuestionRoute = QuizQuestionRouteImport.update({
-  id: '/quiz/question',
+const tabsQuizQuestionRoute = tabsQuizQuestionRouteImport.update({
+  id: '/(tabs)/quiz/question',
   path: '/quiz/question',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizCreateRoute = QuizCreateRouteImport.update({
-  id: '/quiz/create',
+const tabsQuizCreateRoute = tabsQuizCreateRouteImport.update({
+  id: '/(tabs)/quiz/create',
   path: '/quiz/create',
   getParentRoute: () => rootRouteImport,
 } as any)
-const QuizSessionIdRoute = QuizSessionIdRouteImport.update({
-  id: '/quiz/$sessionId',
+const tabsQuizSessionIdRoute = tabsQuizSessionIdRouteImport.update({
+  id: '/(tabs)/quiz/$sessionId',
   path: '/quiz/$sessionId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/quiz/$sessionId': typeof QuizSessionIdRoute
-  '/quiz/create': typeof QuizCreateRoute
-  '/quiz/question': typeof QuizQuestionRoute
-  '/quiz/result': typeof QuizResultRoute
-  '/profile/': typeof ProfileIndexRoute
-  '/quiz/': typeof QuizIndexRoute
-  '/ranking/': typeof RankingIndexRoute
+  '/': typeof tabsIndexRoute
+  '/quiz/$sessionId': typeof tabsQuizSessionIdRoute
+  '/quiz/create': typeof tabsQuizCreateRoute
+  '/quiz/question': typeof tabsQuizQuestionRoute
+  '/quiz/result': typeof tabsQuizResultRoute
+  '/profile/': typeof tabsProfileIndexRoute
+  '/quiz/': typeof tabsQuizIndexRoute
+  '/ranking/': typeof tabsRankingIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/quiz/$sessionId': typeof QuizSessionIdRoute
-  '/quiz/create': typeof QuizCreateRoute
-  '/quiz/question': typeof QuizQuestionRoute
-  '/quiz/result': typeof QuizResultRoute
-  '/profile': typeof ProfileIndexRoute
-  '/quiz': typeof QuizIndexRoute
-  '/ranking': typeof RankingIndexRoute
+  '/': typeof tabsIndexRoute
+  '/quiz/$sessionId': typeof tabsQuizSessionIdRoute
+  '/quiz/create': typeof tabsQuizCreateRoute
+  '/quiz/question': typeof tabsQuizQuestionRoute
+  '/quiz/result': typeof tabsQuizResultRoute
+  '/profile': typeof tabsProfileIndexRoute
+  '/quiz': typeof tabsQuizIndexRoute
+  '/ranking': typeof tabsRankingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/quiz/$sessionId': typeof QuizSessionIdRoute
-  '/quiz/create': typeof QuizCreateRoute
-  '/quiz/question': typeof QuizQuestionRoute
-  '/quiz/result': typeof QuizResultRoute
-  '/profile/': typeof ProfileIndexRoute
-  '/quiz/': typeof QuizIndexRoute
-  '/ranking/': typeof RankingIndexRoute
+  '/(tabs)/': typeof tabsIndexRoute
+  '/(tabs)/quiz/$sessionId': typeof tabsQuizSessionIdRoute
+  '/(tabs)/quiz/create': typeof tabsQuizCreateRoute
+  '/(tabs)/quiz/question': typeof tabsQuizQuestionRoute
+  '/(tabs)/quiz/result': typeof tabsQuizResultRoute
+  '/(tabs)/profile/': typeof tabsProfileIndexRoute
+  '/(tabs)/quiz/': typeof tabsQuizIndexRoute
+  '/(tabs)/ranking/': typeof tabsRankingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -113,97 +113,97 @@ export interface FileRouteTypes {
     | '/ranking'
   id:
     | '__root__'
-    | '/'
-    | '/quiz/$sessionId'
-    | '/quiz/create'
-    | '/quiz/question'
-    | '/quiz/result'
-    | '/profile/'
-    | '/quiz/'
-    | '/ranking/'
+    | '/(tabs)/'
+    | '/(tabs)/quiz/$sessionId'
+    | '/(tabs)/quiz/create'
+    | '/(tabs)/quiz/question'
+    | '/(tabs)/quiz/result'
+    | '/(tabs)/profile/'
+    | '/(tabs)/quiz/'
+    | '/(tabs)/ranking/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  QuizSessionIdRoute: typeof QuizSessionIdRoute
-  QuizCreateRoute: typeof QuizCreateRoute
-  QuizQuestionRoute: typeof QuizQuestionRoute
-  QuizResultRoute: typeof QuizResultRoute
-  ProfileIndexRoute: typeof ProfileIndexRoute
-  QuizIndexRoute: typeof QuizIndexRoute
-  RankingIndexRoute: typeof RankingIndexRoute
+  tabsIndexRoute: typeof tabsIndexRoute
+  tabsQuizSessionIdRoute: typeof tabsQuizSessionIdRoute
+  tabsQuizCreateRoute: typeof tabsQuizCreateRoute
+  tabsQuizQuestionRoute: typeof tabsQuizQuestionRoute
+  tabsQuizResultRoute: typeof tabsQuizResultRoute
+  tabsProfileIndexRoute: typeof tabsProfileIndexRoute
+  tabsQuizIndexRoute: typeof tabsQuizIndexRoute
+  tabsRankingIndexRoute: typeof tabsRankingIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/(tabs)/': {
+      id: '/(tabs)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof tabsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ranking/': {
-      id: '/ranking/'
+    '/(tabs)/ranking/': {
+      id: '/(tabs)/ranking/'
       path: '/ranking'
       fullPath: '/ranking/'
-      preLoaderRoute: typeof RankingIndexRouteImport
+      preLoaderRoute: typeof tabsRankingIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/': {
-      id: '/quiz/'
+    '/(tabs)/quiz/': {
+      id: '/(tabs)/quiz/'
       path: '/quiz'
       fullPath: '/quiz/'
-      preLoaderRoute: typeof QuizIndexRouteImport
+      preLoaderRoute: typeof tabsQuizIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile/': {
-      id: '/profile/'
+    '/(tabs)/profile/': {
+      id: '/(tabs)/profile/'
       path: '/profile'
       fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
+      preLoaderRoute: typeof tabsProfileIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/result': {
-      id: '/quiz/result'
+    '/(tabs)/quiz/result': {
+      id: '/(tabs)/quiz/result'
       path: '/quiz/result'
       fullPath: '/quiz/result'
-      preLoaderRoute: typeof QuizResultRouteImport
+      preLoaderRoute: typeof tabsQuizResultRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/question': {
-      id: '/quiz/question'
+    '/(tabs)/quiz/question': {
+      id: '/(tabs)/quiz/question'
       path: '/quiz/question'
       fullPath: '/quiz/question'
-      preLoaderRoute: typeof QuizQuestionRouteImport
+      preLoaderRoute: typeof tabsQuizQuestionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/create': {
-      id: '/quiz/create'
+    '/(tabs)/quiz/create': {
+      id: '/(tabs)/quiz/create'
       path: '/quiz/create'
       fullPath: '/quiz/create'
-      preLoaderRoute: typeof QuizCreateRouteImport
+      preLoaderRoute: typeof tabsQuizCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/quiz/$sessionId': {
-      id: '/quiz/$sessionId'
+    '/(tabs)/quiz/$sessionId': {
+      id: '/(tabs)/quiz/$sessionId'
       path: '/quiz/$sessionId'
       fullPath: '/quiz/$sessionId'
-      preLoaderRoute: typeof QuizSessionIdRouteImport
+      preLoaderRoute: typeof tabsQuizSessionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  QuizSessionIdRoute: QuizSessionIdRoute,
-  QuizCreateRoute: QuizCreateRoute,
-  QuizQuestionRoute: QuizQuestionRoute,
-  QuizResultRoute: QuizResultRoute,
-  ProfileIndexRoute: ProfileIndexRoute,
-  QuizIndexRoute: QuizIndexRoute,
-  RankingIndexRoute: RankingIndexRoute,
+  tabsIndexRoute: tabsIndexRoute,
+  tabsQuizSessionIdRoute: tabsQuizSessionIdRoute,
+  tabsQuizCreateRoute: tabsQuizCreateRoute,
+  tabsQuizQuestionRoute: tabsQuizQuestionRoute,
+  tabsQuizResultRoute: tabsQuizResultRoute,
+  tabsProfileIndexRoute: tabsProfileIndexRoute,
+  tabsQuizIndexRoute: tabsQuizIndexRoute,
+  tabsRankingIndexRoute: tabsRankingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

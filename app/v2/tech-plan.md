@@ -16,9 +16,11 @@
 ```
 app/v2/
 ├── src/                    → React + TanStack Router (SPA)
-│   ├── routes/
-│   ├── components/
-│   └── lib/
+│   ├── routes/             → TanStack Router の route 定義
+│   ├── features/           → feature 実装本体（page / component / schema / mock / utils）
+│   ├── components/         → 複数 feature で使う shared UI
+│   ├── lib/                → API クライアント、ユーティリティ
+│   └── mocks/              → app-wide mock data
 ├── functions/              → Pages Functions (Hono API)
 │   └── api/
 │       └── [[route]].ts    → Hono で全APIルートをハンドル

@@ -1,8 +1,15 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
 import { BottomTabBar } from "@/components/bottom-tab-bar";
 import { primaryCTAClassName } from "@/components/ui/cta-class-names";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageShell } from "@/components/ui/PageShell";
+import type { FileRoutesById } from "@/routeTree.gen";
+
+type LeafRouteId = Exclude<keyof FileRoutesById, "__root__">;
+
+const HIDDEN_BOTTOM_TAB_ROUTE_IDS = ["/(tabs)/quiz/$sessionId", "/(tabs)/quiz/question"] as const satisfies ReadonlyArray<LeafRouteId>;
+
+const HIDDEN_BOTTOM_TAB_ROUTE_ID_SET: ReadonlySet<string> = new Set(HIDDEN_BOTTOM_TAB_ROUTE_IDS);
 
 function NotFoundPage() {
 	return (
@@ -21,6 +28,9 @@ function NotFoundPage() {
 }
 
 function RootComponent() {
+	const matches = useMatches();
+	const hideBottomTabBar = matches.some((match) => HIDDEN_BOTTOM_TAB_ROUTE_ID_SET.has(match.routeId));
+
 	return (
 		<div className="relative min-h-[100dvh] overflow-x-hidden bg-app-shell">
 			<div className="pointer-events-none absolute inset-x-0 top-0 h-[32rem] bg-[radial-gradient(circle_at_top,rgba(255,217,232,0.92),transparent_58%)]" />
@@ -29,7 +39,7 @@ function RootComponent() {
 			<div className="relative mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-28 pt-5 sm:px-6 sm:pt-6">
 				<Outlet />
 			</div>
-			<BottomTabBar />
+			{hideBottomTabBar ? null : <BottomTabBar />}
 		</div>
 	);
 }

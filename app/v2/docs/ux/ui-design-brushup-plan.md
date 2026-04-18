@@ -256,7 +256,7 @@
 
 主な作業:
 
-- [ ] `app/v2/src/routes/quiz/index.tsx` のグループ選択を単純なボタン列からカード選択 UI に変更する
+- [ ] `app/v2/src/features/quiz/pages/quiz-group-selection-page.tsx` のグループ選択を単純なボタン列からカード選択 UI に変更する
 - [ ] グループ選択画面で選択済み状態と開始可能状態を明確にする
 - [ ] `QuizHeader` に進捗情報を入れる
 - [ ] `QuizQuestionScreen` に問題番号や残り感を加える
@@ -369,33 +369,38 @@
 - `app/v2/src/index.css`
 - `app/v2/src/routes/__root.tsx`
 - `app/v2/src/components/bottom-tab-bar.tsx`
-- `app/v2/src/routes/index.tsx`
-- `app/v2/src/components/home/BentoCard.tsx`
-- `app/v2/src/components/home/BentoGrid.tsx`
-- `app/v2/src/components/home/WelcomeHeader.tsx`
-- `app/v2/src/routes/quiz/index.tsx`
-- `app/v2/src/components/quiz/QuizHeader.tsx`
-- `app/v2/src/components/quiz/QuizQuestionScreen.tsx`
-- `app/v2/src/components/quiz/QuizChoice.tsx`
-- `app/v2/src/components/quiz/ChoicesSection.tsx`
-- `app/v2/src/components/quiz/ResultModal.tsx`
-- `app/v2/src/routes/quiz/result.tsx`
-- `app/v2/src/components/quiz-result/result-summary.tsx`
-- `app/v2/src/components/quiz-result/quiz-result-item.tsx`
-- `app/v2/src/routes/quiz/create.tsx`
-- `app/v2/src/components/quiz/quiz-create-form.tsx`
-- `app/v2/src/components/quiz/quiz-create-fields.tsx`
-- `app/v2/src/routes/ranking/index.tsx`
-- `app/v2/src/components/ranking/RankingTabs.tsx`
-- `app/v2/src/components/ranking/RankingList.tsx`
-- `app/v2/src/components/ranking/TotalRankingItem.tsx`
-- `app/v2/src/components/ranking/GroupRankingItem.tsx`
-- `app/v2/src/components/profile/ProfilePage.tsx`
-- `app/v2/src/components/profile/ProfileHeader.tsx`
-- `app/v2/src/components/profile/ProfileStats.tsx`
-- `app/v2/src/components/profile/ProfileBadges.tsx`
-- `app/v2/src/components/profile/ProfileGroups.tsx`
-- `app/v2/src/components/profile/ProfileProgress.tsx`
+- `app/v2/src/routes/(tabs)/index.tsx`
+- `app/v2/src/features/home/home-page.tsx`
+- `app/v2/src/features/home/components/BentoCard.tsx`
+- `app/v2/src/features/home/components/BentoGrid.tsx`
+- `app/v2/src/features/home/components/WelcomeHeader.tsx`
+- `app/v2/src/routes/(tabs)/quiz/index.tsx`
+- `app/v2/src/features/quiz/pages/quiz-group-selection-page.tsx`
+- `app/v2/src/features/quiz/pages/quiz-question-page.tsx`
+- `app/v2/src/features/quiz/pages/quiz-result-page.tsx`
+- `app/v2/src/features/quiz/pages/quiz-create-page.tsx`
+- `app/v2/src/features/quiz/components/QuizHeader.tsx`
+- `app/v2/src/features/quiz/components/QuizQuestionScreen.tsx`
+- `app/v2/src/features/quiz/components/QuizChoice.tsx`
+- `app/v2/src/features/quiz/components/ChoicesSection.tsx`
+- `app/v2/src/features/quiz/components/ResultModal.tsx`
+- `app/v2/src/features/quiz/components/ResultSummary.tsx`
+- `app/v2/src/features/quiz/components/QuizResultItem.tsx`
+- `app/v2/src/features/quiz/components/QuizCreateForm.tsx`
+- `app/v2/src/features/quiz/components/QuizCreateFields.tsx`
+- `app/v2/src/routes/(tabs)/ranking/index.tsx`
+- `app/v2/src/features/ranking/ranking-page.tsx`
+- `app/v2/src/features/ranking/components/RankingTabs.tsx`
+- `app/v2/src/features/ranking/components/RankingList.tsx`
+- `app/v2/src/features/ranking/components/TotalRankingItem.tsx`
+- `app/v2/src/features/ranking/components/GroupRankingItem.tsx`
+- `app/v2/src/routes/(tabs)/profile/index.tsx`
+- `app/v2/src/features/profile/profile-page.tsx`
+- `app/v2/src/features/profile/components/ProfileHeader.tsx`
+- `app/v2/src/features/profile/components/ProfileStats.tsx`
+- `app/v2/src/features/profile/components/ProfileBadges.tsx`
+- `app/v2/src/features/profile/components/ProfileGroups.tsx`
+- `app/v2/src/features/profile/components/ProfileProgress.tsx`
 
 ## 実施順
 

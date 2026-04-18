@@ -1,4 +1,4 @@
-import { Link, useLocation, useMatches } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 import { Crown, Home, Pencil, User } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -18,15 +18,9 @@ const tabs: ReadonlyArray<TabItem> = [
 ];
 
 export function BottomTabBar() {
-	const matches = useMatches();
 	const pathname = useLocation({
 		select: (location) => location.pathname,
 	});
-	const isVisible = !matches.some((match) => match.routeId === "/quiz/$sessionId");
-
-	if (!isVisible) {
-		return null;
-	}
 
 	return (
 		<nav
