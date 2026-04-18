@@ -256,7 +256,7 @@
 
 主な作業:
 
-- [ ] `app/v2/src/features/quiz/pages/group-selection-page.tsx` のグループ選択を単純なボタン列からカード選択 UI に変更する
+- [ ] `app/v2/src/features/quiz/pages/quiz-group-selection-page.tsx` のグループ選択を単純なボタン列からカード選択 UI に変更する
 - [ ] グループ選択画面で選択済み状態と開始可能状態を明確にする
 - [ ] `QuizHeader` に進捗情報を入れる
 - [ ] `QuizQuestionScreen` に問題番号や残り感を加える
@@ -375,7 +375,7 @@
 - `app/v2/src/features/home/components/BentoGrid.tsx`
 - `app/v2/src/features/home/components/WelcomeHeader.tsx`
 - `app/v2/src/routes/(tabs)/quiz/index.tsx`
-- `app/v2/src/features/quiz/pages/group-selection-page.tsx`
+- `app/v2/src/features/quiz/pages/quiz-group-selection-page.tsx`
 - `app/v2/src/features/quiz/pages/quiz-question-page.tsx`
 - `app/v2/src/features/quiz/pages/quiz-result-page.tsx`
 - `app/v2/src/features/quiz/pages/quiz-create-page.tsx`

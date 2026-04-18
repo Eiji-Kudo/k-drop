@@ -79,9 +79,10 @@ describe("App routes", () => {
 	});
 
 	it("hides the tab bar on quiz session page", async () => {
-		await renderRoute("/quiz/abc123?groupId=1");
+		const router = await renderRoute("/quiz/abc123?groupId=1");
 		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
+		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/quiz/$sessionId");
 	});
 
 	it("renders the profile route through the tabs wrapper", async () => {
@@ -167,11 +168,13 @@ describe("App routes", () => {
 	});
 
 	it("renders the total ranking by default on the ranking page", async () => {
-		await renderRoute("/ranking");
+		const router = await renderRoute("/ranking");
 		expect(await screen.findByRole("button", { name: "総合" })).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "TWICE" })).toBeInTheDocument();
 		expect(screen.getByText("momo_love")).toBeInTheDocument();
 		expect(screen.getByText("9850")).toBeInTheDocument();
+		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
+		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/ranking/");
 	});
 
 	it("switches to the selected group ranking tab", async () => {

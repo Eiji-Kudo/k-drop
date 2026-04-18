@@ -23,8 +23,9 @@
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
 | HIGH | 5 | 5 |
-| MEDIUM | 36 | 36 |
-| LOW | 2 | 0（対応不要） |
+| MEDIUM | 41 | 41 |
+| LOW | 4 | 0（対応不要） |
+| LOW-MEDIUM | 1 | 1 |
 
 ## 参照したガイドライン
 
@@ -455,5 +456,99 @@
 - **検出者**: `testing-reviewer`
 - **問題**: 現行テストは `findByRole(...)` で描画完了を待ってから `router.state.matches` を同期参照するが、将来 `createAppRouter` に `defaultPendingComponent` 等が入ると transient 状態を拾う可能性がある。
 - **対応不要の理由**: 現状の `createAppRouter` には pending component がなく、`findByRole` 解決時には初期 match が確定している。実害が顕在化した時点で `waitFor` に差し替える方針。
+
+</details>
+
+## 4 回目レビュー（2026-04-19 再実行）で追加された対応
+
+<details>
+<summary>41. `src/architecture.md` `route.tsx は feature layout に使う` 節が新 Target Structure と矛盾していた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md`
+- **検出者**: `architecture-reviewer`, `docs-reviewer`
+- **問題**: Target Structure からは `route.tsx` を除去したのに、TanStack Router Conventions の `route.tsx` 節は実在しない `(tabs)/quiz/route.tsx` を含む tree を標準例として残していた。新規 contributor が `routes/` 側に layout を作り始める誘導になっていた。
+- **対応**: 「現時点の K-Drop v2 では採用していない」「将来共通 wrapper が必要になった時の例」と明記し、例の tree を `question.tsx` を含む実構成＋コメント `route.tsx` の組み合わせに更新した。
+
+</details>
+
+<details>
+<summary>42. ルート `CLAUDE.md` の v2 Directory Structure に `mocks/` が抜けていた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `CLAUDE.md`
+- **検出者**: `architecture-reviewer`, `docs-reviewer`
+- **問題**: 2 回目対応 (#26) で `features/` を追記したが `mocks/` は追加されず、`app/v2/tech-plan.md` / `docs/project-structure.md` / `src/architecture.md` の 3 つの tree が `mocks/` を含むのに root の `CLAUDE.md` だけ非対称になっていた。
+- **対応**: `CLAUDE.md` の v2 Directory Structure に `mocks/ → app-wide mock data` を追記した。
+
+</details>
+
+<details>
+<summary>43. `src/architecture.md` `Current State` の移行ナラティブが `home` を含まなかった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md`
+- **検出者**: `docs-reviewer`, `architecture-reviewer`
+- **問題**: 2 回目対応 (#28) で Goal の avoid リストは `home` を含む一般原則化をしたが、直後の `Current State` の移行対象の列挙は `profile` `ranking` `quiz` のまま。また `Migration Example` の「この方針は `profile` `ranking` `quiz` に適用済み」も 3 feature 固定だった。
+- **対応**: `Current State` と `Migration Example` の 2 箇所を `home` `profile` `ranking` `quiz` の 4 feature 列挙に揃えた。
+
+</details>
+
+<details>
+<summary>44. `features/` 配下テストの import path style が `quiz` と `profile` で割れていた（LOW-MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/features/quiz/schemas/__tests__/quiz-create-schema.test.ts`
+- **検出者**: `architecture-reviewer`
+- **問題**: 2 回目で配置規約（`__tests__/` サブディレクトリ）は統一されたが、import path が `quiz-create-schema.test.ts` では `@/features/quiz/...` と absolute、`format-fan-duration.test.ts` では `../format-fan-duration` と relative で、方針が割れていた。feature 内の他ソース（`ProfileBadges.tsx` の `../types` 等）は relative 主体で、テストもそれに揃えるのが自然。
+- **対応**: `quiz-create-schema.test.ts` の import を `../../constants` / `../quiz-create-schema` に変更し、relative style に統一した。
+
+</details>
+
+<details>
+<summary>45. `features/quiz/pages/` 配下のファイル名 prefix が非対称だった（LOW / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/features/quiz/pages/group-selection-page.tsx` → `quiz-group-selection-page.tsx`
+- **検出者**: `architecture-reviewer`
+- **問題**: `pages/` 配下で `quiz-create-page.tsx` / `quiz-question-page.tsx` / `quiz-result-page.tsx` は `quiz-` prefix を持つ一方、`group-selection-page.tsx` だけ prefix なしで非対称だった。`pages/` 自体が `features/quiz/` 配下にあるため prefix は冗長ではあるが、既存 3 ファイルが prefix を持つ以上 PR 内の新設ファイルも揃える方が grep / IDE navigation が一貫する。
+- **対応**: `group-selection-page.tsx` を `quiz-group-selection-page.tsx` にリネームし、`routes/(tabs)/quiz/index.tsx` と `docs/ux/ui-design-brushup-plan.md` の参照も更新した。
+
+</details>
+
+<details>
+<summary>46. `/quiz/$sessionId` smoke test が `(tabs)` 配下の routeId を固定していなかった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: 3 回目で `/profile` / `/quiz/create` / `/quiz/question` には routeId assertion を追加したが、同じ `HIDDEN_BOTTOM_TAB_ROUTE_IDS` に属する `/quiz/$sessionId` だけ「tab bar 非表示」のみで `(tabs)` 配下固定が抜けていた。
+- **対応**: `renderRoute` が返す router を受け取り、`router.state.matches.map(m => m.routeId)` が `/(tabs)/quiz/$sessionId` を含むことを検証する expect を追加した。
+
+</details>
+
+<details>
+<summary>47. `/ranking` smoke test に tabs wrapper / navigation landmark / routeId assertion が無かった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: 3 回目で `/profile` / `/quiz/create` には追加した wrapper 固定が、同じく `(tabs)` 配下で tab bar が出る `/ranking` には適用されておらず、content assertion のみで通過する状態だった。
+- **対応**: `renderRoute` の router を受け取り、`navigation` landmark の存在と `/(tabs)/ranking/` routeId を検証する 2 行を追加した（default total ranking テスト）。
+
+</details>
+
+## 対応不要の懸念点（4 回目レビュー）
+
+<details>
+<summary>48. `alertMock` が他テストで意図しない呼び出しを検知できない（LOW / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: `beforeEach` で alertMock を常に stub しているが、`alert()` が quiz-create テスト以外で誤って呼ばれた時の検知がない。
+- **対応不要の理由**: 現時点で他テストに alert 呼び出し経路はなく、reviewer 自身が「3 回目スコープでは影響が限定的で LOW」と判断している。alert UX は懸念 30 で toast 化別 PR に送っており、toast 化タイミングで alertMock 運用自体を見直す方が効率的。
+
+</details>
+
+<details>
+<summary>49. quiz-create-schema tuple の boundary テストが「5 個」と「3 個」のみで空配列などが無い（LOW / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/features/quiz/schemas/__tests__/quiz-create-schema.test.ts`
+- **検出者**: `testing-reviewer`
+- **問題**: tuple 超過は 5 個、不足は 3 個のみで、0 件や 6 件以上は検証していない。
+- **対応不要の理由**: Zod tuple の挙動は一貫しており、3 個で落ちれば 0 個も落ちる想定。reviewer 自身が「追加価値は限定的、次回 schema 変更 PR で boundary を増やす方が費用対効果が高い」と判断し LOW 扱い。
 
 </details>

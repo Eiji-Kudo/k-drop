@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CHOICE_MAX_LENGTH, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "@/features/quiz/constants";
-import { quizCreateSchema } from "@/features/quiz/schemas/quiz-create-schema";
+import { CHOICE_MAX_LENGTH, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "../../constants";
+import { quizCreateSchema } from "../quiz-create-schema";
 
 const validInput = {
 	idolGroupId: "01J0000000000000000000001",
