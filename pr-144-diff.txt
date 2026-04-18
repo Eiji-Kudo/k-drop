@@ -1,0 +1,2102 @@
+diff --git a/app/v2/docs/architecture.md b/app/v2/docs/architecture.md
+index cc3c08ac..5665b765 100644
+--- a/app/v2/docs/architecture.md
++++ b/app/v2/docs/architecture.md
+@@ -55,7 +55,7 @@ app/v2/
+ ### `src/`
+ 
+ フロントエンド本体。  
+-route-centered package-by-feature の詳細は `src/architecture.md` を参照する。
++`src/routes` で URL を定義し、`src/features` に feature 実装を集約する。詳細は `src/architecture.md` を参照する。
+ 
+ ### `functions/`
+ 
+@@ -88,7 +88,7 @@ functions/
+ 
+ ### 1. Frontend は feature 単位で組織化する
+ 
+-route-local な UI や helper は、共有ディレクトリではなく feature に閉じる。  
++route file は薄く保ち、UI や helper は共有ディレクトリではなく feature に閉じる。  
+ 具体的な配置ルールは `src/architecture.md` で定義する。
+ 
+ ### 2. Frontend と backend の境界は API で固定する
+@@ -102,7 +102,7 @@ route-local な UI や helper は、共有ディレクトリではなく feature
+ ## Document Map
+ 
+ - `docs/architecture.md` -> 全体像と境界
+-- `src/architecture.md` -> フロントエンド構造と route 配下のルール
++- `src/architecture.md` -> フロントエンド構造と `routes` / `features` のルール
+ - `docs/project-structure.md` -> モジュール配置の判断フロー
+ - `docs/component-placement-guide.md` -> サーバー側レイヤー配置
+ - `docs/aggregate-boundary-guide.md` -> 集約境界の設計指針
+diff --git a/app/v2/docs/component-placement-guide.md b/app/v2/docs/component-placement-guide.md
+index e41b96de..5cf3f908 100644
+--- a/app/v2/docs/component-placement-guide.md
++++ b/app/v2/docs/component-placement-guide.md
+@@ -182,8 +182,10 @@ queries → handlers/services/repositories
+ 
+ ## フロントエンド配置規約
+ 
+-- ルートファイル（`src/routes/*.tsx`）はルーティング関心に集中させ、独立した UI セクションは `src/components/` 以下に抽出する。目安として 150 行を超えたら抽出を検討
+-- 詳細ページ: `components/<entity>-detail/` にサブコンポーネントを配置
++- ルートファイル（`src/routes/*.tsx`）は URL / loader / guard / params などのルーティング関心に集中させる
++- feature 固有の page / component / schema / mock / utils は `src/features/<feature>/` に配置する
++- `src/components/` は複数 feature から使われる shared UI のみを置く
++- 詳細ページのサブコンポーネントも、feature 固有なら `src/features/<feature>/components/` に配置する
+ - レイアウト: `components/layout/` にヘッダー・フッター等の共有 UI 部品を配置
+ - カスタムフックは意味や目的ごとに適切な粒度で分割する。1 つのコンポーネントが複数のフックを使い分けるのが自然な設計
+ - `server/modules/*/schemas/` に定義された Zod スキーマと同じ型をフロント側で手書きしない。`z.infer<typeof Schema>` や `Pick`/`Omit` で導出する
+diff --git a/app/v2/docs/project-structure.md b/app/v2/docs/project-structure.md
+index 0dfaa91d..6824c2a3 100644
+--- a/app/v2/docs/project-structure.md
++++ b/app/v2/docs/project-structure.md
+@@ -9,10 +9,11 @@ K-Drop v2 で新しい機能をどこに配置するかを一貫して判断す
+ ```
+ app/v2/
+ ├── src/                        → フロントエンド (SPA)
++│   ├── routes/                 → TanStack Router の route 定義
++│   ├── features/               → feature 実装本体
+ │   ├── components/             → 共有 UI コンポーネント
+ │   │   ├── layout/             → ヘッダー・フッター等
+ │   │   └── <entity>-detail/    → 詳細ページのサブコンポーネント
+-│   ├── routes/                 → TanStack Router ページ
+ │   ├── lib/                    → API クライアント、ユーティリティ
+ │   └── main.tsx
+ ├── functions/                  → バックエンド (Pages Functions)
+@@ -55,7 +56,17 @@ app/v2/
+ 
+ 3. **フロントエンド UI チェック**
+    - Q: ユーザーに表示する UI コンポーネントか？
+-   - YES → `src/components/` または `src/routes/` に配置
++   - YES → 次へ
++
++4. **フロントエンド routing チェック**
++   - Q: URL / loader / guard / params に直接関わる route 定義か？
++   - YES → `src/routes/` に配置
++   - NO → `src/features/<feature>/` に配置
++
++補足:
++
++- `src/routes/` は route 定義の入口を置く
++- `src/features/<feature>/` の page / component が local navigation のために `Link` / `useNavigate` を使うのは許容する
+ 
+ ### ステップ 2: レイヤーの決定
+ 
+diff --git a/app/v2/docs/ux/ui-design-brushup-plan.md b/app/v2/docs/ux/ui-design-brushup-plan.md
+index 4a949a1e..8efc7b39 100644
+--- a/app/v2/docs/ux/ui-design-brushup-plan.md
++++ b/app/v2/docs/ux/ui-design-brushup-plan.md
+@@ -256,7 +256,7 @@
+ 
+ 主な作業:
+ 
+-- [ ] `app/v2/src/routes/quiz/index.tsx` のグループ選択を単純なボタン列からカード選択 UI に変更する
++- [ ] `app/v2/src/features/quiz/pages/group-selection-page.tsx` のグループ選択を単純なボタン列からカード選択 UI に変更する
+ - [ ] グループ選択画面で選択済み状態と開始可能状態を明確にする
+ - [ ] `QuizHeader` に進捗情報を入れる
+ - [ ] `QuizQuestionScreen` に問題番号や残り感を加える
+@@ -369,33 +369,38 @@
+ - `app/v2/src/index.css`
+ - `app/v2/src/routes/__root.tsx`
+ - `app/v2/src/components/bottom-tab-bar.tsx`
+-- `app/v2/src/routes/index.tsx`
+-- `app/v2/src/components/home/BentoCard.tsx`
+-- `app/v2/src/components/home/BentoGrid.tsx`
+-- `app/v2/src/components/home/WelcomeHeader.tsx`
+-- `app/v2/src/routes/quiz/index.tsx`
+-- `app/v2/src/components/quiz/QuizHeader.tsx`
+-- `app/v2/src/components/quiz/QuizQuestionScreen.tsx`
+-- `app/v2/src/components/quiz/QuizChoice.tsx`
+-- `app/v2/src/components/quiz/ChoicesSection.tsx`
+-- `app/v2/src/components/quiz/ResultModal.tsx`
+-- `app/v2/src/routes/quiz/result.tsx`
+-- `app/v2/src/components/quiz-result/result-summary.tsx`
+-- `app/v2/src/components/quiz-result/quiz-result-item.tsx`
+-- `app/v2/src/routes/quiz/create.tsx`
+-- `app/v2/src/components/quiz/quiz-create-form.tsx`
+-- `app/v2/src/components/quiz/quiz-create-fields.tsx`
+-- `app/v2/src/routes/ranking/index.tsx`
+-- `app/v2/src/components/ranking/RankingTabs.tsx`
+-- `app/v2/src/components/ranking/RankingList.tsx`
+-- `app/v2/src/components/ranking/TotalRankingItem.tsx`
+-- `app/v2/src/components/ranking/GroupRankingItem.tsx`
+-- `app/v2/src/components/profile/ProfilePage.tsx`
+-- `app/v2/src/components/profile/ProfileHeader.tsx`
+-- `app/v2/src/components/profile/ProfileStats.tsx`
+-- `app/v2/src/components/profile/ProfileBadges.tsx`
+-- `app/v2/src/components/profile/ProfileGroups.tsx`
+-- `app/v2/src/components/profile/ProfileProgress.tsx`
++- `app/v2/src/routes/(tabs)/index.tsx`
++- `app/v2/src/features/home/home-page.tsx`
++- `app/v2/src/features/home/components/BentoCard.tsx`
++- `app/v2/src/features/home/components/BentoGrid.tsx`
++- `app/v2/src/features/home/components/WelcomeHeader.tsx`
++- `app/v2/src/routes/(tabs)/quiz/index.tsx`
++- `app/v2/src/features/quiz/pages/group-selection-page.tsx`
++- `app/v2/src/features/quiz/pages/quiz-question-page.tsx`
++- `app/v2/src/features/quiz/pages/quiz-result-page.tsx`
++- `app/v2/src/features/quiz/pages/quiz-create-page.tsx`
++- `app/v2/src/features/quiz/components/QuizHeader.tsx`
++- `app/v2/src/features/quiz/components/QuizQuestionScreen.tsx`
++- `app/v2/src/features/quiz/components/QuizChoice.tsx`
++- `app/v2/src/features/quiz/components/ChoicesSection.tsx`
++- `app/v2/src/features/quiz/components/ResultModal.tsx`
++- `app/v2/src/features/quiz/components/ResultSummary.tsx`
++- `app/v2/src/features/quiz/components/QuizResultItem.tsx`
++- `app/v2/src/features/quiz/components/QuizCreateForm.tsx`
++- `app/v2/src/features/quiz/components/QuizCreateFields.tsx`
++- `app/v2/src/routes/(tabs)/ranking/index.tsx`
++- `app/v2/src/features/ranking/ranking-page.tsx`
++- `app/v2/src/features/ranking/components/RankingTabs.tsx`
++- `app/v2/src/features/ranking/components/RankingList.tsx`
++- `app/v2/src/features/ranking/components/TotalRankingItem.tsx`
++- `app/v2/src/features/ranking/components/GroupRankingItem.tsx`
++- `app/v2/src/routes/(tabs)/profile/index.tsx`
++- `app/v2/src/features/profile/profile-page.tsx`
++- `app/v2/src/features/profile/components/ProfileHeader.tsx`
++- `app/v2/src/features/profile/components/ProfileStats.tsx`
++- `app/v2/src/features/profile/components/ProfileBadges.tsx`
++- `app/v2/src/features/profile/components/ProfileGroups.tsx`
++- `app/v2/src/features/profile/components/ProfileProgress.tsx`
+ 
+ ## 実施順
+ 
+diff --git a/app/v2/src/__tests__/App.test.tsx b/app/v2/src/__tests__/App.test.tsx
+index e3da5d64..0d3a87d8 100644
+--- a/app/v2/src/__tests__/App.test.tsx
++++ b/app/v2/src/__tests__/App.test.tsx
+@@ -35,6 +35,7 @@ describe("App routes", () => {
+ 			"fetch",
+ 			vi.fn<typeof fetch>(() => Promise.resolve(new Response("Not Found", { status: 404 }))),
+ 		);
++		vi.stubGlobal("alert", vi.fn());
+ 	});
+ 
+ 	afterEach(() => {
+@@ -79,6 +80,57 @@ describe("App routes", () => {
+ 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
+ 	});
+ 
++	it("renders the profile route through the tabs wrapper", async () => {
++		await renderRoute("/profile");
++		expect(await screen.findByRole("heading", { name: "KPOPファン太郎" })).toBeInTheDocument();
++		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
++	});
++
++	it("renders the quiz create route through the tabs wrapper", async () => {
++		await renderRoute("/quiz/create");
++		expect(await screen.findByRole("heading", { name: "クイズ作成" })).toBeInTheDocument();
++		expect(screen.getByRole("button", { name: "作成する" })).toBeInTheDocument();
++	});
++
++	it("navigates back to the home route after creating a quiz", async () => {
++		await renderRoute("/quiz/create");
++
++		fireEvent.change(screen.getByLabelText("対象グループ"), {
++			target: { value: "01J0000000000000000000001" },
++		});
++		fireEvent.change(screen.getByLabelText("難易度"), {
++			target: { value: "easy" },
++		});
++		fireEvent.change(screen.getByLabelText("問題文"), {
++			target: { value: "TWICEのデビュー曲は？" },
++		});
++		fireEvent.change(screen.getByPlaceholderText("選択肢 1 を入力"), {
++			target: { value: "Like Ooh-Ahh" },
++		});
++		fireEvent.change(screen.getByPlaceholderText("選択肢 2 を入力"), {
++			target: { value: "CHEER UP" },
++		});
++		fireEvent.change(screen.getByPlaceholderText("選択肢 3 を入力"), {
++			target: { value: "TT" },
++		});
++		fireEvent.change(screen.getByPlaceholderText("選択肢 4 を入力"), {
++			target: { value: "SIGNAL" },
++		});
++		fireEvent.click(screen.getByRole("radio", { name: "選択肢 1" }));
++		fireEvent.change(screen.getByLabelText("解説"), {
++			target: { value: "デビュー曲は Like Ooh-Ahh。" },
++		});
++		fireEvent.click(screen.getByRole("button", { name: "作成する" }));
++
++		expect(await screen.findByText("今日もオタ力を伸ばそう")).toBeInTheDocument();
++	});
++
++	it("hides the tab bar on the direct quiz question route", async () => {
++		await renderRoute("/quiz/question");
++		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
++		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
++	});
++
+ 	it("navigates from group selection through the quiz flow to the result screen", async () => {
+ 		await renderRoute("/quiz");
+ 
+diff --git a/app/v2/src/__tests__/quiz-create-schema.test.ts b/app/v2/src/__tests__/quiz-create-schema.test.ts
+index 96d6795b..c61093f7 100644
+--- a/app/v2/src/__tests__/quiz-create-schema.test.ts
++++ b/app/v2/src/__tests__/quiz-create-schema.test.ts
+@@ -1,6 +1,6 @@
+ import { describe, expect, it } from "vitest";
+-import { CHOICE_MAX_LENGTH, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "@/constants/quiz";
+-import { quizCreateSchema } from "@/lib/schemas/quiz-create-schema";
++import { CHOICE_MAX_LENGTH, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "@/features/quiz/constants";
++import { quizCreateSchema } from "@/features/quiz/schemas/quiz-create-schema";
+ 
+ const validInput = {
+ 	idolGroupId: "01J0000000000000000000001",
+diff --git a/app/v2/src/architecture.md b/app/v2/src/architecture.md
+index 57841362..22f906b3 100644
+--- a/app/v2/src/architecture.md
++++ b/app/v2/src/architecture.md
+@@ -15,23 +15,24 @@
+ - `src/components/ranking/*`
+ - `src/components/quiz/*`
+ 
+-この配置は feature ごとに見ればまとまっていても、route から見た時に変更の探索範囲が広がりやすい。
++この配置は feature ごとに見ればまとまっていても、URL 起点で変更を追いづらい。
+ 
+ ## Current State
+ 
+-現状の `src/` は次のような分割になっている。
++現状の `src/` は次の責務分割を採用する。
+ 
+ ```text
+ src/
+-├── routes/         -> TanStack Router の route tree
+-├── components/     -> 画面単位 UI がここに集まっている
+-├── lib/            -> query client, rpc client, app providers
+-├── constants/      -> shared constants
+-└── mocks/          -> app-wide mock data
++├── routes/       -> TanStack Router の route tree と URL 定義
++│   └── (tabs)/   -> home / profile / ranking / quiz の route group
++├── features/     -> feature 実装本体
++├── components/   -> shared UI
++├── lib/          -> query client, rpc client, app providers
++└── mocks/        -> app-wide mock data
+ ```
+ 
+-この形でも動作はするが、feature-local な UI / helper が shared に見えてしまう。  
+-今後は route 配下への co-location を標準にする。
++`profile` `ranking` `quiz` の UI / schema / mock / formatter は `src/features` 配下へ移し、  
++`src/routes` は page import と router 設定に集中させる。
+ 
+ ## Core Principles
+ 
+@@ -42,21 +43,27 @@ src/
+ - `createFileRoute(...)`
+ - `loader` / `beforeLoad` / `validateSearch`
+ - URL params / search params の受け渡し
+-- route entry component の定義
++- feature page の接続
+ 
+-大量の JSX や画面固有 helper は route 配下の補助ファイルへ逃がす。
++大量の JSX や feature 固有 helper は `src/features` に置く。
+ 
+-### 2. Route-local なものは route 配下へ置く
++### 2. Feature 実装は `src/features/<feature>` に集約する
+ 
+-画面固有の UI、hook、formatter、schema、mock は、その route に最も近い場所へ置く。
++その feature の複数 route で使う page / component / schema / mock / utility は、  
++`src/features/<feature>` から辿れるようにまとめる。
+ 
+ ### 3. Shared は「複数 feature で再利用されるもの」だけ
+ 
+-以下のいずれかを満たす時だけ `src/components` / `src/lib` へ上げる。
++以下のいずれかを満たす時だけ `src/components` / `src/lib` / `src/constants` へ上げる。
+ 
+ - 複数 route / 複数 feature で使う
+ - ドメイン非依存で見た目や基盤の責務が明確
+-- URL や feature 名が付くと不自然
++- feature 名が付くと不自然
++
++### 4. Route group は URL を汚さず構造化するために使う
++
++`(tabs)` や `(public)` のような directory は URL segment ではなく、route の論理グループとして使う。  
++構造整理が目的であり、実装本体の置き場ではない。
+ 
+ ## Target Structure
+ 
+@@ -64,39 +71,46 @@ src/
+ src/
+ ├── routes/
+ │   ├── __root.tsx
+-│   ├── (tabs)/
+-│   │   ├── index.tsx
+-│   │   ├── profile/
+-│   │   │   ├── index.tsx
+-│   │   │   ├── -components/
+-│   │   │   │   ├── ProfilePage.tsx
+-│   │   │   │   ├── ProfileHeader.tsx
+-│   │   │   │   └── ProfileStats.tsx
+-│   │   │   ├── -utils/
+-│   │   │   │   └── format-fan-duration.ts
+-│   │   │   ├── -types.ts
+-│   │   │   └── -mock-data.ts
+-│   │   ├── ranking/
+-│   │   │   ├── index.tsx
+-│   │   │   └── -components/
+-│   │   └── quiz/
+-│   │       ├── route.tsx
+-│   │       ├── index.tsx
+-│   │       ├── create.tsx
+-│   │       ├── $sessionId.tsx
+-│   │       ├── result.tsx
+-│   │       ├── -components/
+-│   │       ├── -schemas/
+-│   │       ├── -queries/
+-│   │       └── -mock/
++│   └── (tabs)/
++│       ├── index.tsx
++│       ├── profile/
++│       │   └── index.tsx
++│       ├── ranking/
++│       │   └── index.tsx
++│       └── quiz/
++│           ├── index.tsx
++│           ├── create.tsx
++│           ├── question.tsx
++│           ├── $sessionId.tsx
++│           └── result.tsx
++├── features/
++│   ├── home/
++│   │   ├── home-page.tsx
++│   │   └── components/
++│   ├── profile/
++│   │   ├── profile-page.tsx
++│   │   ├── components/
++│   │   ├── utils/
++│   │   ├── types.ts
++│   │   ├── mock-data.ts
++│   │   └── badge-colors.ts
++│   ├── ranking/
++│   │   ├── ranking-page.tsx
++│   │   ├── components/
++│   │   ├── types.ts
++│   │   ├── mock-data.ts
++│   │   ├── mock-group-rankings-1.ts
++│   │   └── mock-group-rankings-2.ts
++│   └── quiz/
++│       ├── pages/
++│       ├── components/
++│       ├── schemas/
++│       ├── mock/
++│       ├── constants.ts
++│       └── types.ts
+ ├── components/
+ │   └── bottom-tab-bar.tsx
+ ├── lib/
+-│   ├── rpc/
+-│   ├── api/
+-│   ├── query-client.ts
+-│   └── app-providers.tsx
+-├── constants/
+ └── mocks/
+ ```
+ 
+@@ -104,25 +118,18 @@ src/
+ 
+ 新しいファイルは次の順で置き場所を判断する。
+ 
+-1. その route でしか使わないか  
+-   -> `src/routes/<feature>/...`
+-2. その feature の複数 route で使うか  
+-   -> `src/routes/<feature>/-components`, `-hooks`, `-utils`, `-schemas`
++1. URL / params / loader / guard に直接関係するか  
++   -> `src/routes/**`
++2. 1 feature の実装本体か  
++   -> `src/features/<feature>/**`
+ 3. 複数 feature で使うか  
+    -> `src/components`, `src/lib`, `src/constants`
+ 
+ ## TanStack Router Conventions
+ 
+-現在の `vite.config.ts` は `tanstackRouter({ target: "react" })` を使っているため、TanStack Router の標準的な file naming conventions をそのまま採用できる。
+-
+ ### Route Groups は directory-only で使う
+ 
+-`(tabs)` や `(public)` のような directory は URL segment ではなく、route の論理グループとして使う。
+-
+-用途:
+-
+-- feature 群を URL を汚さず整理する
+-- tabs 配下や公開画面配下をまとめる
++`(tabs)` や `(public)` は URL segment ではなく、route の論理グループとして使う。
+ 
+ 推奨例:
+ 
+@@ -146,23 +153,9 @@ src/routes/
+ - `(tabs).tsx` のような route group 自体の route file は作らない
+ - route group に共通ロジックを持たせたい場合は `_` pathless layout を使う
+ 
+-### `-components` などの ignored directory を使う
+-
+-TanStack Router の route tree に含めたくない補助ファイルは、`-` prefix の付いた名前で route 配下に colocate する。
+-
+-推奨サブディレクトリ:
+-
+-- `-components/`: route-local UI
+-- `-hooks/`: route-local custom hooks
+-- `-queries/`: route-local TanStack Query helpers
+-- `-schemas/`: route-local Zod schema
+-- `-utils/`: formatter, mapper, pure helper
+-- `-mock/`: feature-local mock data
+-
+ ### `_` pathless layout は共通 wrapper 用
+ 
+-directory を整理したいだけなら route groups を使う。  
+-URL に segment を増やさず、複数 route に共通の layout / guard / provider を掛けたい時だけ `_` prefix の pathless layout を使う。
++URL に segment を増やさず、複数 route に共通の layout / guard / provider を掛けたい時だけ `_` prefix を使う。
+ 
+ 例:
+ 
+@@ -188,7 +181,21 @@ src/routes/(tabs)/quiz/
+ └── result.tsx
+ ```
+ 
+-`index.tsx` はその directory の index page、`route.tsx` は feature 配下の layout route として扱う。
++### `-components` / `-utils` は route-only helper 用に限定する
++
++TanStack Router の route tree に含めたくない補助ファイルは、`-` prefix の directory を route 配下で使える。  
++ただし K-Drop v2 の基本方針では、UI や schema の大半は `src/features` に置く。
++
++使う場面:
++
++- 特定 route file にだけ紐づく helper
++- route layout 専用の小さな UI
++- loader / guard 専用の mapper や validator
++
++使わない場面:
++
++- feature の複数 route から使う component
++- feature 固有の schema / mock / formatter
+ 
+ ## Responsibility by Folder
+ 
+@@ -204,7 +211,26 @@ src/routes/(tabs)/quiz/
+ 置かないもの:
+ 
+ - 大量の JSX
+-- route 以外では使わない feature 固有 helper を shared へ逃がすこと
++- feature 実装本体
++- feature 固有の schema / mock / utility
++
++### `src/features/`
++
++責務:
++
++- feature page
++- feature-local component
++- feature-local schema
++- feature-local mock
++- feature-local utility / type / constant
++- feature 内で閉じる local navigation UI
++
++`profile` `ranking` `quiz` のように、1つの feature を触る時の探索起点にする。
++
++補足:
++
++- route path / params / loader / guard の定義元は `src/routes` に置く
++- ただし feature page が自身の UI フローのために `Link` / `useNavigate` を使うこと自体は許容する
+ 
+ ### `src/components/`
+ 
+@@ -233,92 +259,86 @@ src/routes/(tabs)/quiz/
+ - provider
+ - shared API integration
+ 
+-feature ではなく基盤を置く場所とする。
+-
+-### `src/constants/`
++### `src/mocks/`
+ 
+ 責務:
+ 
+-- 複数 feature で参照する定数
++- app-wide mock data
+ 
+-feature 固有の定数や文言は route 配下でもよい。
++feature に閉じる mock は `src/features/<feature>/mock/` などへ置く。
+ 
+-### `src/mocks/`
++## Concrete Rules
+ 
+-責務:
++### Feature page
+ 
+-- app-wide mock data
++例:
+ 
+-feature に閉じる mock は route 配下の `-mock/` へ置く。
++- `src/features/home/home-page.tsx`
++- `src/features/profile/profile-page.tsx`
++- `src/features/ranking/ranking-page.tsx`
++- `src/features/quiz/pages/quiz-result-page.tsx`
+ 
+-## Concrete Rules
++route file はこれらを import して接続するだけに保つ。
+ 
+-### Route-local な UI
++### Feature-local UI
+ 
+ 例:
+ 
+-- `ProfilePage`
+ - `ProfileStats`
+ - `RankingTabs`
+ - `QuizCreateForm`
+ 
+ 配置先:
+ 
+-- `src/routes/<feature>/-components/`
++- `src/features/<feature>/components/`
+ 
+-### Route-local な純粋関数
++### Feature-local な純粋関数
+ 
+ 例:
+ 
+ - `format-fan-duration.ts`
+ - mapper
+ - display formatter
+-- page 専用の select helper
+ 
+ 配置先:
+ 
+-- `src/routes/<feature>/-utils/`
+-- 必要なら `-formatters/`
++- `src/features/<feature>/utils/`
+ 
+-`format-fan-duration.ts` は UI ではないため、`-components` ではなく `-utils` に置く。
++`format-fan-duration.ts` は UI ではないため、`components/` ではなく `utils/` に置く。
+ 
+-### Shared UI
++### Feature-local schema / mock / constants
+ 
+ 例:
+ 
+-- app shell
+-- modal primitive
+-- shared form field
++- `quiz-create-schema.ts`
++- `idol-groups.ts`
++- `quiz-questions.ts`
++- `constants.ts`
+ 
+ 配置先:
+ 
+-- `src/components/`
++- `src/features/<feature>/schemas/`
++- `src/features/<feature>/mock/`
++- `src/features/<feature>/constants.ts`
+ 
+-### Shared infrastructure
++### Shared UI
+ 
+ 例:
+ 
+-- `createApiClient`
+-- `createAppQueryClient`
+-- provider
+-- environment helper
++- app shell
++- shared form field
+ 
+ 配置先:
+ 
+-- `src/lib/`
+-
+-## Recommended Migration
++- `src/components/`
+ 
+-優先順位は次の通り。
++## Migration Example
+ 
+-1. `src/routes/(tabs)/profile/` 配下へ `profile` 画面の UI と helper を移す
+-2. `src/routes/(tabs)/ranking/` 配下へ `ranking` 画面の UI を移す
+-3. `src/routes/(tabs)/quiz/` 配下へ `quiz` 画面の form / mocks / helpers を移す
+-4. 複数 feature で使うものだけ `src/components` / `src/lib` に残す
++この方針は `profile` `ranking` `quiz` に適用済みであり、新規 feature も同じ考え方で配置する。
+ 
+-### First Concrete Example
++### Profile Example
+ 
+-現在:
++移行前:
+ 
+ ```text
+ src/components/profile/
+@@ -327,24 +347,26 @@ src/components/profile/
+ └── format-fan-duration.ts
+ ```
+ 
+-推奨:
++適用後:
+ 
+ ```text
+ src/routes/(tabs)/profile/
+-├── index.tsx
+-├── -components/
+-│   ├── ProfilePage.tsx
++└── index.tsx
++
++src/features/profile/
++├── profile-page.tsx
++├── components/
+ │   └── ProfileStats.tsx
+-└── -utils/
++└── utils/
+     └── format-fan-duration.ts
+ ```
+ 
+-この移動により、`profile` の変更は `profile` directory を見れば完結する。
++この配置により、`profile` の実装変更は `src/features/profile` を見ればほぼ完結する。
+ 
+ ## Operational Rules
+ 
+-- route を追加するときは、まず `src/routes/<group>/<feature>/` を切る
+-- その route だけで使う補助コードは `-components`, `-hooks`, `-utils`, `-schemas` に colocate する
++- route を追加するときは、まず `src/routes/<group>/<feature>/` に route file を切る
++- 実装本体は `src/features/<feature>/` に置く
+ - `src/components` に置く前に「本当に複数 feature で使うか」を確認する
+-- feature-local mock は route 配下へ置き、app-wide mock だけ `src/mocks` に置く
++- feature-local mock は `src/features/<feature>/mock/` に置き、app-wide mock だけ `src/mocks` に置く
+ - generated file の `src/routeTree.gen.ts` は編集しない
+diff --git a/app/v2/src/components/bottom-tab-bar.tsx b/app/v2/src/components/bottom-tab-bar.tsx
+index c13fde36..b1a801b7 100644
+--- a/app/v2/src/components/bottom-tab-bar.tsx
++++ b/app/v2/src/components/bottom-tab-bar.tsx
+@@ -1,4 +1,4 @@
+-import { Link, useLocation, useMatches } from "@tanstack/react-router";
++import { Link, useLocation } from "@tanstack/react-router";
+ import type { LucideIcon } from "lucide-react";
+ import { Crown, Home, Pencil, User } from "lucide-react";
+ import { cn } from "@/lib/cn";
+@@ -18,15 +18,9 @@ const tabs: ReadonlyArray<TabItem> = [
+ ];
+ 
+ export function BottomTabBar() {
+-	const matches = useMatches();
+ 	const pathname = useLocation({
+ 		select: (location) => location.pathname,
+ 	});
+-	const isVisible = !matches.some((match) => match.routeId === "/quiz/$sessionId");
+-
+-	if (!isVisible) {
+-		return null;
+-	}
+ 
+ 	return (
+ 		<nav
+diff --git a/app/v2/src/components/quiz-result/types.ts b/app/v2/src/components/quiz-result/types.ts
+deleted file mode 100644
+index e352d75a..00000000
+--- a/app/v2/src/components/quiz-result/types.ts
++++ /dev/null
+@@ -1,13 +0,0 @@
+-export type QuizResultEntry = {
+-	questionId: string;
+-	prompt: string;
+-	isCorrect: boolean;
+-	userAnswer: string;
+-	correctAnswer: string;
+-	explanation: string;
+-};
+-
+-export type QuizResultData = {
+-	totalScore: number;
+-	results: Array<QuizResultEntry>;
+-};
+diff --git a/app/v2/src/constants/quiz.ts b/app/v2/src/constants/quiz.ts
+deleted file mode 100644
+index f151791b..00000000
+--- a/app/v2/src/constants/quiz.ts
++++ /dev/null
+@@ -1,23 +0,0 @@
+-export const DIFFICULTY_OPTIONS = [
+-	{ value: "easy", label: "Easy" },
+-	{ value: "normal", label: "Normal" },
+-	{ value: "hard", label: "Hard" },
+-] as const;
+-
+-export const MOCK_IDOL_GROUPS = [
+-	{ idol_group_id: "01J0000000000000000000001", group_name: "TWICE" },
+-	{ idol_group_id: "01J0000000000000000000002", group_name: "BLACKPINK" },
+-	{ idol_group_id: "01J0000000000000000000003", group_name: "aespa" },
+-	{ idol_group_id: "01J0000000000000000000004", group_name: "IVE" },
+-	{ idol_group_id: "01J0000000000000000000005", group_name: "NewJeans" },
+-	{ idol_group_id: "01J0000000000000000000006", group_name: "LE SSERAFIM" },
+-	{ idol_group_id: "01J0000000000000000000007", group_name: "ITZY" },
+-	{ idol_group_id: "01J0000000000000000000008", group_name: "Stray Kids" },
+-	{ idol_group_id: "01J0000000000000000000009", group_name: "ENHYPEN" },
+-	{ idol_group_id: "01J0000000000000000000010", group_name: "BTS" },
+-] as const;
+-
+-export const CHOICE_COUNT = 4;
+-export const PROMPT_MAX_LENGTH = 500;
+-export const CHOICE_MAX_LENGTH = 100;
+-export const EXPLANATION_MAX_LENGTH = 1000;
+diff --git a/app/v2/src/components/home/BentoCard.tsx b/app/v2/src/features/home/components/BentoCard.tsx
+similarity index 100%
+rename from app/v2/src/components/home/BentoCard.tsx
+rename to app/v2/src/features/home/components/BentoCard.tsx
+diff --git a/app/v2/src/components/home/BentoGrid.tsx b/app/v2/src/features/home/components/BentoGrid.tsx
+similarity index 78%
+rename from app/v2/src/components/home/BentoGrid.tsx
+rename to app/v2/src/features/home/components/BentoGrid.tsx
+index b212362e..17701930 100644
+--- a/app/v2/src/components/home/BentoGrid.tsx
++++ b/app/v2/src/features/home/components/BentoGrid.tsx
+@@ -1,9 +1,9 @@
+ import { BarChart3, PencilLine, UserRound } from "lucide-react";
+-import { BentoCard } from "@/components/home/BentoCard";
+-import { HomeMomentumChips } from "@/components/home/HomeMomentumChips";
+-import { HomeNextGoalCard } from "@/components/home/HomeNextGoalCard";
+-import { HomePrimaryActionCard } from "@/components/home/HomePrimaryActionCard";
+ import type { HomeMotivationViewModel } from "@/lib/ux/types";
++import { BentoCard } from "./BentoCard";
++import { HomeMomentumChips } from "./HomeMomentumChips";
++import { HomeNextGoalCard } from "./HomeNextGoalCard";
++import { HomePrimaryActionCard } from "./HomePrimaryActionCard";
+ 
+ type BentoGridProps = {
+ 	viewModel: HomeMotivationViewModel;
+diff --git a/app/v2/src/components/home/HomeMomentumChips.tsx b/app/v2/src/features/home/components/HomeMomentumChips.tsx
+similarity index 100%
+rename from app/v2/src/components/home/HomeMomentumChips.tsx
+rename to app/v2/src/features/home/components/HomeMomentumChips.tsx
+diff --git a/app/v2/src/components/home/HomeNextGoalCard.tsx b/app/v2/src/features/home/components/HomeNextGoalCard.tsx
+similarity index 100%
+rename from app/v2/src/components/home/HomeNextGoalCard.tsx
+rename to app/v2/src/features/home/components/HomeNextGoalCard.tsx
+diff --git a/app/v2/src/components/home/HomePrimaryActionCard.tsx b/app/v2/src/features/home/components/HomePrimaryActionCard.tsx
+similarity index 100%
+rename from app/v2/src/components/home/HomePrimaryActionCard.tsx
+rename to app/v2/src/features/home/components/HomePrimaryActionCard.tsx
+diff --git a/app/v2/src/components/home/WelcomeHeader.tsx b/app/v2/src/features/home/components/WelcomeHeader.tsx
+similarity index 100%
+rename from app/v2/src/components/home/WelcomeHeader.tsx
+rename to app/v2/src/features/home/components/WelcomeHeader.tsx
+diff --git a/app/v2/src/routes/index.tsx b/app/v2/src/features/home/home-page.tsx
+similarity index 53%
+rename from app/v2/src/routes/index.tsx
+rename to app/v2/src/features/home/home-page.tsx
+index 97f91458..b7b4b3dc 100644
+--- a/app/v2/src/routes/index.tsx
++++ b/app/v2/src/features/home/home-page.tsx
+@@ -1,10 +1,9 @@
+-import { createFileRoute } from "@tanstack/react-router";
+-import { BentoGrid } from "@/components/home/BentoGrid";
+-import { WelcomeHeader } from "@/components/home/WelcomeHeader";
+ import { PageShell } from "@/components/ui/PageShell";
+ import { createHomeMotivationViewModel } from "@/lib/ux";
++import { BentoGrid } from "./components/BentoGrid";
++import { WelcomeHeader } from "./components/WelcomeHeader";
+ 
+-function HomePage() {
++export function HomePage() {
+ 	const viewModel = createHomeMotivationViewModel();
+ 
+ 	return (
+@@ -14,7 +13,3 @@ function HomePage() {
+ 		</PageShell>
+ 	);
+ }
+-
+-export const Route = createFileRoute("/")({
+-	component: HomePage,
+-});
+diff --git a/app/v2/src/components/profile/badge-colors.ts b/app/v2/src/features/profile/badge-colors.ts
+similarity index 100%
+rename from app/v2/src/components/profile/badge-colors.ts
+rename to app/v2/src/features/profile/badge-colors.ts
+diff --git a/app/v2/src/components/profile/BadgeIcon.tsx b/app/v2/src/features/profile/components/BadgeIcon.tsx
+similarity index 96%
+rename from app/v2/src/components/profile/BadgeIcon.tsx
+rename to app/v2/src/features/profile/components/BadgeIcon.tsx
+index 2c7969af..f134f2d9 100644
+--- a/app/v2/src/components/profile/BadgeIcon.tsx
++++ b/app/v2/src/features/profile/components/BadgeIcon.tsx
+@@ -1,4 +1,4 @@
+-import type { BadgeType } from "./types";
++import type { BadgeType } from "../types";
+ 
+ const BADGE_ICONS: Record<BadgeType, string> = {
+ 	quiz_master: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+diff --git a/app/v2/src/components/profile/ProfileBadges.tsx b/app/v2/src/features/profile/components/ProfileBadges.tsx
+similarity index 91%
+rename from app/v2/src/components/profile/ProfileBadges.tsx
+rename to app/v2/src/features/profile/components/ProfileBadges.tsx
+index 5ca49a93..b87e46a7 100644
+--- a/app/v2/src/components/profile/ProfileBadges.tsx
++++ b/app/v2/src/features/profile/components/ProfileBadges.tsx
+@@ -1,7 +1,7 @@
+ import { SectionCard } from "@/components/ui/SectionCard";
++import { getBadgeColorClass } from "../badge-colors";
++import type { Badge } from "../types";
+ import { BadgeIcon } from "./BadgeIcon";
+-import { getBadgeColorClass } from "./badge-colors";
+-import type { Badge } from "./types";
+ 
+ type ProfileBadgesProps = {
+ 	badges: Badge[];
+diff --git a/app/v2/src/components/profile/ProfileGroups.tsx b/app/v2/src/features/profile/components/ProfileGroups.tsx
+similarity index 96%
+rename from app/v2/src/components/profile/ProfileGroups.tsx
+rename to app/v2/src/features/profile/components/ProfileGroups.tsx
+index 6712f9fb..b8898c2d 100644
+--- a/app/v2/src/components/profile/ProfileGroups.tsx
++++ b/app/v2/src/features/profile/components/ProfileGroups.tsx
+@@ -1,5 +1,5 @@
+ import { SectionCard } from "@/components/ui/SectionCard";
+-import type { MockGroup } from "./types";
++import type { MockGroup } from "../types";
+ 
+ type ProfileGroupsProps = {
+ 	groups: MockGroup[];
+diff --git a/app/v2/src/components/profile/ProfileHeader.tsx b/app/v2/src/features/profile/components/ProfileHeader.tsx
+similarity index 100%
+rename from app/v2/src/components/profile/ProfileHeader.tsx
+rename to app/v2/src/features/profile/components/ProfileHeader.tsx
+diff --git a/app/v2/src/components/profile/ProfileProgress.tsx b/app/v2/src/features/profile/components/ProfileProgress.tsx
+similarity index 100%
+rename from app/v2/src/components/profile/ProfileProgress.tsx
+rename to app/v2/src/features/profile/components/ProfileProgress.tsx
+diff --git a/app/v2/src/components/profile/ProfileStats.tsx b/app/v2/src/features/profile/components/ProfileStats.tsx
+similarity index 93%
+rename from app/v2/src/components/profile/ProfileStats.tsx
+rename to app/v2/src/features/profile/components/ProfileStats.tsx
+index 1cf5772a..f580b52c 100644
+--- a/app/v2/src/components/profile/ProfileStats.tsx
++++ b/app/v2/src/features/profile/components/ProfileStats.tsx
+@@ -1,4 +1,4 @@
+-import { formatFanDuration } from "./format-fan-duration";
++import { formatFanDuration } from "../utils/format-fan-duration";
+ 
+ type ProfileStatsProps = {
+ 	totalOtakuPower: number;
+diff --git a/app/v2/src/components/profile/mock-data.ts b/app/v2/src/features/profile/mock-data.ts
+similarity index 100%
+rename from app/v2/src/components/profile/mock-data.ts
+rename to app/v2/src/features/profile/mock-data.ts
+diff --git a/app/v2/src/components/profile/ProfilePage.tsx b/app/v2/src/features/profile/profile-page.tsx
+similarity index 79%
+rename from app/v2/src/components/profile/ProfilePage.tsx
+rename to app/v2/src/features/profile/profile-page.tsx
+index faa2bd4c..c83a8ba6 100644
+--- a/app/v2/src/components/profile/ProfilePage.tsx
++++ b/app/v2/src/features/profile/profile-page.tsx
+@@ -1,12 +1,12 @@
+ import { PageHeader } from "@/components/ui/PageHeader";
+ import { PageShell } from "@/components/ui/PageShell";
+ import { SectionCard } from "@/components/ui/SectionCard";
++import { ProfileBadges } from "./components/ProfileBadges";
++import { ProfileGroups } from "./components/ProfileGroups";
++import { ProfileHeader } from "./components/ProfileHeader";
++import { ProfileProgress } from "./components/ProfileProgress";
++import { ProfileStats } from "./components/ProfileStats";
+ import { MOCK_BADGES, MOCK_GROUPS, MOCK_PROGRESS, MOCK_USER } from "./mock-data";
+-import { ProfileBadges } from "./ProfileBadges";
+-import { ProfileGroups } from "./ProfileGroups";
+-import { ProfileHeader } from "./ProfileHeader";
+-import { ProfileProgress } from "./ProfileProgress";
+-import { ProfileStats } from "./ProfileStats";
+ 
+ export function ProfilePage() {
+ 	return (
+diff --git a/app/v2/src/components/profile/types.ts b/app/v2/src/features/profile/types.ts
+similarity index 100%
+rename from app/v2/src/components/profile/types.ts
+rename to app/v2/src/features/profile/types.ts
+diff --git a/app/v2/src/components/profile/__tests__/format-fan-duration.test.ts b/app/v2/src/features/profile/utils/format-fan-duration.test.ts
+similarity index 94%
+rename from app/v2/src/components/profile/__tests__/format-fan-duration.test.ts
+rename to app/v2/src/features/profile/utils/format-fan-duration.test.ts
+index 86abdcb9..48b5ca28 100644
+--- a/app/v2/src/components/profile/__tests__/format-fan-duration.test.ts
++++ b/app/v2/src/features/profile/utils/format-fan-duration.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from "vitest";
+-import { formatFanDuration } from "../format-fan-duration";
++import { formatFanDuration } from "./format-fan-duration";
+ 
+ describe("formatFanDuration", () => {
+ 	const now = new Date("2026-04-05");
+diff --git a/app/v2/src/components/profile/format-fan-duration.ts b/app/v2/src/features/profile/utils/format-fan-duration.ts
+similarity index 100%
+rename from app/v2/src/components/profile/format-fan-duration.ts
+rename to app/v2/src/features/profile/utils/format-fan-duration.ts
+diff --git a/app/v2/src/components/quiz/ChoicesSection.tsx b/app/v2/src/features/quiz/components/ChoicesSection.tsx
+similarity index 90%
+rename from app/v2/src/components/quiz/ChoicesSection.tsx
+rename to app/v2/src/features/quiz/components/ChoicesSection.tsx
+index f0f3f11a..5dc6f6bf 100644
+--- a/app/v2/src/components/quiz/ChoicesSection.tsx
++++ b/app/v2/src/features/quiz/components/ChoicesSection.tsx
+@@ -1,17 +1,12 @@
+ import { useCallback, useEffect, useState } from "react";
+-import { type ChoiceVariant, QuizChoice } from "@/components/quiz/QuizChoice";
+-import { ResultModal } from "@/components/quiz/ResultModal";
+ import { PrimaryCTA } from "@/components/ui/cta";
+ import { SectionCard } from "@/components/ui/SectionCard";
++import type { Choice } from "../types";
++import { type ChoiceVariant, QuizChoice } from "./QuizChoice";
++import { ResultModal } from "./ResultModal";
+ 
+ type DisplayPhase = "question" | "result" | "explanation";
+ 
+-export type Choice = {
+-	choice_order: number;
+-	choice_text: string;
+-	is_correct: boolean;
+-};
+-
+ type ChoicesSectionProps = {
+ 	choices: ReadonlyArray<Choice>;
+ 	explanation: string;
+diff --git a/app/v2/src/components/quiz/QuestionPrompt.tsx b/app/v2/src/features/quiz/components/QuestionPrompt.tsx
+similarity index 100%
+rename from app/v2/src/components/quiz/QuestionPrompt.tsx
+rename to app/v2/src/features/quiz/components/QuestionPrompt.tsx
+diff --git a/app/v2/src/components/quiz/QuizChoice.tsx b/app/v2/src/features/quiz/components/QuizChoice.tsx
+similarity index 100%
+rename from app/v2/src/components/quiz/QuizChoice.tsx
+rename to app/v2/src/features/quiz/components/QuizChoice.tsx
+diff --git a/app/v2/src/components/quiz/quiz-choice-fields.tsx b/app/v2/src/features/quiz/components/QuizChoiceFields.tsx
+similarity index 93%
+rename from app/v2/src/components/quiz/quiz-choice-fields.tsx
+rename to app/v2/src/features/quiz/components/QuizChoiceFields.tsx
+index d850998d..c8fe4df7 100644
+--- a/app/v2/src/components/quiz/quiz-choice-fields.tsx
++++ b/app/v2/src/features/quiz/components/QuizChoiceFields.tsx
+@@ -1,6 +1,6 @@
+ import type { FieldErrors, UseFormRegister } from "react-hook-form";
+-import { CHOICE_MAX_LENGTH } from "@/constants/quiz";
+-import type { QuizCreateFormValues } from "@/lib/schemas/quiz-create-schema";
++import { CHOICE_MAX_LENGTH } from "../constants";
++import type { QuizCreateFormValues } from "../schemas/quiz-create-schema";
+ 
+ const CHOICE_INDICES = [0, 1, 2, 3] as const;
+ 
+diff --git a/app/v2/src/components/quiz/quiz-create-fields.tsx b/app/v2/src/features/quiz/components/QuizCreateFields.tsx
+similarity index 87%
+rename from app/v2/src/components/quiz/quiz-create-fields.tsx
+rename to app/v2/src/features/quiz/components/QuizCreateFields.tsx
+index f6eb086e..9c8d41ed 100644
+--- a/app/v2/src/components/quiz/quiz-create-fields.tsx
++++ b/app/v2/src/features/quiz/components/QuizCreateFields.tsx
+@@ -1,6 +1,7 @@
+ import type { UseFormRegister } from "react-hook-form";
+-import { DIFFICULTY_OPTIONS, EXPLANATION_MAX_LENGTH, MOCK_IDOL_GROUPS, PROMPT_MAX_LENGTH } from "@/constants/quiz";
+-import type { QuizCreateFormValues } from "@/lib/schemas/quiz-create-schema";
++import { DIFFICULTY_OPTIONS, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "../constants";
++import { MOCK_QUIZ_GROUPS } from "../mock/idol-groups";
++import type { QuizCreateFormValues } from "../schemas/quiz-create-schema";
+ 
+ type FieldProps = {
+ 	register: UseFormRegister<QuizCreateFormValues>;
+@@ -15,9 +16,9 @@ export function GroupSelect({ register, error }: FieldProps) {
+ 			</label>
+ 			<select id="idolGroupId" className={`select select-bordered w-full ${error ? "select-error" : ""}`} {...register("idolGroupId")}>
+ 				<option value="">グループを選択してください</option>
+-				{MOCK_IDOL_GROUPS.map((group) => (
+-					<option key={group.idol_group_id} value={group.idol_group_id}>
+-						{group.group_name}
++				{MOCK_QUIZ_GROUPS.map((group) => (
++					<option key={group.idolGroupId} value={group.idolGroupId}>
++						{group.groupName}
+ 					</option>
+ 				))}
+ 			</select>
+diff --git a/app/v2/src/components/quiz/quiz-create-form.tsx b/app/v2/src/features/quiz/components/QuizCreateForm.tsx
+similarity index 85%
+rename from app/v2/src/components/quiz/quiz-create-form.tsx
+rename to app/v2/src/features/quiz/components/QuizCreateForm.tsx
+index ac0eebed..2a4b0d72 100644
+--- a/app/v2/src/components/quiz/quiz-create-form.tsx
++++ b/app/v2/src/features/quiz/components/QuizCreateForm.tsx
+@@ -1,9 +1,9 @@
+ import { zodResolver } from "@hookform/resolvers/zod";
+ import { useForm } from "react-hook-form";
+-import { ChoicesFieldset, CorrectChoiceFieldset } from "@/components/quiz/quiz-choice-fields";
+-import { DifficultySelect, ExplanationField, GroupSelect, PromptField } from "@/components/quiz/quiz-create-fields";
+ import { PrimaryCTA } from "@/components/ui/cta";
+-import { type QuizCreateFormValues, quizCreateSchema } from "@/lib/schemas/quiz-create-schema";
++import { type QuizCreateFormValues, quizCreateSchema } from "../schemas/quiz-create-schema";
++import { ChoicesFieldset, CorrectChoiceFieldset } from "./QuizChoiceFields";
++import { DifficultySelect, ExplanationField, GroupSelect, PromptField } from "./QuizCreateFields";
+ 
+ type QuizCreateFormProps = {
+ 	onSubmitSuccess: (data: QuizCreateFormValues) => void;
+diff --git a/app/v2/src/components/quiz/QuizHeader.tsx b/app/v2/src/features/quiz/components/QuizHeader.tsx
+similarity index 100%
+rename from app/v2/src/components/quiz/QuizHeader.tsx
+rename to app/v2/src/features/quiz/components/QuizHeader.tsx
+diff --git a/app/v2/src/components/quiz/QuizQuestionScreen.tsx b/app/v2/src/features/quiz/components/QuizQuestionScreen.tsx
+similarity index 75%
+rename from app/v2/src/components/quiz/QuizQuestionScreen.tsx
+rename to app/v2/src/features/quiz/components/QuizQuestionScreen.tsx
+index 9c52c7e8..83e625f5 100644
+--- a/app/v2/src/components/quiz/QuizQuestionScreen.tsx
++++ b/app/v2/src/features/quiz/components/QuizQuestionScreen.tsx
+@@ -1,9 +1,9 @@
+ import { useCallback, useState } from "react";
+-import { ChoicesSection } from "@/components/quiz/ChoicesSection";
+-import { MOCK_QUESTIONS } from "@/components/quiz/mock-questions";
+-import { QuestionPrompt } from "@/components/quiz/QuestionPrompt";
+-import { QuizHeader } from "@/components/quiz/QuizHeader";
+ import { PageShell } from "@/components/ui/PageShell";
++import { MOCK_QUESTIONS } from "../mock/quiz-questions";
++import { ChoicesSection } from "./ChoicesSection";
++import { QuestionPrompt } from "./QuestionPrompt";
++import { QuizHeader } from "./QuizHeader";
+ 
+ type QuizQuestionScreenProps = {
+ 	onComplete: () => void;
+diff --git a/app/v2/src/components/quiz-result/quiz-result-item.tsx b/app/v2/src/features/quiz/components/QuizResultItem.tsx
+similarity index 92%
+rename from app/v2/src/components/quiz-result/quiz-result-item.tsx
+rename to app/v2/src/features/quiz/components/QuizResultItem.tsx
+index ad0d8622..8e28600d 100644
+--- a/app/v2/src/components/quiz-result/quiz-result-item.tsx
++++ b/app/v2/src/features/quiz/components/QuizResultItem.tsx
+@@ -1,5 +1,5 @@
+-import type { QuizResultEntry } from "@/components/quiz-result/types";
+ import { SectionCard } from "@/components/ui/SectionCard";
++import type { QuizResultEntry } from "../types";
+ 
+ export function QuizResultItem({ result }: { result: QuizResultEntry }) {
+ 	return (
+diff --git a/app/v2/src/components/quiz/ResultModal.tsx b/app/v2/src/features/quiz/components/ResultModal.tsx
+similarity index 100%
+rename from app/v2/src/components/quiz/ResultModal.tsx
+rename to app/v2/src/features/quiz/components/ResultModal.tsx
+diff --git a/app/v2/src/components/quiz-result/result-summary.tsx b/app/v2/src/features/quiz/components/ResultSummary.tsx
+similarity index 100%
+rename from app/v2/src/components/quiz-result/result-summary.tsx
+rename to app/v2/src/features/quiz/components/ResultSummary.tsx
+diff --git a/app/v2/src/features/quiz/constants.ts b/app/v2/src/features/quiz/constants.ts
+new file mode 100644
+index 00000000..e7a86683
+--- /dev/null
++++ b/app/v2/src/features/quiz/constants.ts
+@@ -0,0 +1,10 @@
++export const DIFFICULTY_OPTIONS = [
++	{ value: "easy", label: "Easy" },
++	{ value: "normal", label: "Normal" },
++	{ value: "hard", label: "Hard" },
++] as const;
++
++export const CHOICE_COUNT = 4;
++export const PROMPT_MAX_LENGTH = 500;
++export const CHOICE_MAX_LENGTH = 100;
++export const EXPLANATION_MAX_LENGTH = 1000;
+diff --git a/app/v2/src/features/quiz/mock/idol-groups.ts b/app/v2/src/features/quiz/mock/idol-groups.ts
+new file mode 100644
+index 00000000..41858928
+--- /dev/null
++++ b/app/v2/src/features/quiz/mock/idol-groups.ts
+@@ -0,0 +1,14 @@
++import type { QuizGroup } from "../types";
++
++export const MOCK_QUIZ_GROUPS: ReadonlyArray<QuizGroup> = [
++	{ idolGroupId: "01J0000000000000000000001", groupName: "TWICE", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000002", groupName: "BLACKPINK", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000003", groupName: "aespa", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000004", groupName: "IVE", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000005", groupName: "NewJeans", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000006", groupName: "LE SSERAFIM", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000007", groupName: "ITZY", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000008", groupName: "Stray Kids", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000009", groupName: "ENHYPEN", thumbnailUrl: "" },
++	{ idolGroupId: "01J0000000000000000000010", groupName: "BTS", thumbnailUrl: "" },
++];
+diff --git a/app/v2/src/components/quiz/mock-questions.ts b/app/v2/src/features/quiz/mock/quiz-questions.ts
+similarity index 93%
+rename from app/v2/src/components/quiz/mock-questions.ts
+rename to app/v2/src/features/quiz/mock/quiz-questions.ts
+index 2284c8d6..73146325 100644
+--- a/app/v2/src/components/quiz/mock-questions.ts
++++ b/app/v2/src/features/quiz/mock/quiz-questions.ts
+@@ -1,10 +1,4 @@
+-import type { Choice } from "@/components/quiz/ChoicesSection";
+-
+-export type QuizQuestion = {
+-	prompt: string;
+-	explanation: string;
+-	choices: ReadonlyArray<Choice>;
+-};
++import type { QuizQuestion } from "../types";
+ 
+ export const MOCK_QUESTIONS: ReadonlyArray<QuizQuestion> = [
+ 	{
+diff --git a/app/v2/src/routes/quiz/__mock__/-quiz-result-data.ts b/app/v2/src/features/quiz/mock/quiz-result-data.ts
+similarity index 95%
+rename from app/v2/src/routes/quiz/__mock__/-quiz-result-data.ts
+rename to app/v2/src/features/quiz/mock/quiz-result-data.ts
+index 0199dcb0..f15ac0d7 100644
+--- a/app/v2/src/routes/quiz/__mock__/-quiz-result-data.ts
++++ b/app/v2/src/features/quiz/mock/quiz-result-data.ts
+@@ -1,4 +1,4 @@
+-import type { QuizResultData } from "@/components/quiz-result/types";
++import type { QuizResultData } from "../types";
+ 
+ export const mockQuizResultData: QuizResultData = {
+ 	totalScore: 80,
+diff --git a/app/v2/src/routes/quiz/index.tsx b/app/v2/src/features/quiz/pages/group-selection-page.tsx
+similarity index 69%
+rename from app/v2/src/routes/quiz/index.tsx
+rename to app/v2/src/features/quiz/pages/group-selection-page.tsx
+index 5bc1a54e..705354b1 100644
+--- a/app/v2/src/routes/quiz/index.tsx
++++ b/app/v2/src/features/quiz/pages/group-selection-page.tsx
+@@ -1,33 +1,18 @@
+-import { createFileRoute, useNavigate } from "@tanstack/react-router";
++import { useNavigate } from "@tanstack/react-router";
+ import { ArrowRight, CheckCircle2 } from "lucide-react";
+ import { useState } from "react";
+ import { PrimaryCTA } from "@/components/ui/cta";
+ import { PageHeader } from "@/components/ui/PageHeader";
+ import { PageShell } from "@/components/ui/PageShell";
+ import { cn } from "@/lib/cn";
+-
+-type IdolGroup = {
+-	idolGroupId: string;
+-	groupName: string;
+-	thumbnailUrl: string;
+-};
+-
+-const MOCK_IDOL_GROUPS: ReadonlyArray<IdolGroup> = [
+-	{ idolGroupId: "1", groupName: "BLACKPINK", thumbnailUrl: "" },
+-	{ idolGroupId: "2", groupName: "BTS", thumbnailUrl: "" },
+-	{ idolGroupId: "3", groupName: "TWICE", thumbnailUrl: "" },
+-	{ idolGroupId: "4", groupName: "aespa", thumbnailUrl: "" },
+-	{ idolGroupId: "5", groupName: "Stray Kids", thumbnailUrl: "" },
+-	{ idolGroupId: "6", groupName: "IVE", thumbnailUrl: "" },
+-	{ idolGroupId: "7", groupName: "LE SSERAFIM", thumbnailUrl: "" },
+-	{ idolGroupId: "8", groupName: "NewJeans", thumbnailUrl: "" },
+-];
++import { MOCK_QUIZ_GROUPS } from "../mock/idol-groups";
++import type { QuizGroup } from "../types";
+ 
+ function GroupSelectionHeader() {
+ 	return <PageHeader eyebrow="QUIZ START" title="ジャンルを選択" description="今の気分に合うグループを選んで、すぐにクイズへ入れます。" />;
+ }
+ 
+-function GroupButton({ group, isSelected, onPress }: { group: IdolGroup; isSelected: boolean; onPress: (groupId: string) => void }) {
++function GroupButton({ group, isSelected, onPress }: { group: QuizGroup; isSelected: boolean; onPress: (groupId: string) => void }) {
+ 	return (
+ 		<button
+ 			type="button"
+@@ -54,7 +39,7 @@ function GroupButton({ group, isSelected, onPress }: { group: IdolGroup; isSelec
+ 	);
+ }
+ 
+-function GroupSelectionPage() {
++export function GroupSelectionPage() {
+ 	const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+ 	const navigate = useNavigate();
+ 
+@@ -69,7 +54,7 @@ function GroupSelectionPage() {
+ 			<GroupSelectionHeader />
+ 
+ 			<div className="flex flex-col gap-3">
+-				{MOCK_IDOL_GROUPS.map((group) => (
++				{MOCK_QUIZ_GROUPS.map((group) => (
+ 					<GroupButton key={group.idolGroupId} group={group} isSelected={selectedGroupId === group.idolGroupId} onPress={setSelectedGroupId} />
+ 				))}
+ 			</div>
+@@ -82,7 +67,3 @@ function GroupSelectionPage() {
+ 		</PageShell>
+ 	);
+ }
+-
+-export const Route = createFileRoute("/quiz/")({
+-	component: GroupSelectionPage,
+-});
+diff --git a/app/v2/src/routes/quiz/create.tsx b/app/v2/src/features/quiz/pages/quiz-create-page.tsx
+similarity index 62%
+rename from app/v2/src/routes/quiz/create.tsx
+rename to app/v2/src/features/quiz/pages/quiz-create-page.tsx
+index ff034a66..b90c63f4 100644
+--- a/app/v2/src/routes/quiz/create.tsx
++++ b/app/v2/src/features/quiz/pages/quiz-create-page.tsx
+@@ -1,17 +1,18 @@
+-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+-import { QuizCreateForm } from "@/components/quiz/quiz-create-form";
+ import { PageHeader } from "@/components/ui/PageHeader";
+ import { PageShell } from "@/components/ui/PageShell";
+ import { SectionCard } from "@/components/ui/SectionCard";
+-import type { QuizCreateFormValues } from "@/lib/schemas/quiz-create-schema";
++import { QuizCreateForm } from "../components/QuizCreateForm";
++import type { QuizCreateFormValues } from "../schemas/quiz-create-schema";
+ 
+-function QuizCreatePage() {
+-	const navigate = useNavigate();
++type QuizCreatePageProps = {
++	onCreated: (data: QuizCreateFormValues) => void;
++};
+ 
++export function QuizCreatePage({ onCreated }: QuizCreatePageProps) {
+ 	const handleSubmitSuccess = (data: QuizCreateFormValues) => {
+ 		console.log("Quiz created:", data);
+ 		alert("クイズを作成しました！");
+-		navigate({ to: "/" });
++		onCreated(data);
+ 	};
+ 
+ 	return (
+@@ -23,7 +24,3 @@ function QuizCreatePage() {
+ 		</PageShell>
+ 	);
+ }
+-
+-export const Route = createFileRoute("/quiz/create")({
+-	component: QuizCreatePage,
+-});
+diff --git a/app/v2/src/features/quiz/pages/quiz-question-page.tsx b/app/v2/src/features/quiz/pages/quiz-question-page.tsx
+new file mode 100644
+index 00000000..1145ace0
+--- /dev/null
++++ b/app/v2/src/features/quiz/pages/quiz-question-page.tsx
+@@ -0,0 +1,8 @@
++import { useNavigate } from "@tanstack/react-router";
++import { QuizQuestionScreen } from "../components/QuizQuestionScreen";
++
++export function QuizQuestionPage() {
++	const navigate = useNavigate();
++
++	return <QuizQuestionScreen onComplete={() => void navigate({ to: "/quiz/result" })} />;
++}
+diff --git a/app/v2/src/routes/quiz/result.tsx b/app/v2/src/features/quiz/pages/quiz-result-page.tsx
+similarity index 68%
+rename from app/v2/src/routes/quiz/result.tsx
+rename to app/v2/src/features/quiz/pages/quiz-result-page.tsx
+index d180a6ba..4a0ff807 100644
+--- a/app/v2/src/routes/quiz/result.tsx
++++ b/app/v2/src/features/quiz/pages/quiz-result-page.tsx
+@@ -1,15 +1,15 @@
+-import { createFileRoute, Link } from "@tanstack/react-router";
+-import { QuizResultItem } from "@/components/quiz-result/quiz-result-item";
+-import { ResultSummary } from "@/components/quiz-result/result-summary";
++import { Link } from "@tanstack/react-router";
+ import { primaryCTAClassName } from "@/components/ui/cta-class-names";
+ import { PageHeader } from "@/components/ui/PageHeader";
+ import { PageShell } from "@/components/ui/PageShell";
+ import { SectionCard } from "@/components/ui/SectionCard";
+-import { mockQuizResultData } from "@/routes/quiz/__mock__/-quiz-result-data";
++import { QuizResultItem } from "../components/QuizResultItem";
++import { ResultSummary } from "../components/ResultSummary";
++import { mockQuizResultData } from "../mock/quiz-result-data";
+ 
+-function QuizResultPage() {
++export function QuizResultPage() {
+ 	const quizResultData = mockQuizResultData;
+-	const correctCount = quizResultData.results.filter((r) => r.isCorrect).length;
++	const correctCount = quizResultData.results.filter((result) => result.isCorrect).length;
+ 
+ 	return (
+ 		<PageShell className="gap-4">
+@@ -32,7 +32,3 @@ function QuizResultPage() {
+ 		</PageShell>
+ 	);
+ }
+-
+-export const Route = createFileRoute("/quiz/result")({
+-	component: QuizResultPage,
+-});
+diff --git a/app/v2/src/lib/schemas/quiz-create-schema.ts b/app/v2/src/features/quiz/schemas/quiz-create-schema.ts
+similarity index 96%
+rename from app/v2/src/lib/schemas/quiz-create-schema.ts
+rename to app/v2/src/features/quiz/schemas/quiz-create-schema.ts
+index 722572e1..1440eaa3 100644
+--- a/app/v2/src/lib/schemas/quiz-create-schema.ts
++++ b/app/v2/src/features/quiz/schemas/quiz-create-schema.ts
+@@ -1,5 +1,5 @@
+ import { z } from "zod";
+-import { CHOICE_COUNT, CHOICE_MAX_LENGTH, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "@/constants/quiz";
++import { CHOICE_COUNT, CHOICE_MAX_LENGTH, EXPLANATION_MAX_LENGTH, PROMPT_MAX_LENGTH } from "../constants";
+ 
+ const choiceSchema = z.string().min(1, "選択肢を入力してください").max(CHOICE_MAX_LENGTH, `選択肢は${CHOICE_MAX_LENGTH}文字以内で入力してください`);
+ 
+diff --git a/app/v2/src/features/quiz/types.ts b/app/v2/src/features/quiz/types.ts
+new file mode 100644
+index 00000000..7175e6de
+--- /dev/null
++++ b/app/v2/src/features/quiz/types.ts
+@@ -0,0 +1,31 @@
++export type Choice = {
++	choice_order: number;
++	choice_text: string;
++	is_correct: boolean;
++};
++
++export type QuizQuestion = {
++	prompt: string;
++	explanation: string;
++	choices: ReadonlyArray<Choice>;
++};
++
++export type QuizGroup = {
++	idolGroupId: string;
++	groupName: string;
++	thumbnailUrl: string;
++};
++
++export type QuizResultEntry = {
++	questionId: string;
++	prompt: string;
++	isCorrect: boolean;
++	userAnswer: string;
++	correctAnswer: string;
++	explanation: string;
++};
++
++export type QuizResultData = {
++	totalScore: number;
++	results: Array<QuizResultEntry>;
++};
+diff --git a/app/v2/src/components/ranking/GroupRankingItem.tsx b/app/v2/src/features/ranking/components/GroupRankingItem.tsx
+similarity index 94%
+rename from app/v2/src/components/ranking/GroupRankingItem.tsx
+rename to app/v2/src/features/ranking/components/GroupRankingItem.tsx
+index f3f73478..3be10202 100644
+--- a/app/v2/src/components/ranking/GroupRankingItem.tsx
++++ b/app/v2/src/features/ranking/components/GroupRankingItem.tsx
+@@ -1,4 +1,4 @@
+-import type { GroupRankingEntry } from "./types";
++import type { GroupRankingEntry } from "../types";
+ 
+ type GroupRankingItemProps = {
+ 	entry: GroupRankingEntry;
+diff --git a/app/v2/src/components/ranking/RankingList.tsx b/app/v2/src/features/ranking/components/RankingList.tsx
+similarity index 95%
+rename from app/v2/src/components/ranking/RankingList.tsx
+rename to app/v2/src/features/ranking/components/RankingList.tsx
+index f1e3d704..0574a58b 100644
+--- a/app/v2/src/components/ranking/RankingList.tsx
++++ b/app/v2/src/features/ranking/components/RankingList.tsx
+@@ -1,8 +1,8 @@
+ import { EmptyState } from "@/components/ui/EmptyState";
+ import { SectionCard } from "@/components/ui/SectionCard";
++import type { GroupRankingEntry, TotalRankingEntry } from "../types";
+ import { GroupRankingItem } from "./GroupRankingItem";
+ import { TotalRankingItem } from "./TotalRankingItem";
+-import type { GroupRankingEntry, TotalRankingEntry } from "./types";
+ 
+ type TotalRankingListProps = {
+ 	type: "total";
+diff --git a/app/v2/src/components/ranking/RankingTabs.tsx b/app/v2/src/features/ranking/components/RankingTabs.tsx
+similarity index 93%
+rename from app/v2/src/components/ranking/RankingTabs.tsx
+rename to app/v2/src/features/ranking/components/RankingTabs.tsx
+index 823858fc..104b8c2e 100644
+--- a/app/v2/src/components/ranking/RankingTabs.tsx
++++ b/app/v2/src/features/ranking/components/RankingTabs.tsx
+@@ -1,5 +1,5 @@
+ import { PillTab } from "@/components/ui/PillTab";
+-import type { IdolGroup } from "./types";
++import type { IdolGroup } from "../types";
+ 
+ type RankingTabsProps = {
+ 	activeIndex: number;
+diff --git a/app/v2/src/components/ranking/TotalRankingItem.tsx b/app/v2/src/features/ranking/components/TotalRankingItem.tsx
+similarity index 93%
+rename from app/v2/src/components/ranking/TotalRankingItem.tsx
+rename to app/v2/src/features/ranking/components/TotalRankingItem.tsx
+index a0dae78c..79c5b478 100644
+--- a/app/v2/src/components/ranking/TotalRankingItem.tsx
++++ b/app/v2/src/features/ranking/components/TotalRankingItem.tsx
+@@ -1,4 +1,4 @@
+-import type { TotalRankingEntry } from "./types";
++import type { TotalRankingEntry } from "../types";
+ 
+ type TotalRankingItemProps = {
+ 	entry: TotalRankingEntry;
+diff --git a/app/v2/src/components/ranking/mock-data.ts b/app/v2/src/features/ranking/mock-data.ts
+similarity index 100%
+rename from app/v2/src/components/ranking/mock-data.ts
+rename to app/v2/src/features/ranking/mock-data.ts
+diff --git a/app/v2/src/components/ranking/mock-group-rankings-1.ts b/app/v2/src/features/ranking/mock-group-rankings-1.ts
+similarity index 100%
+rename from app/v2/src/components/ranking/mock-group-rankings-1.ts
+rename to app/v2/src/features/ranking/mock-group-rankings-1.ts
+diff --git a/app/v2/src/components/ranking/mock-group-rankings-2.ts b/app/v2/src/features/ranking/mock-group-rankings-2.ts
+similarity index 100%
+rename from app/v2/src/components/ranking/mock-group-rankings-2.ts
+rename to app/v2/src/features/ranking/mock-group-rankings-2.ts
+diff --git a/app/v2/src/routes/ranking/index.tsx b/app/v2/src/features/ranking/ranking-page.tsx
+similarity index 67%
+rename from app/v2/src/routes/ranking/index.tsx
+rename to app/v2/src/features/ranking/ranking-page.tsx
+index e887fd22..8971d1e0 100644
+--- a/app/v2/src/routes/ranking/index.tsx
++++ b/app/v2/src/features/ranking/ranking-page.tsx
+@@ -1,12 +1,11 @@
+-import { createFileRoute } from "@tanstack/react-router";
+ import { useState } from "react";
+-import { getGroupRankings, IDOL_GROUPS, TOTAL_RANKINGS } from "@/components/ranking/mock-data";
+-import { RankingList } from "@/components/ranking/RankingList";
+-import { RankingTabs } from "@/components/ranking/RankingTabs";
+ import { PageHeader } from "@/components/ui/PageHeader";
+ import { PageShell } from "@/components/ui/PageShell";
++import { RankingList } from "./components/RankingList";
++import { RankingTabs } from "./components/RankingTabs";
++import { getGroupRankings, IDOL_GROUPS, TOTAL_RANKINGS } from "./mock-data";
+ 
+-function RankingPage() {
++export function RankingPage() {
+ 	const [activeIndex, setActiveIndex] = useState(0);
+ 	const selectedGroup = activeIndex > 0 ? IDOL_GROUPS[activeIndex - 1] : undefined;
+ 
+@@ -22,7 +21,3 @@ function RankingPage() {
+ 		</PageShell>
+ 	);
+ }
+-
+-export const Route = createFileRoute("/ranking/")({
+-	component: RankingPage,
+-});
+diff --git a/app/v2/src/components/ranking/types.ts b/app/v2/src/features/ranking/types.ts
+similarity index 100%
+rename from app/v2/src/components/ranking/types.ts
+rename to app/v2/src/features/ranking/types.ts
+diff --git a/app/v2/src/routeTree.gen.ts b/app/v2/src/routeTree.gen.ts
+index abf6658d..fdb65c21 100644
+--- a/app/v2/src/routeTree.gen.ts
++++ b/app/v2/src/routeTree.gen.ts
+@@ -9,86 +9,86 @@
+ // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
+ 
+ import { Route as rootRouteImport } from './routes/__root'
+-import { Route as IndexRouteImport } from './routes/index'
+-import { Route as RankingIndexRouteImport } from './routes/ranking/index'
+-import { Route as QuizIndexRouteImport } from './routes/quiz/index'
+-import { Route as ProfileIndexRouteImport } from './routes/profile/index'
+-import { Route as QuizResultRouteImport } from './routes/quiz/result'
+-import { Route as QuizQuestionRouteImport } from './routes/quiz/question'
+-import { Route as QuizCreateRouteImport } from './routes/quiz/create'
+-import { Route as QuizSessionIdRouteImport } from './routes/quiz/$sessionId'
++import { Route as tabsIndexRouteImport } from './routes/(tabs)/index'
++import { Route as tabsRankingIndexRouteImport } from './routes/(tabs)/ranking/index'
++import { Route as tabsQuizIndexRouteImport } from './routes/(tabs)/quiz/index'
++import { Route as tabsProfileIndexRouteImport } from './routes/(tabs)/profile/index'
++import { Route as tabsQuizResultRouteImport } from './routes/(tabs)/quiz/result'
++import { Route as tabsQuizQuestionRouteImport } from './routes/(tabs)/quiz/question'
++import { Route as tabsQuizCreateRouteImport } from './routes/(tabs)/quiz/create'
++import { Route as tabsQuizSessionIdRouteImport } from './routes/(tabs)/quiz/$sessionId'
+ 
+-const IndexRoute = IndexRouteImport.update({
+-  id: '/',
++const tabsIndexRoute = tabsIndexRouteImport.update({
++  id: '/(tabs)/',
+   path: '/',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+-const RankingIndexRoute = RankingIndexRouteImport.update({
+-  id: '/ranking/',
++const tabsRankingIndexRoute = tabsRankingIndexRouteImport.update({
++  id: '/(tabs)/ranking/',
+   path: '/ranking/',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+-const QuizIndexRoute = QuizIndexRouteImport.update({
+-  id: '/quiz/',
++const tabsQuizIndexRoute = tabsQuizIndexRouteImport.update({
++  id: '/(tabs)/quiz/',
+   path: '/quiz/',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+-const ProfileIndexRoute = ProfileIndexRouteImport.update({
+-  id: '/profile/',
++const tabsProfileIndexRoute = tabsProfileIndexRouteImport.update({
++  id: '/(tabs)/profile/',
+   path: '/profile/',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+-const QuizResultRoute = QuizResultRouteImport.update({
+-  id: '/quiz/result',
++const tabsQuizResultRoute = tabsQuizResultRouteImport.update({
++  id: '/(tabs)/quiz/result',
+   path: '/quiz/result',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+-const QuizQuestionRoute = QuizQuestionRouteImport.update({
+-  id: '/quiz/question',
++const tabsQuizQuestionRoute = tabsQuizQuestionRouteImport.update({
++  id: '/(tabs)/quiz/question',
+   path: '/quiz/question',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+-const QuizCreateRoute = QuizCreateRouteImport.update({
+-  id: '/quiz/create',
++const tabsQuizCreateRoute = tabsQuizCreateRouteImport.update({
++  id: '/(tabs)/quiz/create',
+   path: '/quiz/create',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+-const QuizSessionIdRoute = QuizSessionIdRouteImport.update({
+-  id: '/quiz/$sessionId',
++const tabsQuizSessionIdRoute = tabsQuizSessionIdRouteImport.update({
++  id: '/(tabs)/quiz/$sessionId',
+   path: '/quiz/$sessionId',
+   getParentRoute: () => rootRouteImport,
+ } as any)
+ 
+ export interface FileRoutesByFullPath {
+-  '/': typeof IndexRoute
+-  '/quiz/$sessionId': typeof QuizSessionIdRoute
+-  '/quiz/create': typeof QuizCreateRoute
+-  '/quiz/question': typeof QuizQuestionRoute
+-  '/quiz/result': typeof QuizResultRoute
+-  '/profile/': typeof ProfileIndexRoute
+-  '/quiz/': typeof QuizIndexRoute
+-  '/ranking/': typeof RankingIndexRoute
++  '/': typeof tabsIndexRoute
++  '/quiz/$sessionId': typeof tabsQuizSessionIdRoute
++  '/quiz/create': typeof tabsQuizCreateRoute
++  '/quiz/question': typeof tabsQuizQuestionRoute
++  '/quiz/result': typeof tabsQuizResultRoute
++  '/profile/': typeof tabsProfileIndexRoute
++  '/quiz/': typeof tabsQuizIndexRoute
++  '/ranking/': typeof tabsRankingIndexRoute
+ }
+ export interface FileRoutesByTo {
+-  '/': typeof IndexRoute
+-  '/quiz/$sessionId': typeof QuizSessionIdRoute
+-  '/quiz/create': typeof QuizCreateRoute
+-  '/quiz/question': typeof QuizQuestionRoute
+-  '/quiz/result': typeof QuizResultRoute
+-  '/profile': typeof ProfileIndexRoute
+-  '/quiz': typeof QuizIndexRoute
+-  '/ranking': typeof RankingIndexRoute
++  '/': typeof tabsIndexRoute
++  '/quiz/$sessionId': typeof tabsQuizSessionIdRoute
++  '/quiz/create': typeof tabsQuizCreateRoute
++  '/quiz/question': typeof tabsQuizQuestionRoute
++  '/quiz/result': typeof tabsQuizResultRoute
++  '/profile': typeof tabsProfileIndexRoute
++  '/quiz': typeof tabsQuizIndexRoute
++  '/ranking': typeof tabsRankingIndexRoute
+ }
+ export interface FileRoutesById {
+   __root__: typeof rootRouteImport
+-  '/': typeof IndexRoute
+-  '/quiz/$sessionId': typeof QuizSessionIdRoute
+-  '/quiz/create': typeof QuizCreateRoute
+-  '/quiz/question': typeof QuizQuestionRoute
+-  '/quiz/result': typeof QuizResultRoute
+-  '/profile/': typeof ProfileIndexRoute
+-  '/quiz/': typeof QuizIndexRoute
+-  '/ranking/': typeof RankingIndexRoute
++  '/(tabs)/': typeof tabsIndexRoute
++  '/(tabs)/quiz/$sessionId': typeof tabsQuizSessionIdRoute
++  '/(tabs)/quiz/create': typeof tabsQuizCreateRoute
++  '/(tabs)/quiz/question': typeof tabsQuizQuestionRoute
++  '/(tabs)/quiz/result': typeof tabsQuizResultRoute
++  '/(tabs)/profile/': typeof tabsProfileIndexRoute
++  '/(tabs)/quiz/': typeof tabsQuizIndexRoute
++  '/(tabs)/ranking/': typeof tabsRankingIndexRoute
+ }
+ export interface FileRouteTypes {
+   fileRoutesByFullPath: FileRoutesByFullPath
+@@ -113,97 +113,97 @@ export interface FileRouteTypes {
+     | '/ranking'
+   id:
+     | '__root__'
+-    | '/'
+-    | '/quiz/$sessionId'
+-    | '/quiz/create'
+-    | '/quiz/question'
+-    | '/quiz/result'
+-    | '/profile/'
+-    | '/quiz/'
+-    | '/ranking/'
++    | '/(tabs)/'
++    | '/(tabs)/quiz/$sessionId'
++    | '/(tabs)/quiz/create'
++    | '/(tabs)/quiz/question'
++    | '/(tabs)/quiz/result'
++    | '/(tabs)/profile/'
++    | '/(tabs)/quiz/'
++    | '/(tabs)/ranking/'
+   fileRoutesById: FileRoutesById
+ }
+ export interface RootRouteChildren {
+-  IndexRoute: typeof IndexRoute
+-  QuizSessionIdRoute: typeof QuizSessionIdRoute
+-  QuizCreateRoute: typeof QuizCreateRoute
+-  QuizQuestionRoute: typeof QuizQuestionRoute
+-  QuizResultRoute: typeof QuizResultRoute
+-  ProfileIndexRoute: typeof ProfileIndexRoute
+-  QuizIndexRoute: typeof QuizIndexRoute
+-  RankingIndexRoute: typeof RankingIndexRoute
++  tabsIndexRoute: typeof tabsIndexRoute
++  tabsQuizSessionIdRoute: typeof tabsQuizSessionIdRoute
++  tabsQuizCreateRoute: typeof tabsQuizCreateRoute
++  tabsQuizQuestionRoute: typeof tabsQuizQuestionRoute
++  tabsQuizResultRoute: typeof tabsQuizResultRoute
++  tabsProfileIndexRoute: typeof tabsProfileIndexRoute
++  tabsQuizIndexRoute: typeof tabsQuizIndexRoute
++  tabsRankingIndexRoute: typeof tabsRankingIndexRoute
+ }
+ 
+ declare module '@tanstack/react-router' {
+   interface FileRoutesByPath {
+-    '/': {
+-      id: '/'
++    '/(tabs)/': {
++      id: '/(tabs)/'
+       path: '/'
+       fullPath: '/'
+-      preLoaderRoute: typeof IndexRouteImport
++      preLoaderRoute: typeof tabsIndexRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+-    '/ranking/': {
+-      id: '/ranking/'
++    '/(tabs)/ranking/': {
++      id: '/(tabs)/ranking/'
+       path: '/ranking'
+       fullPath: '/ranking/'
+-      preLoaderRoute: typeof RankingIndexRouteImport
++      preLoaderRoute: typeof tabsRankingIndexRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+-    '/quiz/': {
+-      id: '/quiz/'
++    '/(tabs)/quiz/': {
++      id: '/(tabs)/quiz/'
+       path: '/quiz'
+       fullPath: '/quiz/'
+-      preLoaderRoute: typeof QuizIndexRouteImport
++      preLoaderRoute: typeof tabsQuizIndexRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+-    '/profile/': {
+-      id: '/profile/'
++    '/(tabs)/profile/': {
++      id: '/(tabs)/profile/'
+       path: '/profile'
+       fullPath: '/profile/'
+-      preLoaderRoute: typeof ProfileIndexRouteImport
++      preLoaderRoute: typeof tabsProfileIndexRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+-    '/quiz/result': {
+-      id: '/quiz/result'
++    '/(tabs)/quiz/result': {
++      id: '/(tabs)/quiz/result'
+       path: '/quiz/result'
+       fullPath: '/quiz/result'
+-      preLoaderRoute: typeof QuizResultRouteImport
++      preLoaderRoute: typeof tabsQuizResultRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+-    '/quiz/question': {
+-      id: '/quiz/question'
++    '/(tabs)/quiz/question': {
++      id: '/(tabs)/quiz/question'
+       path: '/quiz/question'
+       fullPath: '/quiz/question'
+-      preLoaderRoute: typeof QuizQuestionRouteImport
++      preLoaderRoute: typeof tabsQuizQuestionRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+-    '/quiz/create': {
+-      id: '/quiz/create'
++    '/(tabs)/quiz/create': {
++      id: '/(tabs)/quiz/create'
+       path: '/quiz/create'
+       fullPath: '/quiz/create'
+-      preLoaderRoute: typeof QuizCreateRouteImport
++      preLoaderRoute: typeof tabsQuizCreateRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+-    '/quiz/$sessionId': {
+-      id: '/quiz/$sessionId'
++    '/(tabs)/quiz/$sessionId': {
++      id: '/(tabs)/quiz/$sessionId'
+       path: '/quiz/$sessionId'
+       fullPath: '/quiz/$sessionId'
+-      preLoaderRoute: typeof QuizSessionIdRouteImport
++      preLoaderRoute: typeof tabsQuizSessionIdRouteImport
+       parentRoute: typeof rootRouteImport
+     }
+   }
+ }
+ 
+ const rootRouteChildren: RootRouteChildren = {
+-  IndexRoute: IndexRoute,
+-  QuizSessionIdRoute: QuizSessionIdRoute,
+-  QuizCreateRoute: QuizCreateRoute,
+-  QuizQuestionRoute: QuizQuestionRoute,
+-  QuizResultRoute: QuizResultRoute,
+-  ProfileIndexRoute: ProfileIndexRoute,
+-  QuizIndexRoute: QuizIndexRoute,
+-  RankingIndexRoute: RankingIndexRoute,
++  tabsIndexRoute: tabsIndexRoute,
++  tabsQuizSessionIdRoute: tabsQuizSessionIdRoute,
++  tabsQuizCreateRoute: tabsQuizCreateRoute,
++  tabsQuizQuestionRoute: tabsQuizQuestionRoute,
++  tabsQuizResultRoute: tabsQuizResultRoute,
++  tabsProfileIndexRoute: tabsProfileIndexRoute,
++  tabsQuizIndexRoute: tabsQuizIndexRoute,
++  tabsRankingIndexRoute: tabsRankingIndexRoute,
+ }
+ export const routeTree = rootRouteImport
+   ._addFileChildren(rootRouteChildren)
+diff --git a/app/v2/src/routes/(tabs)/index.tsx b/app/v2/src/routes/(tabs)/index.tsx
+new file mode 100644
+index 00000000..099b6184
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/index.tsx
+@@ -0,0 +1,6 @@
++import { createFileRoute } from "@tanstack/react-router";
++import { HomePage } from "@/features/home/home-page";
++
++export const Route = createFileRoute("/(tabs)/")({
++	component: HomePage,
++});
+diff --git a/app/v2/src/routes/(tabs)/profile/index.tsx b/app/v2/src/routes/(tabs)/profile/index.tsx
+new file mode 100644
+index 00000000..9c02959a
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/profile/index.tsx
+@@ -0,0 +1,6 @@
++import { createFileRoute } from "@tanstack/react-router";
++import { ProfilePage } from "@/features/profile/profile-page";
++
++export const Route = createFileRoute("/(tabs)/profile/")({
++	component: ProfilePage,
++});
+diff --git a/app/v2/src/routes/(tabs)/quiz/$sessionId.tsx b/app/v2/src/routes/(tabs)/quiz/$sessionId.tsx
+new file mode 100644
+index 00000000..0729fb3c
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/quiz/$sessionId.tsx
+@@ -0,0 +1,13 @@
++import { createFileRoute } from "@tanstack/react-router";
++import { QuizQuestionPage } from "@/features/quiz/pages/quiz-question-page";
++
++type QuizSessionSearch = {
++	groupId: string;
++};
++
++export const Route = createFileRoute("/(tabs)/quiz/$sessionId")({
++	component: QuizQuestionPage,
++	validateSearch: (search: Record<string, unknown>): QuizSessionSearch => ({
++		groupId: typeof search.groupId === "string" ? search.groupId : "",
++	}),
++});
+diff --git a/app/v2/src/routes/(tabs)/quiz/create.tsx b/app/v2/src/routes/(tabs)/quiz/create.tsx
+new file mode 100644
+index 00000000..35ed0249
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/quiz/create.tsx
+@@ -0,0 +1,16 @@
++import { createFileRoute, useNavigate } from "@tanstack/react-router";
++import { QuizCreatePage } from "@/features/quiz/pages/quiz-create-page";
++
++export const Route = createFileRoute("/(tabs)/quiz/create")({
++	component: QuizCreateRoute,
++});
++
++function QuizCreateRoute() {
++	const navigate = useNavigate();
++
++	const handleCreated = () => {
++		navigate({ to: "/" });
++	};
++
++	return <QuizCreatePage onCreated={handleCreated} />;
++}
+diff --git a/app/v2/src/routes/(tabs)/quiz/index.tsx b/app/v2/src/routes/(tabs)/quiz/index.tsx
+new file mode 100644
+index 00000000..7b0d4879
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/quiz/index.tsx
+@@ -0,0 +1,6 @@
++import { createFileRoute } from "@tanstack/react-router";
++import { GroupSelectionPage } from "@/features/quiz/pages/group-selection-page";
++
++export const Route = createFileRoute("/(tabs)/quiz/")({
++	component: GroupSelectionPage,
++});
+diff --git a/app/v2/src/routes/(tabs)/quiz/question.tsx b/app/v2/src/routes/(tabs)/quiz/question.tsx
+new file mode 100644
+index 00000000..c4ce9b27
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/quiz/question.tsx
+@@ -0,0 +1,6 @@
++import { createFileRoute } from "@tanstack/react-router";
++import { QuizQuestionPage } from "@/features/quiz/pages/quiz-question-page";
++
++export const Route = createFileRoute("/(tabs)/quiz/question")({
++	component: QuizQuestionPage,
++});
+diff --git a/app/v2/src/routes/(tabs)/quiz/result.tsx b/app/v2/src/routes/(tabs)/quiz/result.tsx
+new file mode 100644
+index 00000000..5d623e20
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/quiz/result.tsx
+@@ -0,0 +1,6 @@
++import { createFileRoute } from "@tanstack/react-router";
++import { QuizResultPage } from "@/features/quiz/pages/quiz-result-page";
++
++export const Route = createFileRoute("/(tabs)/quiz/result")({
++	component: QuizResultPage,
++});
+diff --git a/app/v2/src/routes/(tabs)/ranking/index.tsx b/app/v2/src/routes/(tabs)/ranking/index.tsx
+new file mode 100644
+index 00000000..d7e0e6d9
+--- /dev/null
++++ b/app/v2/src/routes/(tabs)/ranking/index.tsx
+@@ -0,0 +1,6 @@
++import { createFileRoute } from "@tanstack/react-router";
++import { RankingPage } from "@/features/ranking/ranking-page";
++
++export const Route = createFileRoute("/(tabs)/ranking/")({
++	component: RankingPage,
++});
+diff --git a/app/v2/src/routes/__root.tsx b/app/v2/src/routes/__root.tsx
+index 150ea797..25216228 100644
+--- a/app/v2/src/routes/__root.tsx
++++ b/app/v2/src/routes/__root.tsx
+@@ -1,9 +1,11 @@
+-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
++import { createRootRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
+ import { BottomTabBar } from "@/components/bottom-tab-bar";
+ import { primaryCTAClassName } from "@/components/ui/cta-class-names";
+ import { EmptyState } from "@/components/ui/EmptyState";
+ import { PageShell } from "@/components/ui/PageShell";
+ 
++const HIDDEN_BOTTOM_TAB_ROUTE_IDS = new Set(["/(tabs)/quiz/$sessionId", "/(tabs)/quiz/question"]);
++
+ function NotFoundPage() {
+ 	return (
+ 		<PageShell className="justify-center">
+@@ -21,6 +23,9 @@ function NotFoundPage() {
+ }
+ 
+ function RootComponent() {
++	const matches = useMatches();
++	const hideBottomTabBar = matches.some((match) => HIDDEN_BOTTOM_TAB_ROUTE_IDS.has(match.routeId));
++
+ 	return (
+ 		<div className="relative min-h-[100dvh] overflow-x-hidden bg-app-shell">
+ 			<div className="pointer-events-none absolute inset-x-0 top-0 h-[32rem] bg-[radial-gradient(circle_at_top,rgba(255,217,232,0.92),transparent_58%)]" />
+@@ -29,7 +34,7 @@ function RootComponent() {
+ 			<div className="relative mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-28 pt-5 sm:px-6 sm:pt-6">
+ 				<Outlet />
+ 			</div>
+-			<BottomTabBar />
++			{hideBottomTabBar ? null : <BottomTabBar />}
+ 		</div>
+ 	);
+ }
+diff --git a/app/v2/src/routes/profile/index.tsx b/app/v2/src/routes/profile/index.tsx
+deleted file mode 100644
+index b02bb850..00000000
+--- a/app/v2/src/routes/profile/index.tsx
++++ /dev/null
+@@ -1,6 +0,0 @@
+-import { createFileRoute } from "@tanstack/react-router";
+-import { ProfilePage } from "@/components/profile/ProfilePage";
+-
+-export const Route = createFileRoute("/profile/")({
+-	component: ProfilePage,
+-});
+diff --git a/app/v2/src/routes/quiz/$sessionId.tsx b/app/v2/src/routes/quiz/$sessionId.tsx
+deleted file mode 100644
+index d1f6875c..00000000
+--- a/app/v2/src/routes/quiz/$sessionId.tsx
++++ /dev/null
+@@ -1,19 +0,0 @@
+-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+-import { QuizQuestionScreen } from "@/components/quiz/QuizQuestionScreen";
+-
+-type QuizSessionSearch = {
+-	groupId: string;
+-};
+-
+-function QuizSessionPage() {
+-	const navigate = useNavigate();
+-
+-	return <QuizQuestionScreen onComplete={() => void navigate({ to: "/quiz/result" })} />;
+-}
+-
+-export const Route = createFileRoute("/quiz/$sessionId")({
+-	component: QuizSessionPage,
+-	validateSearch: (search: Record<string, unknown>): QuizSessionSearch => ({
+-		groupId: typeof search.groupId === "string" ? search.groupId : "",
+-	}),
+-});
+diff --git a/app/v2/src/routes/quiz/question.tsx b/app/v2/src/routes/quiz/question.tsx
+deleted file mode 100644
+index b2e44fff..00000000
+--- a/app/v2/src/routes/quiz/question.tsx
++++ /dev/null
+@@ -1,12 +0,0 @@
+-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+-import { QuizQuestionScreen } from "@/components/quiz/QuizQuestionScreen";
+-
+-function QuizQuestionPage() {
+-	const navigate = useNavigate();
+-
+-	return <QuizQuestionScreen onComplete={() => void navigate({ to: "/quiz/result" })} />;
+-}
+-
+-export const Route = createFileRoute("/quiz/question")({
+-	component: QuizQuestionPage,
+-});
+diff --git a/critics-review-pr-144.md b/critics-review-pr-144.md
+new file mode 100644
+index 00000000..021e4a79
+--- /dev/null
++++ b/critics-review-pr-144.md
+@@ -0,0 +1,145 @@
++# PR #144 チームレビュー懸念点
++
++## 概要
++
++- **PR**: app/v2 フロントエンドを route-centered package-by-feature 構成へ移行する
++- **URL**: https://github.com/Eiji-Kudo/k-drop/pull/144
++- **調査日**: 2026-04-05
++- **レビュー方式**: 並列レビュー + 相互検証
++
++## レビュワー構成
++
++| レビュワー | 専門領域 | 選定理由 |
++|------------|----------|----------|
++| `router-reviewer` | TanStack Router / navigation | route group 導入と route id 変化の影響確認 |
++| `architecture-reviewer` | 配置方針 / 依存境界 | feature-local code の移設が shared 責務を壊していないか確認 |
++| `docs-reviewer` | docs / verification | architecture 文書と実装結果の不整合確認 |
++
++## サマリー
++
++| 重要度 | 件数 | 対応済み |
++|--------|------|----------|
++| CRITICAL | 0 | 0 |
++| HIGH | 2 | 2 |
++| MEDIUM | 8 | 8 |
++
++## 参照したガイドライン
++
++- `CLAUDE.md`
++- `README.md`
++- `app/v2/README.md`
++
++## 未対応の懸念点
++
++なし
++
++## 対応済みの懸念点
++
++<details>
++<summary>1. `src/architecture.md` の Current State / migration example が移行前の説明のまま残っていた（MEDIUM / 修正済み）</summary>
++
++| 項目 | 内容 |
++|------|------|
++| 重要度 | **MEDIUM** |
++| ファイル | `app/v2/src/architecture.md` |
++| 検出者 | `docs-reviewer` |
++
++**問題点**:
++`Current State` が `src/components` に feature-local UI が集まっている前提のままで、`Recommended Migration` も未適用の future tense になっていた。今回の PR 自体がその移行を完了させているため、文書を参照した開発者が「まだ移行前」と誤読する状態だった。
++
++**該当コード**:
++```md
++## Current State
++
++現状の `src/` は次のような分割になっている。
++...
++├── components/     -> 画面単位 UI がここに集まっている
++...
++## Recommended Migration
++```
++
++**対応**:
++`Current State` を移行後の構造に更新し、`Recommended Migration` を `Migration Example` に変更した。`現在/推奨` も `移行前/適用後` に置き換え、実装済みの内容を historical example として読めるようにした。
++
++</details>
++
++<details>
++<summary>8. UX ブラッシュアップ計画が旧ディレクトリ構成を編集対象として案内していた（MEDIUM / 修正済み）</summary>
++
++- **ファイル**: `app/v2/docs/ux/ui-design-brushup-plan.md`
++- **問題**: `src/routes/quiz/index.tsx` や `src/components/home/*` など、移行前の file path が実務ドキュメントに残っており、次の UI 改修で削除済みパスを辿る誤読を招く状態だった。
++- **対応**: group selection の作業対象を `src/features/quiz/pages/group-selection-page.tsx` に修正し、主要な編集対象ファイル一覧も `src/routes/(tabs)` と `src/features/*` ベースの現構成へ更新した。
++
++</details>
++
++<details>
++<summary>9. `quiz-create-page` が app-level の home route を直接参照していた（MEDIUM / 修正済み）</summary>
++
++- **ファイル**: `app/v2/src/features/quiz/pages/quiz-create-page.tsx`, `app/v2/src/routes/(tabs)/quiz/create.tsx`
++- **問題**: `QuizCreatePage` が `navigate({ to: "/" })` を直接持ち、feature 実装が app-level route 契約を知っている状態だった。
++- **対応**: submit 完了後の app-level 遷移は route file 側へ戻し、`QuizCreatePage` には `onCreated` callback だけを渡す形に変更した。feature 側は作成完了通知に留め、home route 依存を外した。
++
++</details>
++
++<details>
++<summary>10. `quiz/create` の callback 契約が弱く、submit 後遷移の回帰を検知できなかった（MEDIUM / 修正済み）</summary>
++
++- **ファイル**: `app/v2/src/features/quiz/pages/quiz-create-page.tsx`, `app/v2/src/__tests__/App.test.tsx`
++- **問題**: `QuizCreatePage` の `onCreated` が optional だったため、route file 側で callback を渡し忘れても型で検知できず、`/quiz/create` の smoke test も submit 完了後の遷移までは固定できていなかった。
++- **対応**: `onCreated` を必須 prop に変更し、`App.test.tsx` にクイズ作成完了後に home route へ戻ることを確認する route test を追加した。
++
++</details>
++
++<details>
++<summary>2. `quiz` feature 内でグループ一覧の mock source が二重化していた（HIGH / 修正済み）</summary>
++
++- **ファイル**: `app/v2/src/features/quiz/constants.ts`, `app/v2/src/features/quiz/mock/idol-groups.ts`, `app/v2/src/features/quiz/components/QuizCreateFields.tsx`
++- **問題**: グループ一覧が `MOCK_IDOL_GROUPS` と `MOCK_QUIZ_GROUPS` に分かれ、ID 体系と命名規約も不一致だったため、create と solve で master data が drift する状態だった。
++- **対応**: `MOCK_QUIZ_GROUPS` を単一ソースに寄せ、create form 側も同じデータを参照するように変更した。`constants.ts` には定数だけを残した。
++
++</details>
++
++<details>
++<summary>3. route wrapper の smoke test が不足し、Testing 欄も route 回帰の実態を十分に表していなかった（HIGH / 修正済み）</summary>
++
++- **ファイル**: `app/v2/src/__tests__/App.test.tsx`, `PR #144 description`
++- **問題**: `/profile` `/quiz/create` `/quiz/question` の接続が直接検証されておらず、PR description の Testing 欄も focused test だけで route 再編の確認範囲を誤読させる状態だった。
++- **対応**: `App.test.tsx` に route smoke test を追加し、`/profile` `/quiz/create` `/quiz/question` を明示的に確認するようにした。PR description の Testing 欄も実際に回した route smoke を含む内容へ更新した。
++
++</details>
++
++<details>
++<summary>4. `BottomTabBar` が route 固有知識を持ち、`/quiz/question` と `$sessionId` で挙動が分かれていた（MEDIUM / 修正済み）</summary>
++
++- **ファイル**: `app/v2/src/routes/__root.tsx`, `app/v2/src/components/bottom-tab-bar.tsx`
++- **問題**: shared UI の `BottomTabBar` が `routeId` 判定を抱えた結果、同じ question screen を返す `/quiz/question` では tab bar が表示されたままになっていた。
++- **対応**: tab bar の表示可否を route layer の `__root.tsx` 側へ移し、`BottomTabBar` は純粋な shared UI に戻した。`/quiz/question` でも tab bar を隠すよう統一した。
++
++</details>
++
++<details>
++<summary>5. `src/features` 方針に対して周辺ガイドが古い配置ルールのままだった（MEDIUM / 修正済み）</summary>
++
++- **ファイル**: `app/v2/docs/project-structure.md`, `app/v2/docs/component-placement-guide.md`
++- **問題**: `src/architecture.md` では `src/features/<feature>` を frontend 実装本体の置き場とした一方、周辺ガイドは `src/components` / `src/routes` 前提の説明を残していた。
++- **対応**: 両ドキュメントを更新し、`src/routes` は routing 関心、`src/features` は feature 実装、`src/components` は shared UI という分担を明文化した。
++
++</details>
++
++<details>
++<summary>6. feature page 内の local navigation 許容範囲がドキュメント上で曖昧だった（MEDIUM / 修正済み）</summary>
++
++- **ファイル**: `app/v2/src/architecture.md`, `app/v2/docs/project-structure.md`
++- **問題**: `quiz` page が `Link` / `useNavigate` を持つ実装に対し、ドキュメントが「routing 関心は routes に集中」とだけ読める状態で、許容境界が曖昧だった。
++- **対応**: route path / loader / guard の定義元は `src/routes` としつつ、feature page が local navigation のために router hook を使うこと自体は許容する、と明文化した。
++
++</details>
++
++<details>
++<summary>7. tab shell を route 構造で表現しきれていない点は将来の pathless layout 化で検討する（MEDIUM / 対応不要）</summary>
++
++- **ファイル**: `app/v2/src/routes/__root.tsx`
++- **問題**: tab bar の表示制御は root layout の denylist で管理しており、将来 full-screen route が増えた場合は明示追加が必要になる。
++- **対応**: 現時点では既知の full-screen route が `quiz/$sessionId` と `quiz/question` に限られ、実害は解消済みのためこの PR では対応不要とした。tab shell を route tree で表現する pathless layout 化は別リファクタで扱う。
++
++</details>
