@@ -61,11 +61,17 @@ app/v2/
 4. **フロントエンド routing チェック**
    - Q: URL / loader / guard / params に直接関わる route 定義か？
    - YES → `src/routes/` に配置
+   - NO → 次へ
+
+5. **フロントエンド shared UI チェック**
+   - Q: 複数 feature で使う shared UI / 共通プリミティブか？
+   - YES → `src/components/`（共通プリミティブは `src/components/ui/`）に配置
    - NO → `src/features/<feature>/` に配置
 
 補足:
 
 - `src/routes/` は route 定義の入口を置く
+- `src/components/` は複数 feature から使われる shared UI（`bottom-tab-bar.tsx`、`components/ui/` の `PageShell` / `PageHeader` / CTA 等）のみを置く
 - `src/features/<feature>/` の page / component が local navigation のために `Link` / `useNavigate` を使うのは許容する
 
 ### ステップ 2: レイヤーの決定

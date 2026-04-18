@@ -5,7 +5,9 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { PageShell } from "@/components/ui/PageShell";
 import type { FileRoutesById } from "@/routeTree.gen";
 
-const HIDDEN_BOTTOM_TAB_ROUTE_IDS = ["/(tabs)/quiz/$sessionId", "/(tabs)/quiz/question"] as const satisfies ReadonlyArray<keyof FileRoutesById>;
+type LeafRouteId = Exclude<keyof FileRoutesById, "__root__">;
+
+const HIDDEN_BOTTOM_TAB_ROUTE_IDS = ["/(tabs)/quiz/$sessionId", "/(tabs)/quiz/question"] as const satisfies ReadonlyArray<LeafRouteId>;
 
 const HIDDEN_BOTTOM_TAB_ROUTE_ID_SET: ReadonlySet<string> = new Set(HIDDEN_BOTTOM_TAB_ROUTE_IDS);
 

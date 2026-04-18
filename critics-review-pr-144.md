@@ -23,9 +23,9 @@
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
 | HIGH | 5 | 5 |
-| MEDIUM | 41 | 41 |
+| MEDIUM | 46 | 46 |
+| LOW-MEDIUM | 6 | 6 |
 | LOW | 4 | 0（対応不要） |
-| LOW-MEDIUM | 1 | 1 |
 
 ## 参照したガイドライン
 
@@ -550,5 +550,107 @@
 - **検出者**: `testing-reviewer`
 - **問題**: tuple 超過は 5 個、不足は 3 個のみで、0 件や 6 件以上は検証していない。
 - **対応不要の理由**: Zod tuple の挙動は一貫しており、3 個で落ちれば 0 個も落ちる想定。reviewer 自身が「追加価値は限定的、次回 schema 変更 PR で boundary を増やす方が費用対効果が高い」と判断し LOW 扱い。
+
+</details>
+
+## 5 回目レビュー（2026-04-19 再実行）で追加された対応
+
+<details>
+<summary>50. `HIDDEN_BOTTOM_TAB_ROUTE_IDS` の型が `__root__` を許容していた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/routes/__root.tsx`
+- **検出者**: `architecture-reviewer`
+- **問題**: 2 回目 #11 の型保護は `keyof FileRoutesById` だったが、`FileRoutesById` には `__root__` も含まれるため、誤って `"__root__"` を denylist に追加すると type check を通過し、全ページで tab bar が消える致命的回帰を静的に拾えない。
+- **対応**: `type LeafRouteId = Exclude<keyof FileRoutesById, "__root__">` を導入し、`HIDDEN_BOTTOM_TAB_ROUTE_IDS` を `ReadonlyArray<LeafRouteId>` に satisfies で縛るようにした。
+
+</details>
+
+<details>
+<summary>51. `quiz-group-selection-page.tsx` の export 名が `GroupSelectionPage` のままで他 page と非対称（LOW-MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/features/quiz/pages/quiz-group-selection-page.tsx`, `app/v2/src/routes/(tabs)/quiz/index.tsx`
+- **検出者**: `architecture-reviewer`
+- **問題**: 3 回目 #45 でファイル名は `quiz-group-selection-page.tsx` に揃えたが、中の export は `GroupSelectionPage` のままで、他 3 page (`QuizCreatePage` / `QuizQuestionPage` / `QuizResultPage`) と命名が割れていた。
+- **対応**: export を `QuizGroupSelectionPage` にリネームし、route file の import も合わせて更新した。
+
+</details>
+
+<details>
+<summary>52. `src/architecture.md` `Responsibility by Folder` の feature 探索起点例が `home` を含まなかった（LOW-MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md`
+- **検出者**: `architecture-reviewer`
+- **問題**: 3 回目 #43 で Current State / Migration Example の 4 feature 列挙は揃えたが、同文書 228 行目の「`profile` `ranking` `quiz` のように、1つの feature を触る時の探索起点にする」だけ 3 feature のままで残っていた。
+- **対応**: `home` を加えた 4 feature 列挙に揃えた。
+
+</details>
+
+<details>
+<summary>53. architecture.md にテスト colocate 規約の記述が無かった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md`
+- **検出者**: `architecture-reviewer`, `docs-reviewer`
+- **問題**: 2-4 回目で「feature 配下のテストは `__tests__/` サブディレクトリ、app-level smoke は `src/__tests__/`」という規約が実装で固まったが、Concrete Rules / Operational Rules のどこにも明記されていなかった。新規 contributor が test 配置を判断できない状態。
+- **対応**: Concrete Rules に `### Feature-local テスト配置` 節を追加し、`features/` 配下と `src/__tests__/` の使い分けを例付きで明文化した。
+
+</details>
+
+<details>
+<summary>54. `docs/project-structure.md` 判断フロー（ステップ 4）が shared UI への分岐を落としていた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/docs/project-structure.md`
+- **検出者**: `docs-reviewer`
+- **問題**: ステップ 4 は「routing か否か」で `src/routes/` と `src/features/<feature>/` に二分岐するだけで、`bottom-tab-bar.tsx` や `components/ui/*` など shared UI の配置判断が抜けていた。
+- **対応**: ステップ 4 を「routing チェック」、ステップ 5 を「shared UI チェック」に分割し、YES → `src/components/`（共通プリミティブは `src/components/ui/`）／NO → `src/features/<feature>/` の分岐を追加した。補足文にも shared UI の例を追記した。
+
+</details>
+
+<details>
+<summary>55. `src/architecture.md` Target Structure の `lib/` が空枝のまま残っていた（LOW-MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md`
+- **検出者**: `docs-reviewer`
+- **問題**: 他の feature 枝は実態に揃えたが `lib/` だけ children 無しの空箱のままで、`api/` / `rpc/` / `ux/` / `app-providers.tsx` / `query-client.ts` / `cn.ts` が示されず非対称だった。
+- **対応**: Target Structure の `lib/` と `components/` に代表的な children を追記した。
+
+</details>
+
+<details>
+<summary>56. ルート `CLAUDE.md` の v2 Directory Structure が `components/ui/` を示していなかった（LOW-MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `CLAUDE.md`
+- **検出者**: `docs-reviewer`, `architecture-reviewer`
+- **問題**: `components/` の shared UI 責務は記載されているものの、`components/ui/` の共通プリミティブ層は docs/project-structure.md や src/architecture.md に存在するのに root の `CLAUDE.md` には描画されておらず、docs 間の粒度が非対称。
+- **対応**: v2 Directory Structure に `components/ui/ → PageShell / PageHeader / CTA 等の共通プリミティブ` を追記した。
+
+</details>
+
+<details>
+<summary>57. ホームルート (`/`) smoke test に routeId assertion が抜けていた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: 3-4 回目で `/profile` `/quiz/create` `/quiz/question` `/quiz/$sessionId` `/ranking` には `/(tabs)/...` routeId 固定を追加したが、`/` のテスト群にだけ routeId assertion が無く、同 PR 内で規約が不統一だった。
+- **対応**: `renders the bottom tab bar with four tabs` テストで `renderRoute` が返す `router` を受け取り、`router.state.matches.map(m => m.routeId)` が `/(tabs)/` を含むことを検証する expect を追加した。
+
+</details>
+
+<details>
+<summary>58. quiz flow の result 到達時に routeId が検証されていなかった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: `navigates from group selection through the quiz flow to the result screen` は heading `クイズ結果` で終端判定していたが、`/quiz/result` の routeId が `(tabs)` 配下に居続けることは検証されておらず、`result.tsx` を別 route group に移しても通過する状態だった。
+- **対応**: flow 終端で `router.state.matches.map(m => m.routeId)` が `/(tabs)/quiz/result` を含むことを検証する 1 行を追加した。
+
+</details>
+
+<details>
+<summary>59. テストでの routeId string literal が `FileRoutesById` で型保護されていなかった（LOW-MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: `__root.tsx` 側の `HIDDEN_BOTTOM_TAB_ROUTE_IDS` は型保護済みだが、同 PR で追加したテストの routeId assertion (`toContain("/(tabs)/profile/")` 等) は plain string literal で、`routeTree.gen.ts` と連動していなかった。route リネーム時にテスト側が stale になっても TypeScript が気付けない。
+- **対応**: `const ROUTE_ID` を `Record<string, LeafRouteId>` に satisfies で型保護して追加し、全 `toContain(...)` を `ROUTE_ID.HOME` / `ROUTE_ID.QUIZ_CREATE` などのキー経由に書き換えた。route 改名時には `ROUTE_ID` 定義で型エラーになる。
 
 </details>

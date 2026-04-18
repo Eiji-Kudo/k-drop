@@ -39,7 +39,7 @@ function GroupButton({ group, isSelected, onPress }: { group: QuizGroup; isSelec
 	);
 }
 
-export function GroupSelectionPage() {
+export function QuizGroupSelectionPage() {
 	const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 	const navigate = useNavigate();
 

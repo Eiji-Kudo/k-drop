@@ -5,6 +5,19 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "@/lib/app-providers";
 import { createAppRouter } from "@/router";
+import type { FileRoutesById } from "@/routeTree.gen";
+
+type LeafRouteId = Exclude<keyof FileRoutesById, "__root__">;
+
+const ROUTE_ID = {
+	HOME: "/(tabs)/",
+	PROFILE: "/(tabs)/profile/",
+	RANKING: "/(tabs)/ranking/",
+	QUIZ_CREATE: "/(tabs)/quiz/create",
+	QUIZ_QUESTION: "/(tabs)/quiz/question",
+	QUIZ_RESULT: "/(tabs)/quiz/result",
+	QUIZ_SESSION: "/(tabs)/quiz/$sessionId",
+} as const satisfies Record<string, LeafRouteId>;
 
 async function renderRoute(path: string) {
 	const queryClient = new QueryClient({
@@ -69,27 +82,28 @@ describe("App routes", () => {
 	});
 
 	it("renders the bottom tab bar with four tabs", async () => {
-		await renderRoute("/");
+		const router = await renderRoute("/");
 		const nav = screen.getByRole("navigation", { name: "メインナビゲーション" });
 		expect(nav).toBeInTheDocument();
 		expect(within(nav).getByText("ホーム")).toBeInTheDocument();
 		expect(within(nav).getByText("クイズ")).toBeInTheDocument();
 		expect(within(nav).getByText("ランキング")).toBeInTheDocument();
 		expect(within(nav).getByText("プロフィール")).toBeInTheDocument();
+		expect(router.state.matches.map((match) => match.routeId)).toContain(ROUTE_ID.HOME);
 	});
 
 	it("hides the tab bar on quiz session page", async () => {
 		const router = await renderRoute("/quiz/abc123?groupId=1");
 		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
-		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/quiz/$sessionId");
+		expect(router.state.matches.map((match) => match.routeId)).toContain(ROUTE_ID.QUIZ_SESSION);
 	});
 
 	it("renders the profile route through the tabs wrapper", async () => {
 		const router = await renderRoute("/profile");
 		expect(await screen.findByRole("heading", { name: "KPOPファン太郎" })).toBeInTheDocument();
 		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
-		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/profile/");
+		expect(router.state.matches.map((match) => match.routeId)).toContain(ROUTE_ID.PROFILE);
 	});
 
 	it("renders the quiz create route through the tabs wrapper", async () => {
@@ -97,7 +111,7 @@ describe("App routes", () => {
 		expect(await screen.findByRole("heading", { name: "クイズ作成" })).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "作成する" })).toBeInTheDocument();
 		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
-		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/quiz/create");
+		expect(router.state.matches.map((match) => match.routeId)).toContain(ROUTE_ID.QUIZ_CREATE);
 	});
 
 	it("navigates back to the home route after creating a quiz", async () => {
@@ -138,11 +152,11 @@ describe("App routes", () => {
 		const router = await renderRoute("/quiz/question");
 		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
-		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/quiz/question");
+		expect(router.state.matches.map((match) => match.routeId)).toContain(ROUTE_ID.QUIZ_QUESTION);
 	});
 
 	it("navigates from group selection through the quiz flow to the result screen", async () => {
-		await renderRoute("/quiz");
+		const router = await renderRoute("/quiz");
 
 		fireEvent.click(screen.getByRole("button", { name: "BLACKPINK" }));
 		fireEvent.click(screen.getByRole("button", { name: "問題へ進む" }));
@@ -158,6 +172,7 @@ describe("App routes", () => {
 
 		expect(await screen.findByRole("heading", { name: "クイズ結果" })).toBeInTheDocument();
 		expect(screen.getByRole("link", { name: "グループ一覧に戻る" })).toBeInTheDocument();
+		expect(router.state.matches.map((match) => match.routeId)).toContain(ROUTE_ID.QUIZ_RESULT);
 	}, 10000);
 
 	it("renders the 404 page for an unknown path", async () => {
@@ -174,7 +189,7 @@ describe("App routes", () => {
 		expect(screen.getByText("momo_love")).toBeInTheDocument();
 		expect(screen.getByText("9850")).toBeInTheDocument();
 		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
-		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/ranking/");
+		expect(router.state.matches.map((match) => match.routeId)).toContain(ROUTE_ID.RANKING);
 	});
 
 	it("switches to the selected group ranking tab", async () => {

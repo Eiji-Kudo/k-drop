@@ -133,6 +133,7 @@ app/v2/
 │   ├── routes/                 → TanStack Router の route 定義
 │   ├── features/               → feature 実装本体（page / component / schema / mock / utils）
 │   ├── components/             → 複数 feature で使う shared UI
+│   │   └── ui/                 → PageShell / PageHeader / CTA 等の共通プリミティブ
 │   ├── lib/                    → API クライアント、ユーティリティ
 │   └── mocks/                  → app-wide mock data
 ├── functions/                  → バックエンド (Pages Functions)
