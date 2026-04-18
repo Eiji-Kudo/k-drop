@@ -13,7 +13,7 @@ export type QuizQuestion = {
 export type QuizGroup = {
 	idolGroupId: string;
 	groupName: string;
-	thumbnailUrl: string;
+	thumbnailUrl?: string;
 };
 
 export type QuizResultEntry = {

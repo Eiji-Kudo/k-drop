@@ -1,6 +1,6 @@
 import { SectionCard } from "@/components/ui/SectionCard";
-import { getBadgeColorClass } from "../badge-colors";
 import type { Badge } from "../types";
+import { getBadgeColorClass } from "../utils/badge-colors";
 import { BadgeIcon } from "./BadgeIcon";
 
 type ProfileBadgesProps = {

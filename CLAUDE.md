@@ -130,8 +130,9 @@ All commands should be run from `app/v2/`.
 ```
 app/v2/
 ├── src/                        → フロントエンド (SPA)
-│   ├── components/             → 共有 UI コンポーネント
-│   ├── routes/                 → TanStack Router ページ
+│   ├── routes/                 → TanStack Router の route 定義
+│   ├── features/               → feature 実装本体（page / component / schema / mock / utils）
+│   ├── components/             → 複数 feature で使う shared UI
 │   └── lib/                    → API クライアント、ユーティリティ
 ├── functions/                  → バックエンド (Pages Functions)
 │   ├── core/                   → ドメイン知識を含まない共通技術コード

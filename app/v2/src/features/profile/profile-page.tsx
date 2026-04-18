@@ -1,12 +1,12 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { PageShell } from "@/components/ui/PageShell";
 import { SectionCard } from "@/components/ui/SectionCard";
+import { MOCK_BADGES, MOCK_GROUPS, MOCK_PROGRESS, MOCK_USER } from "@/mocks/profile";
 import { ProfileBadges } from "./components/ProfileBadges";
 import { ProfileGroups } from "./components/ProfileGroups";
 import { ProfileHeader } from "./components/ProfileHeader";
 import { ProfileProgress } from "./components/ProfileProgress";
 import { ProfileStats } from "./components/ProfileStats";
-import { MOCK_BADGES, MOCK_GROUPS, MOCK_PROGRESS, MOCK_USER } from "./mock-data";
 
 export function ProfilePage() {
 	return (

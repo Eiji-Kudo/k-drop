@@ -65,6 +65,11 @@ describe("quizCreateSchema", () => {
 		expect(result.success).toBe(false);
 	});
 
+	it("rejects more than 4 choices", () => {
+		const result = quizCreateSchema.safeParse({ ...validInput, choices: ["A", "B", "C", "D", "E"] });
+		expect(result.success).toBe(false);
+	});
+
 	it("rejects NaN correctChoiceIndex", () => {
 		const result = quizCreateSchema.safeParse({ ...validInput, correctChoiceIndex: "abc" });
 		expect(result.success).toBe(false);
@@ -105,5 +110,15 @@ describe("quizCreateSchema", () => {
 	it("accepts max boundary correctChoiceIndex", () => {
 		const result = quizCreateSchema.safeParse({ ...validInput, correctChoiceIndex: 3 });
 		expect(result.success).toBe(true);
+	});
+
+	it("accepts min boundary correctChoiceIndex", () => {
+		const result = quizCreateSchema.safeParse({ ...validInput, correctChoiceIndex: 0 });
+		expect(result.success).toBe(true);
+	});
+
+	it("rejects undefined correctChoiceIndex", () => {
+		const result = quizCreateSchema.safeParse({ ...validInput, correctChoiceIndex: undefined });
+		expect(result.success).toBe(false);
 	});
 });

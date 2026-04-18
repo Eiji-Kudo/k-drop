@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { QueryClient } from "@tanstack/react-query";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "@/lib/app-providers";
 import { createAppRouter } from "@/router";
@@ -27,7 +27,11 @@ async function renderRoute(path: string) {
 			<RouterProvider router={router} />
 		</AppProviders>,
 	);
+
+	return router;
 }
+
+let alertMock: ReturnType<typeof vi.fn>;
 
 describe("App routes", () => {
 	beforeEach(() => {
@@ -35,13 +39,13 @@ describe("App routes", () => {
 			"fetch",
 			vi.fn<typeof fetch>(() => Promise.resolve(new Response("Not Found", { status: 404 }))),
 		);
-		vi.stubGlobal("alert", vi.fn());
+		alertMock = vi.fn();
+		vi.stubGlobal("alert", alertMock);
 	});
 
 	afterEach(() => {
 		cleanup();
 		vi.unstubAllGlobals();
-		vi.useRealTimers();
 	});
 
 	it("renders the home screen as a motivation hub", async () => {
@@ -90,10 +94,11 @@ describe("App routes", () => {
 		await renderRoute("/quiz/create");
 		expect(await screen.findByRole("heading", { name: "クイズ作成" })).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "作成する" })).toBeInTheDocument();
+		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
 	});
 
 	it("navigates back to the home route after creating a quiz", async () => {
-		await renderRoute("/quiz/create");
+		const router = await renderRoute("/quiz/create");
 
 		fireEvent.change(screen.getByLabelText("対象グループ"), {
 			target: { value: "01J0000000000000000000001" },
@@ -122,13 +127,15 @@ describe("App routes", () => {
 		});
 		fireEvent.click(screen.getByRole("button", { name: "作成する" }));
 
-		expect(await screen.findByText("今日もオタ力を伸ばそう")).toBeInTheDocument();
+		await waitFor(() => expect(router.state.location.pathname).toBe("/"));
+		expect(alertMock).toHaveBeenCalledWith("クイズを作成しました！");
 	});
 
 	it("hides the tab bar on the direct quiz question route", async () => {
-		await renderRoute("/quiz/question");
+		const router = await renderRoute("/quiz/question");
 		expect(await screen.findByRole("heading", { name: "問題を解く" })).toBeInTheDocument();
 		expect(screen.queryByRole("navigation", { name: "メインナビゲーション" })).not.toBeInTheDocument();
+		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/quiz/question");
 	});
 
 	it("navigates from group selection through the quiz flow to the result screen", async () => {

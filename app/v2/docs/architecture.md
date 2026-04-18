@@ -55,7 +55,7 @@ app/v2/
 ### `src/`
 
 フロントエンド本体。  
-`src/routes` で URL を定義し、`src/features` に feature 実装を集約する。詳細は `src/architecture.md` を参照する。
+`src/routes` で URL を定義し、`src/features` に feature 実装を集約する（route-centered package-by-feature）。詳細は `src/architecture.md` を参照する。
 
 ### `functions/`
 

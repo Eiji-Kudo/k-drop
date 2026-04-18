@@ -3,8 +3,14 @@ import { BottomTabBar } from "@/components/bottom-tab-bar";
 import { primaryCTAClassName } from "@/components/ui/cta-class-names";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageShell } from "@/components/ui/PageShell";
+import type { FileRoutesById } from "@/routeTree.gen";
 
-const HIDDEN_BOTTOM_TAB_ROUTE_IDS = new Set(["/(tabs)/quiz/$sessionId", "/(tabs)/quiz/question"]);
+const HIDDEN_BOTTOM_TAB_ROUTE_IDS = [
+	"/(tabs)/quiz/$sessionId",
+	"/(tabs)/quiz/question",
+] as const satisfies ReadonlyArray<keyof FileRoutesById>;
+
+const HIDDEN_BOTTOM_TAB_ROUTE_ID_SET: ReadonlySet<string> = new Set(HIDDEN_BOTTOM_TAB_ROUTE_IDS);
 
 function NotFoundPage() {
 	return (
@@ -24,7 +30,7 @@ function NotFoundPage() {
 
 function RootComponent() {
 	const matches = useMatches();
-	const hideBottomTabBar = matches.some((match) => HIDDEN_BOTTOM_TAB_ROUTE_IDS.has(match.routeId));
+	const hideBottomTabBar = matches.some((match) => HIDDEN_BOTTOM_TAB_ROUTE_ID_SET.has(match.routeId));
 
 	return (
 		<div className="relative min-h-[100dvh] overflow-x-hidden bg-app-shell">

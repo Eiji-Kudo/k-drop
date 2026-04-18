@@ -9,11 +9,9 @@
 
 フロントエンドは `components first` ではなく、`route / feature first` で整理する。
 
-避けたい状態:
+避けたい状態: feature 固有の UI / schema / mock / formatter を `src/components/<feature>/` に集約すること。
 
-- `src/components/profile/*`
-- `src/components/ranking/*`
-- `src/components/quiz/*`
+例: `src/components/profile/*` / `src/components/ranking/*` / `src/components/quiz/*` / `src/components/home/*`。
 
 この配置は feature ごとに見ればまとまっていても、URL 起点で変更を追いづらい。
 
@@ -54,7 +52,7 @@ src/
 
 ### 3. Shared は「複数 feature で再利用されるもの」だけ
 
-以下のいずれかを満たす時だけ `src/components` / `src/lib` / `src/constants` へ上げる。
+以下のいずれかを満たす時だけ `src/components` / `src/lib` へ上げる。
 
 - 複数 route / 複数 feature で使う
 - ドメイン非依存で見た目や基盤の責務が明確
@@ -123,7 +121,7 @@ src/
 2. 1 feature の実装本体か  
    -> `src/features/<feature>/**`
 3. 複数 feature で使うか  
-   -> `src/components`, `src/lib`, `src/constants`
+   -> `src/components`, `src/lib`
 
 ## TanStack Router Conventions
 
@@ -241,7 +239,8 @@ TanStack Router の route tree に含めたくない補助ファイルは、`-` 
 
 現時点の代表例:
 
-- `bottom-tab-bar.tsx`
+- `bottom-tab-bar.tsx` — app shell のタブバー
+- `ui/PageShell.tsx` / `ui/PageHeader.tsx` / `ui/cta.tsx` / `ui/PillTab.tsx` / `ui/SectionCard.tsx` / `ui/EmptyState.tsx` — 複数 feature で使う共通 UI プリミティブ
 
 ここに置かないもの:
 
@@ -279,6 +278,9 @@ feature に閉じる mock は `src/features/<feature>/mock/` などへ置く。
 - `src/features/quiz/pages/quiz-result-page.tsx`
 
 route file はこれらを import して接続するだけに保つ。
+
+page が 1 つの feature は `<feature>-page.tsx` を feature 直下に置き、複数 page を持つ feature は `pages/` サブディレクトリにまとめる。  
+`quiz` は `pages/` を持つが、`home` / `profile` / `ranking` は現時点で single page のため feature 直下に置く。
 
 ### Feature-local UI
 
