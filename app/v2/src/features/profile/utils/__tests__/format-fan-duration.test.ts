@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatFanDuration } from "./format-fan-duration";
+import { formatFanDuration } from "../format-fan-duration";
 
 describe("formatFanDuration", () => {
 	const now = new Date("2026-04-05");

@@ -31,9 +31,9 @@ async function renderRoute(path: string) {
 	return router;
 }
 
-let alertMock: ReturnType<typeof vi.fn>;
-
 describe("App routes", () => {
+	let alertMock: ReturnType<typeof vi.fn>;
+
 	beforeEach(() => {
 		vi.stubGlobal(
 			"fetch",
@@ -85,16 +85,18 @@ describe("App routes", () => {
 	});
 
 	it("renders the profile route through the tabs wrapper", async () => {
-		await renderRoute("/profile");
+		const router = await renderRoute("/profile");
 		expect(await screen.findByRole("heading", { name: "KPOPファン太郎" })).toBeInTheDocument();
 		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
+		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/profile/");
 	});
 
 	it("renders the quiz create route through the tabs wrapper", async () => {
-		await renderRoute("/quiz/create");
+		const router = await renderRoute("/quiz/create");
 		expect(await screen.findByRole("heading", { name: "クイズ作成" })).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "作成する" })).toBeInTheDocument();
 		expect(screen.getByRole("navigation", { name: "メインナビゲーション" })).toBeInTheDocument();
+		expect(router.state.matches.map((match) => match.routeId)).toContain("/(tabs)/quiz/create");
 	});
 
 	it("navigates back to the home route after creating a quiz", async () => {

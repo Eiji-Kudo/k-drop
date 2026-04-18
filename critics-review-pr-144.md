@@ -22,8 +22,9 @@
 | 重要度 | 件数 | 対応済み |
 |--------|------|----------|
 | CRITICAL | 0 | 0 |
-| HIGH | 4 | 4 |
-| MEDIUM | 31 | 31 |
+| HIGH | 5 | 5 |
+| MEDIUM | 36 | 36 |
+| LOW | 2 | 0（対応不要） |
 
 ## 参照したガイドライン
 
@@ -370,5 +371,89 @@
 - **検出者**: `testing-reviewer`
 - **問題**: 現在のテストは fetch を 404 にグローバル stub しているため、将来 loader/queries が追加された時に呼び出しをサイレントに握り潰して最低限描画される可能性がある。
 - **対応不要の理由**: 現時点で `features/*` / `routes/(tabs)/*` のいずれも fetch を呼んでおらず、false positive が発生する状況にない。YAGNI の範囲で本 PR では対応しない。ローダー追加時に該当 test で個別 stub を上書きする方針。
+
+</details>
+
+## 3 回目レビュー（2026-04-19 再実行）で追加された対応
+
+<details>
+<summary>33. `src/architecture.md` Target Structure の `profile/` が 2 回目対応（#13, #14）に追従していなかった（HIGH / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md` (88-94 行目)
+- **検出者**: `docs-reviewer`, `architecture-reviewer`
+- **問題**: 2 回目で `features/profile/mock-data.ts` を削除し、`features/profile/badge-colors.ts` を `features/profile/utils/` に移したのに、Target Structure 図は両ファイルが feature 直下にある旧構造のまま残っていた。
+- **対応**: `profile/` ブロックを `profile-page.tsx` / `components/` / `utils/ (badge-colors.ts, format-fan-duration.ts)` / `types.ts` の実態構造に更新した。
+
+</details>
+
+<details>
+<summary>34. `src/architecture.md` の mock 配置ルールが `ranking` 実態（`feature` 直下平置き）と矛盾していた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/architecture.md` (267, 321-324, 373 行目)
+- **検出者**: `docs-reviewer`, `architecture-reviewer`
+- **問題**: `Concrete Rules` と `Operational Rules` が「feature-local mock は `src/features/<feature>/mock/` に置く」と明言する一方、`ranking` は `mock-data.ts` / `mock-group-rankings-1.ts` / `mock-group-rankings-2.ts` を feature 直下に置いており、docs と実装で矛盾していた。
+- **対応**: ruleを「ファイル数が多い feature は `mock/` にまとめ、少ない場合は feature 直下の `mock-*.ts` も許容する」と柔軟化し、`quiz` / `ranking` それぞれの現状例を明記した。
+
+</details>
+
+<details>
+<summary>35. `features/` 配下のテスト colocate 方式が `__tests__/` 方針と sibling 方針で割れていた（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/features/profile/utils/format-fan-duration.test.ts` → `app/v2/src/features/profile/utils/__tests__/format-fan-duration.test.ts`
+- **検出者**: `architecture-reviewer`, `testing-reviewer`
+- **問題**: 2 回目で `quiz-create-schema.test.ts` を `features/quiz/schemas/__tests__/` に移した一方、`format-fan-duration.test.ts` は `utils/` 直下に sibling 配置されており方針が割れていた。`lib/ux/__tests__/` も `__tests__/` 方式のためそちらに揃えるのが既存との整合が良い。
+- **対応**: `format-fan-duration.test.ts` を `utils/__tests__/` に移動し、import を `../format-fan-duration` に変更した。
+
+</details>
+
+<details>
+<summary>36. `app/v2/tech-plan.md` のディレクトリ構成が route-centered package-by-feature 移行を反映していなかった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/tech-plan.md` (17-24 行目)
+- **検出者**: `docs-reviewer`
+- **問題**: 本 PR で `CLAUDE.md` / `docs/*.md` / `src/architecture.md` は新構成に更新済みだが、`tech-plan.md` のプロジェクト構成図だけ旧構成のまま残り、新規 contributor が旧方針で読む余地があった。
+- **対応**: `routes/` / `features/` / `components/` / `mocks/` の責務を併記した図に更新した。
+
+</details>
+
+<details>
+<summary>37. `/profile` と `/quiz/create` の smoke test が `(tabs)` wrapper 経由を routeId で固定していなかった（MEDIUM / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: 2 回目で `/quiz/question` テストに `router.state.matches.map(...).toContain("/(tabs)/quiz/question")` を追加した一方、同種の `/profile` / `/quiz/create` は navigation landmark しか見ておらず、`(tabs)` 外へ route を移しても通過してしまう状態だった。
+- **対応**: 両 smoke test で `renderRoute` が返す `router` を受け取り、`toContain("/(tabs)/profile/")` / `toContain("/(tabs)/quiz/create")` の routeId assertion を追加した。
+
+</details>
+
+<details>
+<summary>38. `alertMock` が module-level `let` で保持されており describe スコープに閉じていなかった（LOW / 修正済み）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: `let alertMock` が describe 外に置かれており、将来 `describe.concurrent` や並列化フラグが入った際にテスト間で参照が競合する余地があった。
+- **対応**: `describe("App routes", ...)` ブロック内に `let alertMock` を移動し、mock のライフサイクルをテストスイートに限定した。
+
+</details>
+
+## 対応不要の懸念点（3 回目レビュー）
+
+<details>
+<summary>39. `navigates back to the home route after creating a quiz` で alert→navigate の順序が固定されていない（LOW-MEDIUM / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: `waitFor(pathname === "/")` の後に `toHaveBeenCalledWith` を検証しているため、alert が navigate commit の前後どちらに呼ばれても test は通過する。
+- **対応不要の理由**: `QuizCreatePage` の `alert()` そのものが懸念 30 で「UX 改修別 PR で toast 化予定」としており、順序を固定すると将来 UX 改修時にテストも合わせて書き換える必要がある。alert が呼ばれた事実だけ固定しておけば toast 化 PR で挙動差分が自然に浮き上がる。
+
+</details>
+
+<details>
+<summary>40. `renderRoute` 返却後の `router.state` 確定タイミングが `waitFor` で保護されていない（LOW / 対応不要）</summary>
+
+- **ファイル**: `app/v2/src/__tests__/App.test.tsx`
+- **検出者**: `testing-reviewer`
+- **問題**: 現行テストは `findByRole(...)` で描画完了を待ってから `router.state.matches` を同期参照するが、将来 `createAppRouter` に `defaultPendingComponent` 等が入ると transient 状態を拾う可能性がある。
+- **対応不要の理由**: 現状の `createAppRouter` には pending component がなく、`findByRole` 解決時には初期 match が確定している。実害が顕在化した時点で `waitFor` に差し替える方針。
 
 </details>
